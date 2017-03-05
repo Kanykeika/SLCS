@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">SLCS</string>
+    <string name="hint_name_of_room">Name of room</string>
+    <string name="btn_create">Create</string>
+    <string name="err_msg_name">Enter name of room</string>
+</resources>
