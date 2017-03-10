@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#fff"
-            android:text="Create a new room"
+            android:text="Display room"
             android:layout_gravity="left"
             android:textSize="20sp"
             android:gravity="center"
@@ -33,19 +33,22 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:paddingTop="60dp">
+        <EditText
+            android:id="@+id/editTextName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="82dp"
+            android:ems="10"
+            android:inputType="text" >
+        </EditText>
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/input_name"
-                android:layout_width="match_parent"
-                android:layout_height="78dp"
-                android:maxLines="1"
-                android:hint="@string/hint_name_of_room" />
-        </android.support.design.widget.TextInputLayout>
+        <TextView
+            android:id="@+id/textView_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/name"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <Button android:id="@+id/btn_save"
             android:layout_width="fill_parent"

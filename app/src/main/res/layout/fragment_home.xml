@@ -2,42 +2,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context="com.kanykei.slcs.HomeFragment">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/frag_home"
+    tools:context="com.kanykei.slcs.HomeFragment">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
+
+    <ScrollView
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:orientation="vertical"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="60dp">
+        android:fillViewport="true"
+        android:id="@+id/scrollView">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_name"
+        <ListView
+            android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+        </ListView>
 
-            <EditText
-                android:id="@+id/input_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:hint="@string/hint_name_of_room" />
-        </android.support.design.widget.TextInputLayout>
-
-        <Button android:id="@+id/btn_create"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_create"
-            android:background="@color/colorPrimary"
-            android:layout_marginTop="40dp"
-            android:textColor="@android:color/white"/>
-
-    </LinearLayout>
-
+    </ScrollView>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -52,5 +35,4 @@ tools:context="com.kanykei.slcs.HomeFragment">
         android:layout_marginBottom="42dp"
         app:backgroundTint="@android:color/holo_red_light"
         app:fabSize="normal" />
-
 </RelativeLayout>
