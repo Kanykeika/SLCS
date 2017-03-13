@@ -3,6 +3,8 @@ package com.kanykei.slcs;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -24,12 +26,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // TODO Auto-generated method stub
-        db.execSQL(
-                "create table rooms " +
-                        "(id integer primary key, name text,state text)"
-        );
+        db.execSQL("create table rooms (id integer primary key, name text,state text)");
+
     }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -39,11 +39,24 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public boolean insertRoom (String name) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("name", name);
-        contentValues.put("state", "0");
-        db.insert("rooms", null, contentValues);
-        return true;
+
+        Cursor res =  db.rawQuery( "select * from rooms where name=\"" + name + "\"", null );
+        res.moveToFirst();
+        if(res.getCount() == 0) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("name", name);
+            contentValues.put("state", "0");
+            db.insert("rooms", null, contentValues);
+            if (!res.isClosed())  {
+                res.close();
+            }
+            return true;
+        }else{
+            if (!res.isClosed())  {
+                res.close();
+            }
+            return false;
+        }
     }
 
     public Cursor getData(int id) {
@@ -61,11 +74,23 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public boolean updateRoom (Integer id, String name) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("name", name);
-        contentValues.put("state", "0");
-        db.update("rooms", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
-        return true;
+        Cursor res =  db.rawQuery( "select * from rooms where name=\"" + name + "\"", null );
+        res.moveToFirst();
+        if(res.getCount() == 0) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("name", name);
+            contentValues.put("state", "0");
+            db.update("rooms", contentValues, "id = ? ", new String[]{Integer.toString(id)});
+            if (!res.isClosed())  {
+                res.close();
+            }
+            return true;
+        }else{
+            if (!res.isClosed())  {
+                res.close();
+            }
+            return false;
+        }
     }
 
     public Integer deleteRoom (Integer id) {
@@ -73,16 +98,21 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.delete("rooms", "id = ? ", new String[] { Integer.toString(id) });
     }
 
-    public ArrayList<String> getAllRooms() {
-        ArrayList<String> array_list = new ArrayList<String>();
+
+    public ArrayList<Room> getAllRooms() {
+        ArrayList<Room> array_list = new ArrayList<Room>();
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from rooms", null );
+
         res.moveToFirst();
 
-        while(res.isAfterLast() == false){
-            array_list.add(res.getString(res.getColumnIndex(ROOMS_COLUMN_NAME)));
+        while(!res.isAfterLast()){
+            array_list.add(new Room(res.getInt(res.getColumnIndex("id")),res.getString(res.getColumnIndex("name"))));
             res.moveToNext();
+        }
+        if (!res.isClosed())  {
+            res.close();
         }
         return array_list;
     }
