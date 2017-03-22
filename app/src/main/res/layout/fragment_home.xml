@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/frag_home"
     tools:context="com.kanykei.slcs.HomeFragment">
 
 
@@ -12,7 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:id="@+id/scrollView">
+        android:id="@+id/scrollView"
+        android:descendantFocusability="blocksDescendants" >
 
         <ListView
             android:id="@+id/listView"
@@ -21,19 +21,21 @@
 
         </ListView>
 
+
     </ScrollView>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:src="@android:drawable/ic_input_add"
+        app:srcCompat="@drawable/ic_add"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="69dp"
+        app:backgroundTint="@android:color/holo_red_light"
+        app:fabSize="normal"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="34dp"
-        android:layout_marginEnd="34dp"
-        android:layout_marginBottom="42dp"
-        app:backgroundTint="@android:color/holo_red_light"
-        app:fabSize="normal" />
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

@@ -4,8 +4,8 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="Smart Lighting Control System"
+        android:icon="@mipmap/ic_lauch"
+        android:label="Lighting Control App"
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme">
         <activity android:name=".MainActivity">

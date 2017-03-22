@@ -536,6 +536,9 @@
     <dimen name="tab_label">14sp</dimen>
     <dimen name="tab_max_width">264dp</dimen>
     <dimen name="tab_padding_bottom">16dp</dimen>
+    <dimen name="text_size">20sp</dimen>
+    <dimen name="toggle_btn_margin">35dp</dimen>
+    <dimen name="toggle_btn_margin_top_bottom">5dp</dimen>
     <drawable name="notification_template_icon_bg">#3333B5E5</drawable>
     <drawable name="notification_template_icon_low_bg">#0cffffff</drawable>
     <item name="action_bar_activity_content" type="id"/>
@@ -616,6 +619,7 @@
     <string name="path_password_strike_through" translatable="false">M3.27,4.27 L19.74,20.74</string>
     <string name="search_menu_title">Search</string>
     <string name="status_bar_notification_info_overflow">999+</string>
+    <string name="time_picker_title">Select Time</string>
     <string name="title_activity_display_room">DisplayRoom</string>
     <string name="yes">Yes</string>
     <style name="AlertDialog.AppCompat" parent="Base.AlertDialog.AppCompat"/>

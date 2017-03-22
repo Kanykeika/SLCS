@@ -19,6 +19,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String ROOMS_COLUMN_ID = "id";
     public static final String ROOMS_COLUMN_NAME = "name";
     public static final String ROOMS_COLUMN_STATE = "state";
+    public static final String ROOMS_COLUMN_SET_TIME = "set_time";
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME , null, 1);
@@ -26,7 +27,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table rooms (id integer primary key, name text,state text)");
+        db.execSQL("create table rooms (id integer primary key, name text, state integer, wake_up_time time(0), go_sleep_time time(0), set_relay integer)");
 
     }
 
@@ -45,7 +46,7 @@ public class DBHelper extends SQLiteOpenHelper {
         if(res.getCount() == 0) {
             ContentValues contentValues = new ContentValues();
             contentValues.put("name", name);
-            contentValues.put("state", "0");
+            contentValues.put("state", 0);
             db.insert("rooms", null, contentValues);
             if (!res.isClosed())  {
                 res.close();
@@ -79,7 +80,6 @@ public class DBHelper extends SQLiteOpenHelper {
         if(res.getCount() == 0) {
             ContentValues contentValues = new ContentValues();
             contentValues.put("name", name);
-            contentValues.put("state", "0");
             db.update("rooms", contentValues, "id = ? ", new String[]{Integer.toString(id)});
             if (!res.isClosed())  {
                 res.close();
@@ -91,6 +91,28 @@ public class DBHelper extends SQLiteOpenHelper {
             }
             return false;
         }
+    }
+
+    public boolean updateStateOfRoom (Integer id, Integer state) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("state", state);
+        db.update("rooms", contentValues, "id = ? ", new String[]{Integer.toString(id)});
+        return true;
+    }
+    public boolean updateWakeUpTimer (Integer id, String wake_timer) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("wake_up_time", wake_timer);
+        db.update("rooms", contentValues, "id = ? ", new String[]{Integer.toString(id)});
+        return true;
+    }
+    public boolean updateGoSleepTimer (Integer id, String sleep_timer) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("go_sleep_time", sleep_timer);
+        db.update("rooms", contentValues, "id = ? ", new String[]{Integer.toString(id)});
+        return true;
     }
 
     public Integer deleteRoom (Integer id) {
@@ -108,7 +130,7 @@ public class DBHelper extends SQLiteOpenHelper {
         res.moveToFirst();
 
         while(!res.isAfterLast()){
-            array_list.add(new Room(res.getInt(res.getColumnIndex("id")),res.getString(res.getColumnIndex("name"))));
+            array_list.add(new Room(res.getInt(res.getColumnIndex("id")),res.getString(res.getColumnIndex("name")),res.getInt(res.getColumnIndex("state")), res.getString(res.getColumnIndex("wake_up_time")), res.getString(res.getColumnIndex("go_sleep_time"))));
             res.moveToNext();
         }
         if (!res.isClosed())  {

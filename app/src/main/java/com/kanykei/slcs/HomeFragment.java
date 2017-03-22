@@ -2,13 +2,12 @@ package com.kanykei.slcs;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import java.util.ArrayList;
 import android.support.v4.app.Fragment;
@@ -16,9 +15,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.support.design.widget.FloatingActionButton;
-import android.widget.TextView;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
+
 
 public class HomeFragment extends Fragment implements OnClickListener {
 
@@ -27,11 +26,12 @@ public class HomeFragment extends Fragment implements OnClickListener {
     }
 
     private ListView obj;
-    DBHelper mydb;
-    Toolbar toolbar;
+    private DBHelper mydb;
+    private Toolbar toolbar;
     private FloatingActionButton fab;
-    private TextView roomId;
-    private TextView roomName;
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +64,6 @@ public class HomeFragment extends Fragment implements OnClickListener {
         final ArrayList<Room> array_list = mydb.getAllRooms();
 
         RoomAdapter adapter = new RoomAdapter(myView.getContext(),array_list);
-
         obj = (ListView) myView.findViewById(R.id.listView);
         obj.setAdapter(adapter);
 
@@ -109,7 +108,15 @@ public class HomeFragment extends Fragment implements OnClickListener {
             }
 
         });
+
         return myView;
     }
+
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        inflater.inflate(R.menu.display_rooms, menu);
+//        super.onCreateOptionsMenu(menu,inflater);
+//    }
 
 }
