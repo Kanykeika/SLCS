@@ -1,14 +1,12 @@
 package com.kanykei.slcs;
 
 import java.util.ArrayList;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-//import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -18,8 +16,6 @@ public class RoomAdapter extends ArrayAdapter<Room> {
     private final Context context;
     private final ArrayList<Room> roomsArrayList;
     private DBHelper mydb;
-//    private CheckBox checkBox;
-
 
     public RoomAdapter(Context context, ArrayList<Room> itemsArrayList) {
 
@@ -66,31 +62,8 @@ public class RoomAdapter extends ArrayAdapter<Room> {
             }
         });
 
-//        checkBox = (CheckBox) rowView.findViewById(R.id.checkbox_room);
-
-
         // 6. return rowView
         return rowView;
     }
 
-//    public void onCheckboxClicked(View view) {
-//        // Is the view now checked?
-//        boolean checked = ((CheckBox) view).isChecked();
-//
-//        // Check which checkbox was clicked
-//        switch(view.getId()) {
-//            case R.id.checkbox_room:
-//                if (checked)
-//                // Put some meat on the sandwich
-//                else
-//                // Remove the meat
-//                break;
-//            case R.id.checkbox_cheese:
-//                if (checked)
-//                // Cheese me
-//                else
-//                // I'm lactose intolerant
-//                break;
-//        }
-//    }
 }

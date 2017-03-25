@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-
 public class RoutinesFragment extends Fragment{
     private TextView wake;
     private TextView sleep;
@@ -39,8 +38,7 @@ public class RoutinesFragment extends Fragment{
                 SetTimeFragment wake_time_fragment = new SetTimeFragment();
                 wake_time_fragment.setArguments(bundle);
                 FragmentManager fm = getActivity().getSupportFragmentManager();
-                fm.popBackStack();
-                fm.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.routines_frag_container, wake_time_fragment).addToBackStack(null).commit();
+                fm.beginTransaction().replace(R.id.root_frame, wake_time_fragment,"routine_frag").setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).addToBackStack(null).commit();
             }
         });
 
@@ -52,14 +50,12 @@ public class RoutinesFragment extends Fragment{
                 SetTimeFragment sleep_time_fragment = new SetTimeFragment();
                 sleep_time_fragment.setArguments(bundle);
                 FragmentManager fm = getActivity().getSupportFragmentManager();
-                fm.popBackStack();
-                fm.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.routines_frag_container, sleep_time_fragment).addToBackStack(null).commit();
+                fm.beginTransaction().replace(R.id.root_frame, sleep_time_fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).addToBackStack(null).commit();
             }
         });
 
         return routineView;
     }
-
 
 }
 

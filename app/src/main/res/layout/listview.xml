@@ -30,8 +30,9 @@ android:layout_width="fill_parent"
         android:fontFamily="@string/font_fontFamily_medium"
         android:textColor="@color/colorPrimary"
         android:textColorHighlight="@color/colorAccent"
-        android:layout_gravity="center"
-        android:layout_weight="0.50" />
+        android:layout_gravity="start|center_vertical"
+        android:layout_weight="0.50"
+        />
 
     <ToggleButton
         android:id="@+id/toggleButton"

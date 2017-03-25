@@ -15,6 +15,4 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="time_picker_title">Select Time</string>
-    <string name="disp_room">Display room</string>
-    <string name="create_room">Create a room</string>
 </resources>

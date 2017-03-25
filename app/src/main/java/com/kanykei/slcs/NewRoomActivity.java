@@ -16,7 +16,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 import android.widget.EditText;
 
-
 public class NewRoomActivity extends AppCompatActivity {
     private EditText inputName;
     private TextInputLayout inputLayoutName;

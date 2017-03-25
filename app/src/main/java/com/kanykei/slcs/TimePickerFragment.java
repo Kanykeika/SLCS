@@ -2,10 +2,14 @@ package com.kanykei.slcs;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TimePicker;
 
 public class TimePickerFragment extends DialogFragment  {
@@ -24,7 +28,7 @@ public class TimePickerFragment extends DialogFragment  {
 
         timePicker = (TimePicker) v.findViewById(R.id.dialog_time_picker);
         timePicker.setIs24HourView(true);
-        return new android.support.v7.app.AlertDialog.Builder(getContext())
+        return new AlertDialog.Builder(getContext())
                 .setView(v)
                 .setTitle(R.string.time_picker_title)
                 .setPositiveButton(android.R.string.ok,
@@ -32,13 +36,13 @@ public class TimePickerFragment extends DialogFragment  {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 int hour = 0;
-                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                     hour = timePicker.getHour();
                                 }else{
                                     hour = timePicker.getCurrentHour();
                                 }
                                 int minute = 0;
-                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                     minute = timePicker.getMinute();
                                 }else{
                                     minute = timePicker.getCurrentMinute();
@@ -51,8 +55,14 @@ public class TimePickerFragment extends DialogFragment  {
                 .create();
     }
 
-    private String updateTime(int hours, int mins) {
+    @Override
+    public void onStart() {
+        super.onStart();
+        Button positive = ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_POSITIVE);
+        positive.setTextColor(Color.parseColor("#ff33b5e5"));
+    }
 
+    private String updateTime(int hours, int mins) {
         String minutes = "";
         if (mins < 10)
             minutes = "0" + mins;
@@ -61,8 +71,6 @@ public class TimePickerFragment extends DialogFragment  {
 
         return new StringBuilder().append(hours).append(":")
                 .append(minutes).toString();
-
-
     }
 
 }

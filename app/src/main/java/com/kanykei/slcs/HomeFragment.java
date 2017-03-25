@@ -55,9 +55,11 @@ public class HomeFragment extends Fragment implements OnClickListener {
         final View myView = inflater.inflate(R.layout.fragment_home, container, false);
 
         toolbar = (Toolbar) myView.findViewById(R.id.toolbar);
+
         setHasOptionsMenu(true);
 
         fab = (FloatingActionButton) myView.findViewById(R.id.fab);
+        fab.show();
         fab.setOnClickListener(this);
 
         mydb = new DBHelper(getActivity());

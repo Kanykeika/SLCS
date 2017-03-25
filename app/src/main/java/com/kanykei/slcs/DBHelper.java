@@ -19,7 +19,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String ROOMS_COLUMN_ID = "id";
     public static final String ROOMS_COLUMN_NAME = "name";
     public static final String ROOMS_COLUMN_STATE = "state";
-    public static final String ROOMS_COLUMN_SET_TIME = "set_time";
+    public static final String ROOMS_COLUMN_WAKE_UP_TIME = "wake_up_time";
+    public static final String ROOMS_COLUMN_GO_SLEEP_TIME = "go_sleep_time";
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME , null, 1);

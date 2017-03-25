@@ -5,23 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.kanykei.slcs.RoutinesFragment"
-    android:id="@+id/routines_frag_container"
     >
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:id="@+id/scrollViewSetTime">
 
-        <ListView
-            android:id="@+id/listViewSetTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </ListView>
-
-
-    </ScrollView>
     <LinearLayout
         android:id="@+id/sunrise"
         xmlns:tools="http://schemas.android.com/tools"

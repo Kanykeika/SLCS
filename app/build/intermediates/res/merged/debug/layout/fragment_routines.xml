@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.kanykei.slcs.RoutinesFragment"
-    android:id="@+id/routines_frag_container"
     >
+
     <LinearLayout
         android:id="@+id/sunrise"
         xmlns:tools="http://schemas.android.com/tools"
