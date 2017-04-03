@@ -30,7 +30,6 @@ public class TimePickerFragment extends DialogFragment  {
         timePicker.setIs24HourView(true);
         return new AlertDialog.Builder(getContext())
                 .setView(v)
-                .setTitle(R.string.time_picker_title)
                 .setPositiveButton(android.R.string.ok,
                         new DialogInterface.OnClickListener() {
                             @Override

@@ -30,7 +30,7 @@
             android:textSize="20sp"
             android:fontFamily="@string/font_fontFamily_medium"
             android:layout_gravity="center"
-            android:text="Wake up"
+            android:text="@string/wake"
             android:clickable="true"
             android:paddingStart="10dp"
             android:paddingLeft="10dp"/>
@@ -64,7 +64,7 @@
             android:layout_gravity="center"
             android:textSize="20sp"
             android:fontFamily="@string/font_fontFamily_medium"
-            android:text="Go to sleep"
+            android:text="@string/sleep"
             android:clickable="true"
             android:paddingStart="10dp"
             android:paddingLeft="10dp"/>

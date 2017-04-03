@@ -42,7 +42,7 @@ public class RoomAdapter extends ArrayAdapter<Room> {
         labelView.setText(String.valueOf(roomsArrayList.get(position).getId()));
         valueView.setText(String.valueOf(roomsArrayList.get(position).getName()));
 
-        mydb = new DBHelper(getContext());
+        mydb = DBHelper.getInstance(getContext());
 
         // 5. Set listener for toggle button
         ToggleButton toggleButton = (ToggleButton) rowView.findViewById(R.id.toggleButton);

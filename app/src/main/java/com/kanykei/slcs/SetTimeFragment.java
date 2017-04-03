@@ -32,7 +32,7 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View routineView = inflater.inflate(R.layout.fragment_set_time, container, false);
 
-        mydb = new DBHelper(getActivity());
+        mydb = DBHelper.getInstance(getContext());
         array_list = mydb.getAllRooms();
         message = getArguments().getString("message");
         if(message == "wake"){

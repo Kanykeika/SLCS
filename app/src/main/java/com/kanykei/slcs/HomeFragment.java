@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
         fab.show();
         fab.setOnClickListener(this);
 
-        mydb = new DBHelper(getActivity());
+        mydb = DBHelper.getInstance(getContext());
         final ArrayList<Room> array_list = mydb.getAllRooms();
 
         RoomAdapter adapter = new RoomAdapter(myView.getContext(),array_list);
@@ -84,20 +84,20 @@ public class HomeFragment extends Fragment implements OnClickListener {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 AlertDialog.Builder aat = new AlertDialog.Builder(getContext());
-                aat.setTitle("Delete?")
-                        .setMessage("Are you sure you want to delete " + array_list.get(position).getName() +"?")
+                aat.setTitle(getString(R.string.delete_dialog) + "?")
+                        .setMessage(getString(R.string.delete_dialog_sure) + array_list.get(position).getName() +"?")
                         .setCancelable(true)
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener(){
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.cancel();
                             }
                         })
-                        .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.delete_dialog, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 mydb.deleteRoom(array_list.get(position).getId());
-                                Toast.makeText(getContext(), "Deleted Successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), getString(R.string.success_delete), Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(getActivity().getApplicationContext(),MainActivity.class);
                                 startActivity(intent);//call it here to refresh listView upon delete
                             }

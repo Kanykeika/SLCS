@@ -29,12 +29,12 @@ public class NewRoomActivity extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Create a new room");
+        toolbar.setTitle(R.string.create_room);
 
         inputLayoutName = (TextInputLayout) findViewById(R.id.input_layout_name);
         inputName = (EditText) findViewById(R.id.input_name);
 
-        mydb = new DBHelper(this);
+        mydb = DBHelper.getInstance(getApplicationContext());
 
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
@@ -81,7 +81,7 @@ public class NewRoomActivity extends AppCompatActivity {
                 builder.setMessage(R.string.deleteRoom).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mydb.deleteRoom(id_To_Update);
-                        Toast.makeText(getApplicationContext(), "Deleted Successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), R.string.success_delete, Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
                     }
@@ -92,7 +92,7 @@ public class NewRoomActivity extends AppCompatActivity {
                 });
 
                 AlertDialog d = builder.create();
-                d.setTitle("Are you sure");
+                d.setTitle(R.string.deleteRoomTitle);
                 d.show();
 
                 return true;
@@ -111,13 +111,13 @@ public class NewRoomActivity extends AppCompatActivity {
                     return;
                 }
                 else if(mydb.updateRoom(id_To_Update,inputName.getText().toString())){
-                    Toast.makeText(getApplicationContext(), "Updated", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.updated, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                 } else{
                     inputLayoutName.setError(getString(R.string.err_msg_duplicate_name));
                     requestFocus(inputName);
-                    Toast.makeText(getApplicationContext(), "Not updated", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.not_updated, Toast.LENGTH_SHORT).show();
                     return;
                 }
             } else{
@@ -125,13 +125,13 @@ public class NewRoomActivity extends AppCompatActivity {
                     return;
                 }
                 else if (mydb.insertRoom(inputName.getText().toString())) {
-                    Toast.makeText(getApplicationContext(), "Done", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.done, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                 } else {
                     inputLayoutName.setError(getString(R.string.err_msg_duplicate_name));
                     requestFocus(inputName);
-                    Toast.makeText(getApplicationContext(), "Not done", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.not_done, Toast.LENGTH_SHORT).show();
                     return;
                 }
 

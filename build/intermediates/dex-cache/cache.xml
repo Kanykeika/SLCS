@@ -39,6 +39,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-basement\8.4.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="8e673cdfadd8f2d98fdb2fda2285c30f6e449782">
+        <dex dex="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-basement-8.4.0_dc5105edd05f90a1f9f9ecfc9ed860a49d3e00a1\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\25.2.0\jars\classes.jar"
         jumboMode="true"
         optimize="true"
@@ -66,12 +75,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\exploded-aar\com.android.support\support-v4\25.2.0\jars\classes.jar"
+        jar="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appindexing\8.4.0\jars\classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
-        <dex dex="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-v4-25.2.0_982c9a115506680b27b34a7fa114f2eef1ba7ac6\classes.dex" />
+        sha1="65d086ee9daaf87b5af62ad24471edafa433354c">
+        <dex dex="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-appindexing-8.4.0_a18697f24b0c57d1fb04969461f7643e3397fee0\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -79,8 +88,17 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="10ccc10d61fb2f74e369700e18688432ed6b0c1d">
+        sha1="b06a110d1e21efd7aa3fa1b7cc3eee2091542ea2">
         <dex dex="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_84dd7961f9185881f87c5b8d0c39ea1d8af55b78\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\exploded-aar\com.android.support\support-v4\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-v4-25.2.0_982c9a115506680b27b34a7fa114f2eef1ba7ac6\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -124,8 +142,17 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="7071e6bdb204a2c44da5e28032e910503b7cfdc7">
+        sha1="c199ae1b439c1b0d6b4c22d4d165075cc669bf6c">
         <dex dex="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_7af2601cacbca2fa8def36d7ea2262652ae8c2b1\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-base\8.4.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="fef2b3e4b6b1b0e5fe7b69fa137a5fa55a3182ab">
+        <dex dex="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-base-8.4.0_b078887b7e3bc2242c8bc6fe9d085d84421a854e\classes.dex" />
     </item>
     <item
         is-multidex="true"

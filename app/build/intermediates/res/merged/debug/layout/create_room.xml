@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#fff"
-            android:text="Create a new room"
+            android:text="@string/create_room"
             android:layout_gravity="left"
             android:textSize="20sp"
             android:gravity="center"

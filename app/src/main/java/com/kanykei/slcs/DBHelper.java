@@ -21,15 +21,26 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String ROOMS_COLUMN_STATE = "state";
     public static final String ROOMS_COLUMN_WAKE_UP_TIME = "wake_up_time";
     public static final String ROOMS_COLUMN_GO_SLEEP_TIME = "go_sleep_time";
+    private static DBHelper mInstance = null;
 
-    public DBHelper(Context context) {
+    private DBHelper(Context context) {
         super(context, DATABASE_NAME , null, 1);
+    }
+
+    public static DBHelper getInstance(Context context) {
+
+        // Use the application context, which will ensure that you
+        // don't accidentally leak an Activity's context.
+        // See this article for more information: http://bit.ly/6LRzfx
+        if (mInstance == null) {
+            mInstance = new DBHelper(context.getApplicationContext());
+        }
+        return mInstance;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table rooms (id integer primary key, name text, state integer, wake_up_time time(0), go_sleep_time time(0), set_relay integer)");
-
     }
 
 

@@ -1,5 +1,9 @@
 package com.kanykei.slcs;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -10,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -65,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new HomeFragment(), "Home");
-        adapter.addFragment(new RootFragment(), "Routines");
-        adapter.addFragment(new SettingsFragment(), "Settings");
+        adapter.addFragment(new HomeFragment(), getString(R.string.title_home));
+        adapter.addFragment(new RootFragment(),  getString(R.string.title_routines));
+        adapter.addFragment(new RootSettingsFragment(),  getString(R.string.title_settings));
         viewPager.setAdapter(adapter);
     }
 
@@ -97,4 +102,6 @@ public class MainActivity extends AppCompatActivity {
             return mFragmentTitleList.get(position);
         }
     }
+
+
 }
