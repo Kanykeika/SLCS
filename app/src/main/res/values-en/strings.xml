@@ -32,4 +32,8 @@
     <string name="en_lang">English</string>
     <string name="ru_lang">Russian</string>
     <string name="kg_lang">Kyrgyz</string>
+    <string name="empty">Nothing to show</string>
+    <string name="set_wake">set wake time</string>
+    <string name="set_sleep">set sleep time</string>
+
 </resources>

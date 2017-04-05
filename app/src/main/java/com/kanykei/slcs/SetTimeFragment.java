@@ -1,5 +1,8 @@
 package com.kanykei.slcs;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,8 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class SetTimeFragment extends Fragment implements TimePickerFragment.TimeDialogListener {
     private DBHelper mydb;
@@ -18,6 +23,7 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
     private ArrayList<Room> array_list;
     private String message;
     private RoutinesAdapter adapter;
+    private TextView empty_text;
 
     public SetTimeFragment() {
         // Required empty public constructor
@@ -30,10 +36,17 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        String lan = loadLanguage("en");
+        setLocale(lan);
         View routineView = inflater.inflate(R.layout.fragment_set_time, container, false);
 
         mydb = DBHelper.getInstance(getContext());
         array_list = mydb.getAllRooms();
+        if(array_list.isEmpty()){
+            empty_text = (TextView) routineView.findViewById(R.id.emptyText);
+            empty_text.setText(getText(R.string.empty));
+        }
         message = getArguments().getString("message");
         if(message == "wake"){
             adapter = new RoutinesAdapter(routineView.getContext(), array_list, "wake");
@@ -75,7 +88,18 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
         time_fragment.setArguments(bundle);
         FragmentManager fm = getActivity().getSupportFragmentManager();
         fm.popBackStack();
-        fm.beginTransaction().replace(R.id.root_frame, time_fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).addToBackStack(null).commit();
+        fm.beginTransaction().replace(R.id.routines_frame, time_fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).addToBackStack(null).commit();
+    }
+    public String loadLanguage(String defaultLanguage)
+    {
+        SharedPreferences pref = getContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        return pref.getString("lan", defaultLanguage);
+    }
+    public void setLocale(String lang) {
+        Locale myLocale = new Locale(lang);
+        Configuration conf = getResources().getConfiguration();
+        conf.locale = myLocale;
+        getResources().updateConfiguration(conf, null);
     }
 
 }

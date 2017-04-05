@@ -12,6 +12,33 @@
     </item>
     <item
         is-multidex="true"
+        jar="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="ee394a892dd21c03a528139c1e8d4e0e1264ac84">
+        <dex dex="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-media-compat-25.2.0_f7ed19782619e5b78df1d4eef208ec843db5b53f\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appindexing\8.4.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="65d086ee9daaf87b5af62ad24471edafa433354c">
+        <dex dex="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-appindexing-8.4.0_a18697f24b0c57d1fb04969461f7643e3397fee0\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\exploded-aar\com.android.support\animated-vector-drawable\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="cb454b52545859ed2f24a6c01366805b0fa04b22">
+        <dex dex="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-animated-vector-drawable-25.2.0_2c1a1527c915eca7a4194e0aa0072a437707f65f\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\exploded-aar\com.android.support\transition\25.2.0\jars\classes.jar"
         jumboMode="true"
         optimize="true"
@@ -48,15 +75,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\25.2.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="ee394a892dd21c03a528139c1e8d4e0e1264ac84">
-        <dex dex="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-media-compat-25.2.0_f7ed19782619e5b78df1d4eef208ec843db5b53f\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\exploded-aar\com.ToxicBakery.viewpager.transforms\view-pager-transforms\1.2.32\jars\classes.jar"
         jumboMode="true"
         optimize="true"
@@ -75,12 +93,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appindexing\8.4.0\jars\classes.jar"
+        jar="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\exploded-aar\com.android.support\support-v4\25.2.0\jars\classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="65d086ee9daaf87b5af62ad24471edafa433354c">
-        <dex dex="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-appindexing-8.4.0_a18697f24b0c57d1fb04969461f7643e3397fee0\classes.dex" />
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-v4-25.2.0_982c9a115506680b27b34a7fa114f2eef1ba7ac6\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -88,17 +106,8 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="b06a110d1e21efd7aa3fa1b7cc3eee2091542ea2">
+        sha1="67132225de87ee7fbf78d9700c22943e6dcab806">
         <dex dex="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_84dd7961f9185881f87c5b8d0c39ea1d8af55b78\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\exploded-aar\com.android.support\support-v4\25.2.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
-        <dex dex="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-v4-25.2.0_982c9a115506680b27b34a7fa114f2eef1ba7ac6\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -142,7 +151,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="c199ae1b439c1b0d6b4c22d4d165075cc669bf6c">
+        sha1="39c21d8d33f2833a97ff8fbeab4d10dc0efc7b17">
         <dex dex="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_7af2601cacbca2fa8def36d7ea2262652ae8c2b1\classes.dex" />
     </item>
     <item
@@ -153,15 +162,6 @@
         revision="25.0.2"
         sha1="fef2b3e4b6b1b0e5fe7b69fa137a5fa55a3182ab">
         <dex dex="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.google.android.gms-play-services-base-8.4.0_b078887b7e3bc2242c8bc6fe9d085d84421a854e\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\exploded-aar\com.android.support\animated-vector-drawable\25.2.0\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="cb454b52545859ed2f24a6c01366805b0fa04b22">
-        <dex dex="C:\Users\Fujitsu\AndroidStudioProjects\SLCS\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-animated-vector-drawable-25.2.0_2c1a1527c915eca7a4194e0aa0072a437707f65f\classes.dex" />
     </item>
     <item
         is-multidex="true"

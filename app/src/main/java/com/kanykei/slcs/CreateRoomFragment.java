@@ -1,42 +1,75 @@
 package com.kanykei.slcs;
 
-import android.os.Bundle;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.widget.Toolbar;
-import android.support.v7.app.AppCompatActivity;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
 
-public class NewRoomActivity extends AppCompatActivity {
+
+public class CreateRoomFragment extends Fragment{
+
     private EditText inputName;
     private TextInputLayout inputLayoutName;
-    private Toolbar toolbar;
     private DBHelper mydb;
     int id_To_Update = 0;
+
+    public CreateRoomFragment() {
+        // Required empty public constructor
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.create_room);
+    }
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setTitle(R.string.create_room);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View createRoomView = inflater.inflate(R.layout.fragment_create_room, container, false);
 
-        inputLayoutName = (TextInputLayout) findViewById(R.id.input_layout_name);
-        inputName = (EditText) findViewById(R.id.input_name);
+        inputLayoutName = (TextInputLayout) createRoomView.findViewById(R.id.input_layout_name);
+        inputName = (EditText) createRoomView.findViewById(R.id.input_name);
+        String[] relay_pins = { "IN0", "IN1", "IN2", "IN3" };
+        Spinner spinner = (Spinner) createRoomView.findViewById(R.id.spinner_relay_pins);
 
-        mydb = DBHelper.getInstance(getApplicationContext());
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),R.layout.spinner_item, relay_pins);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setSelection(0); // get relay pin from db
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-        Bundle extras = getIntent().getExtras();
+
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+
+
+            }
+
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
+        mydb = DBHelper.getInstance(getContext());
+
+        Bundle extras = getArguments();
         if(extras != null) {
             int Value = extras.getInt("id");
             if(Value > 0){
@@ -49,7 +82,7 @@ public class NewRoomActivity extends AppCompatActivity {
                 if (!rs.isClosed())  {
                     rs.close();
                 }
-                Button b = (Button)findViewById(R.id.btn_save);
+                Button b = (Button)createRoomView.findViewById(R.id.btn_save);
                 b.setVisibility(View.VISIBLE);
                 inputName.setText((CharSequence)col_name);
                 inputLayoutName.setError(col_id);
@@ -58,31 +91,33 @@ public class NewRoomActivity extends AppCompatActivity {
                 inputName.setClickable(true);
             }
         }
+        return createRoomView;
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        Bundle extras = getIntent().getExtras();
+        Bundle extras = getArguments();
         if(extras != null) {
             int Value = extras.getInt("id");
             if(Value > 0){
-                getMenuInflater().inflate(R.menu.display_rooms, menu);
+                inflater.inflate(R.menu.display_rooms, menu);
             }
         }
-        return true;
+
+        super.onCreateOptionsMenu(menu,inflater);
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         switch(item.getItemId()) {
             case R.id.Delete_Room:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setMessage(R.string.deleteRoom).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mydb.deleteRoom(id_To_Update);
-                        Toast.makeText(getApplicationContext(), R.string.success_delete, Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        Toast.makeText(getContext(), R.string.success_delete, Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getContext(), MainActivity.class);
                         startActivity(intent);
                     }
                 }).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -103,7 +138,7 @@ public class NewRoomActivity extends AppCompatActivity {
     }
 
     public void run(View view) {
-        Bundle extras = getIntent().getExtras();
+        Bundle extras = getArguments();
         if(extras != null) {
             int Value = extras.getInt("id");
             if(Value > 0){
@@ -111,13 +146,13 @@ public class NewRoomActivity extends AppCompatActivity {
                     return;
                 }
                 else if(mydb.updateRoom(id_To_Update,inputName.getText().toString())){
-                    Toast.makeText(getApplicationContext(), R.string.updated, Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    Toast.makeText(getContext(), R.string.updated, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getContext(), MainActivity.class);
                     startActivity(intent);
                 } else{
                     inputLayoutName.setError(getString(R.string.err_msg_duplicate_name));
                     requestFocus(inputName);
-                    Toast.makeText(getApplicationContext(), R.string.not_updated, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.not_updated, Toast.LENGTH_SHORT).show();
                     return;
                 }
             } else{
@@ -125,13 +160,13 @@ public class NewRoomActivity extends AppCompatActivity {
                     return;
                 }
                 else if (mydb.insertRoom(inputName.getText().toString())) {
-                    Toast.makeText(getApplicationContext(), R.string.done, Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    Toast.makeText(getContext(), R.string.done, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getContext(), MainActivity.class);
                     startActivity(intent);
                 } else {
                     inputLayoutName.setError(getString(R.string.err_msg_duplicate_name));
                     requestFocus(inputName);
-                    Toast.makeText(getApplicationContext(), R.string.not_done, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.not_done, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -152,8 +187,10 @@ public class NewRoomActivity extends AppCompatActivity {
 
     private void requestFocus(View view) {
         if (view.requestFocus()) {
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
     }
 
 }
+
+

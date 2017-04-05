@@ -32,4 +32,8 @@
     <string name="en_lang">Английский</string>
     <string name="ru_lang">Русский</string>
     <string name="kg_lang">Кыргызский</string>
+    <string name="empty">Пусто</string>
+    <string name="set_wake">установить время</string>
+    <string name="set_sleep">установить время сна</string>
+
 </resources>

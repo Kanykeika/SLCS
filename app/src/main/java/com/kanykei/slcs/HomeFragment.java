@@ -3,6 +3,7 @@ package com.kanykei.slcs;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,12 +42,9 @@ public class HomeFragment extends Fragment implements OnClickListener {
     public void onClick(View view) {
         Bundle dataBundle = new Bundle();
         dataBundle.putInt("id", 0);
-
-        Intent intent = new Intent(getActivity().getApplicationContext(),NewRoomActivity.class);
-        intent.putExtras(dataBundle);
-
-        startActivity(intent);
-
+        CreateRoomFragment createRoomFragment = new CreateRoomFragment();
+        createRoomFragment.setArguments(dataBundle);
+        getFragmentManager().beginTransaction().replace(R.id.home_frame, createRoomFragment).commit();
     }
 
     @Override
@@ -74,9 +72,9 @@ public class HomeFragment extends Fragment implements OnClickListener {
             public void onItemClick(AdapterView<?> arg0, View arg1, int position,long arg3) {
                 Bundle dataBundle = new Bundle();
                 dataBundle.putInt("id", array_list.get(position).getId());
-                Intent intent = new Intent(getActivity().getApplicationContext(),NewRoomActivity.class);
-                intent.putExtras(dataBundle);
-                startActivity(intent);
+                CreateRoomFragment createRoomFragment = new CreateRoomFragment();
+                createRoomFragment.setArguments(dataBundle);
+                getFragmentManager().beginTransaction().replace(R.id.home_frame, createRoomFragment).commit();
             }
         });
         obj.setLongClickable(true);
@@ -98,8 +96,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
                             public void onClick(DialogInterface dialog, int which) {
                                 mydb.deleteRoom(array_list.get(position).getId());
                                 Toast.makeText(getContext(), getString(R.string.success_delete), Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(getActivity().getApplicationContext(),MainActivity.class);
-                                startActivity(intent);//call it here to refresh listView upon delete
+                                getFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit(); //call it here to refresh listView upon delete
                             }
                         });
                 AlertDialog art = aat.create();

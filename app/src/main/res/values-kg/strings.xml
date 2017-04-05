@@ -32,4 +32,8 @@
     <string name="en_lang">Англисче</string>
     <string name="ru_lang">Орусча</string>
     <string name="kg_lang">Кыргызча</string>
+    <string name="empty">Эч нерсе жок</string>
+    <string name="set_wake">ойгон</string>
+    <string name="set_sleep">укта</string>
+
 </resources>

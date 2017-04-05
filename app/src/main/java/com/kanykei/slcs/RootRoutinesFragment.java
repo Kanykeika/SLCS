@@ -8,9 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-public class RootFragment extends Fragment{
+public class RootRoutinesFragment extends Fragment{
 
-    public RootFragment() {
+    public RootRoutinesFragment() {
         // Required empty public constructor
     }
 
@@ -23,7 +23,7 @@ public class RootFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 		/* Inflate the layout for this fragment */
-        View view = inflater.inflate(R.layout.fragment_root, container, false);
+        View view = inflater.inflate(R.layout.fragment_root_routines, container, false);
 
         FragmentTransaction transaction = getFragmentManager()
                 .beginTransaction();
@@ -31,7 +31,7 @@ public class RootFragment extends Fragment{
 		 * When this container fragment is created, we fill it with our first
 		 * "real" fragment
 		 */
-        transaction.replace(R.id.root_frame, new RoutinesFragment());
+        transaction.replace(R.id.routines_frame, new RoutinesFragment());
         transaction.commit();
 
         return view;

@@ -61,6 +61,7 @@
     <string name="disp_room">Изменить</string>
     <string name="done">Создана новая комната</string>
     <string name="edit">Изменить</string>
+    <string name="empty">Пусто</string>
     <string name="en_lang">Английский</string>
     <string name="err_msg_duplicate_name">Комната с таким именем уже существует</string>
     <string name="err_msg_name">Название комнаты (помещения) не может быть пустым</string>
@@ -73,6 +74,8 @@
     <string name="not_updated">Не изменено</string>
     <string name="ru_lang">Русский</string>
     <string msgid="146198913615257606" name="search_menu_title">"Поиск"</string>
+    <string name="set_sleep">установить время сна</string>
+    <string name="set_wake">установить время</string>
     <string name="sleep">Уснуть</string>
     <string msgid="2869576371154716097" name="status_bar_notification_info_overflow">">999"</string>
     <string name="success_delete">Удалено</string>

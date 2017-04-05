@@ -46,13 +46,13 @@ public class RoutinesAdapter extends ArrayAdapter<Room> {
             if(roomsArrayList.get(position).getWake() != null) {
                 timeView.setText(String.valueOf(roomsArrayList.get(position).getWake()));
             } else{
-                timeView.setText(String.valueOf("set wake time"));
+                timeView.setText(getContext().getText(R.string.set_wake));
             }
         } else if(action == "sleep"){
             if(roomsArrayList.get(position).getSleep() != null) {
                 timeView.setText(String.valueOf(roomsArrayList.get(position).getSleep()));
             } else{
-                timeView.setText(String.valueOf("set sleep time"));
+                timeView.setText(getContext().getText(R.string.set_sleep));
             }
         }
 

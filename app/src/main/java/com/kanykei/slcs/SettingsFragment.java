@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,11 +42,11 @@ public class SettingsFragment extends Fragment{
 
         String[] languages = { getContext().getString(R.string.en_lang), getContext().getString(R.string.ru_lang), getContext().getString(R.string.kg_lang) };
         Integer[] images = { R.drawable.united_kingdom, R.drawable.russia, R.drawable.kyrgyzstan };
-        final List<String> Locale_list = new ArrayList<String>(Arrays.asList(getContext().getString(R.string.en_lang), getContext().getString(R.string.ru_lang), getContext().getString(R.string.kg_lang)));
+        final List<String> Locale_list = new ArrayList<String>(Arrays.asList("en", "ru", "kg"));
 
         final Spinner spinner = (Spinner) settingsView.findViewById(R.id.spinner_lang);
 
-        SpinnerAdapter adapter = new SpinnerAdapter(getContext(), languages, images);
+        SpinnerAdapter adapter = new SpinnerAdapter(getContext(),R.layout.spinner_item, languages, images);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setSelection(Locale_list.indexOf(lan));
@@ -53,21 +54,17 @@ public class SettingsFragment extends Fragment{
 
 
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                switch (arg2){
-                    case 0:
-                        setLocale("en");
-                        break;
-                    case 1:
-                        setLocale("ru");
-                        break;
-                    case 2:
-                        setLocale("kg");
-                        break;
-                    default:
-                        setLocale("en");
-                        break;
+                String lan = Locale_list.get(arg2);
+                Log.i("My tag",("locale = "+ lan));
+                setLocale(lan);
+                String loaded_lang = loadLanguage("en");
+                Log.i("My tag","load lan = "+loadLanguage("en"));
+                if(!lan.equals(loaded_lang)){
+                    saveLanguage(lan);
+                    restartActivity();
                 }
-           }
+
+            }
 
             public void onNothingSelected(AdapterView<?> arg0) {
                 // TODO Auto-generated method stub
@@ -99,7 +96,7 @@ public class SettingsFragment extends Fragment{
         private String[] contentArray;
         private Integer[] imageArray;
 
-        public SpinnerAdapter(Context context, String[] objects,
+        public SpinnerAdapter(Context context, int resource, String[] objects,
                               Integer[] imageArray) {
             super(context,  R.layout.spinner_item, R.id.spinnerTextView, objects);
             this.ctx = context;
@@ -121,19 +118,10 @@ public class SettingsFragment extends Fragment{
 
             LayoutInflater inflater = (LayoutInflater)ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View row = inflater.inflate(R.layout.spinner_item, parent, false);
-            final List<String> Locale_list = new ArrayList<String>(Arrays.asList(getContext().getString(R.string.en_lang), getContext().getString(R.string.ru_lang), getContext().getString(R.string.kg_lang)));
+            final List<String> Locale_list = new ArrayList<String>(Arrays.asList("en", "ru", "kg"));
 
             TextView textView = (TextView) row.findViewById(R.id.spinnerTextView);
             textView.setText(contentArray[position]);
-            textView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String lan = Locale_list.get(position);
-                    setLocale(Locale_list.get(position));
-                    saveLanguage(lan);
-                    restartActivity();
-                }
-            });
 
             ImageView imageView = (ImageView)row.findViewById(R.id.spinnerImages);
             imageView.setImageResource(imageArray[position]);

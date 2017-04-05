@@ -27,7 +27,7 @@
                 android:layout_gravity="start"
                 android:fontFamily="@string/font_fontFamily_medium"
                 android:textSize="20sp"
-                android:gravity="center"
+                android:gravity="left"
                 android:id="@+id/toolbar_title" />
         </android.support.v7.widget.Toolbar>
 
