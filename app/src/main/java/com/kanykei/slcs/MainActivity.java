@@ -147,5 +147,14 @@ public class MainActivity extends AppCompatActivity {
         Log.i("My tag", "on Resume of main activity");
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.moveTaskToBack(true);
+                return true;
+        }
+        return false;
+    }
 
 }
