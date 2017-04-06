@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -74,7 +75,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
                 dataBundle.putInt("id", array_list.get(position).getId());
                 CreateRoomFragment createRoomFragment = new CreateRoomFragment();
                 createRoomFragment.setArguments(dataBundle);
-                getFragmentManager().beginTransaction().replace(R.id.home_frame, createRoomFragment).commit();
+                getFragmentManager().beginTransaction().replace(R.id.home_frame, createRoomFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).addToBackStack(null).commit();
             }
         });
         obj.setLongClickable(true);

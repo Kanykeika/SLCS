@@ -6,11 +6,10 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
         android:orientation="vertical"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:paddingTop="60dp">
+        android:paddingTop="30dp">
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/input_layout_name"
@@ -23,14 +22,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="78dp"
                 android:maxLines="1"
-                android:textColor="@color/colorPrimaryDark"
-                android:textColorHint="@color/colorPrimaryDark"
-                android:hint="@string/hint_name_of_room" />
+                android:hint="@string/hint_name_of_room"
+                android:textColorLink="?attr/colorPrimary" />
         </android.support.design.widget.TextInputLayout>
     <Spinner
         android:id="@+id/spinner_relay_pins"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:spinnerMode="dropdown"
         android:layout_gravity="center"
         />
@@ -38,7 +36,6 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/btn_save"
-            android:onClick="run"
             android:background="@color/colorPrimary"
             android:layout_marginTop="40dp"
             android:textColor="@android:color/white"/>

@@ -3,6 +3,7 @@ package com.kanykei.slcs;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ public class RootHomeFragment extends Fragment{
 		 * "real" fragment
 		 */
         transaction.replace(R.id.home_frame, new HomeFragment());
+        Log.i("My tag", "frag root home replaced with home frag");
         transaction.commit();
 
         return view;

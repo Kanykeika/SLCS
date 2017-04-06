@@ -7,14 +7,16 @@ public class Room {
     private String wake_time;
     private String sleep_time;
     private int state;
+    private int relay_pin;
 
-    public Room(int id, String name, int state, String wake_time, String sleep_time) {
+    public Room(int id, String name, int state, String wake_time, String sleep_time, int relay_pin) {
         super();
         this.id = id;
         this.name = name;
         this.state = state;
         this.wake_time = wake_time;
         this.sleep_time = sleep_time;
+        this.relay_pin = relay_pin;
     }
 
     // getters
@@ -23,6 +25,7 @@ public class Room {
     public String getWake(){return wake_time;}
     public String getSleep(){ return sleep_time; }
     public int getState() {return state;}
+    public int getRelayPin() {return relay_pin;}
 
     // setters
     public void setId(int id) {this.id = id;}
@@ -32,5 +35,6 @@ public class Room {
     public void setState(int state) {
         this.state = state;
     }
+    public void setRelayPin(int state) { this.relay_pin = relay_pin; }
 
 }

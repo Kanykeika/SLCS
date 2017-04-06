@@ -26,7 +26,6 @@ android:weightSum="1">
         android:layout_height="wrap_content"
         android:ellipsize="marquee"
         android:textAlignment="inherit"
-        android:text="Vfmkcdkl"
         android:paddingBottom="0dp"
         android:paddingTop="10dp"
         android:paddingLeft="5dp"

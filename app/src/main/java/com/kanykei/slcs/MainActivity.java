@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 //            }
 
             // Create a new Fragment to be placed in the activity layout
-            RootHomeFragment firstFragment = new RootHomeFragment();
+            HomeFragment firstFragment = new HomeFragment();
 
             Log.i("My Tag","viewpager != null");
             // Add the fragment to the 'fragment_container' FrameLayout
