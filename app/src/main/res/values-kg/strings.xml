@@ -17,7 +17,7 @@
     <string name="title_routines">Убакыт</string>
     <string name="title_settings">Настройки</string>
     <string name="delete_dialog">Жок кылуу</string>
-    <string name="delete_dialog_sure">Вы уверены, что хотите удалить </string>
+    <string name="delete_dialog_sure">Жок кылуу бөлмөлөрдүн саны: </string>
     <string name="cancel">Отмена</string>
     <string name="deleteRoomTitle">Вы уверены</string>
     <string name="updated">Оңдолду</string>
@@ -35,5 +35,8 @@
     <string name="empty">Эч нерсе жок</string>
     <string name="set_wake">ойгон</string>
     <string name="set_sleep">укта</string>
+    <string name="selected"> Тандалды</string>
+    <string name="room"> бөлмө</string>
+    <string name="choose_relay">Реленин pin-ин тандаңыз</string>
 
 </resources>

@@ -3,6 +3,9 @@ package com.kanykei.slcs;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+//import android.text.format.DateFormat;
+import android.os.Handler;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -13,7 +16,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+//import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -23,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private ImageView loadingImage;
     private int[] tabIcons = {
             R.drawable.ic_tab_home,
             R.drawable.ic_tab_schedule,
@@ -41,11 +51,18 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LoadingScreen loadingscreen = new LoadingScreen(loadingImage);
+        loadingscreen.setLoadScreen();
         super.onCreate(savedInstanceState);
 
         Log.i("My tag", "on create of main activity");
         String lan = loadLanguage("en");
         setLocale(lan);
+        Log.i("My tag", "setLocale = " + lan);
+
+//        DBHelper mydb = DBHelper.getInstance(this);
+//        mydb.updateStateOfRoomEveryMinute();
+//        Log.i("My tag", "mydb.updateStateOfRoomEveryMinute();");
 
         setContentView(R.layout.activity_main);
         Log.i("My Tag","content view activ main");
@@ -53,7 +70,9 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // Custom action bar
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         Log.i("My Tag","action bar");
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -128,6 +147,28 @@ public class MainActivity extends AppCompatActivity {
             return mFragmentTitleList.get(position);
         }
     }
+    public class LoadingScreen {
+        private ImageView loading;
+
+        LoadingScreen(ImageView loading) {
+            this.loading = loading;
+        }
+
+        public void setLoadScreen(){
+            final Integer[] loadingImages = {R.mipmap.ic_lauch, R.mipmap.ic_launcher};
+            final Handler loadingHandler = new Handler();
+            Runnable runnable = new Runnable() {
+                int loadingImgIndex = 0;
+                public void run() {
+                    loading.setImageResource(loadingImages[loadingImgIndex]);
+                    loadingImgIndex++;
+                    if (loadingImgIndex >= loadingImages.length)
+                        loadingImgIndex = 0;
+                    loadingHandler.postDelayed(this, 500);
+                }
+            };
+            loadingHandler.postDelayed(runnable, 500);
+        }}
 
     @Override
     public void onPause(){

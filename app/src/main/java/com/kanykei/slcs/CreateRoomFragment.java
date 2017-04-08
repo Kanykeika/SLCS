@@ -25,6 +25,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 
 public class CreateRoomFragment extends Fragment{
 
@@ -86,6 +88,7 @@ public class CreateRoomFragment extends Fragment{
                 return mView;
             }
         };
+
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         Bundle extras = getArguments();

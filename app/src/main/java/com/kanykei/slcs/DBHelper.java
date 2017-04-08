@@ -150,6 +150,21 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.delete(ROOMS_TABLE_NAME, "id = ? ", new String[] { Integer.toString(id) });
     }
 
+//    public boolean updateStateOfRoomEveryMinute () {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        String MY_QUERY =
+//                " CREATE EVENT reset " +
+//                " ON SCHEDULE " +
+//                " EVERY 1 MINUTE " +
+//                " DO " +
+//                " update rooms " +
+//                " set state = 1 " +
+//                " where wake_up_time = ?";
+//
+//        db.rawQuery(MY_QUERY, new String[]{"CURTIME()"});
+//        return true;
+//    }
+
 
     public ArrayList<Room> getAllRooms() {
         ArrayList<Room> array_list = new ArrayList<Room>();

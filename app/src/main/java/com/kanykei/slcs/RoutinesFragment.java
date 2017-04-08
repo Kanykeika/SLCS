@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,7 +77,33 @@ public class RoutinesFragment extends Fragment{
         conf.locale = myLocale;
         getResources().updateConfiguration(conf, null);
     }
+    public void onAttach(){
+        Log.i("My tag", "on attach of routine fragment");
+    }
 
+    @Override
+    public void onPause(){
+        super.onPause();
+        Log.i("My tag", "on pause of routine fragment");
+    }
+
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+        Log.i("My tag", "on DestroyView of routine fragment");
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.i("My tag", "on resume of routine fragment");
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        Log.i("My tag", "on stop of routine fragment");
+    }
 }
 
 

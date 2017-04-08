@@ -13,9 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +25,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class SettingsFragment extends Fragment{
-
+    ToggleButton toggleButton;
     public SettingsFragment() {
         // Required empty public constructor
     }
@@ -38,6 +40,7 @@ public class SettingsFragment extends Fragment{
                              Bundle savedInstanceState) {
         String lan = loadLanguage("en");
         setLocale(lan);
+
         View settingsView = inflater.inflate(R.layout.fragment_settings, container, false);
 
         String[] languages = { getContext().getString(R.string.en_lang), getContext().getString(R.string.ru_lang), getContext().getString(R.string.kg_lang) };
@@ -72,6 +75,17 @@ public class SettingsFragment extends Fragment{
             }
         });
 
+        toggleButton = (ToggleButton) settingsView.findViewById(R.id.toggleButtonVoiceControl);
+        boolean voice_control = loadVoiceControl(false);
+        setVoiceControl(voice_control);
+        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton arg0, boolean isChecked) {
+//                int isCheckedInt = (isChecked) ? 1 : 0;
+                saveVoiceControl(isChecked);
+            }
+        });
         return settingsView;
     }
 
@@ -88,6 +102,23 @@ public class SettingsFragment extends Fragment{
         Configuration conf = getResources().getConfiguration();
         conf.locale = myLocale;
         getResources().updateConfiguration(conf, null);
+    }
+
+    public boolean loadVoiceControl(boolean defaultValue)
+    {
+        SharedPreferences pref = getContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        return pref.getBoolean("voice_control", defaultValue);
+    }
+    public void setVoiceControl(boolean on_off) {
+        toggleButton.setChecked(on_off);
+    }
+
+    public void saveVoiceControl(boolean on_off)
+    {
+        SharedPreferences pref = getContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean("voice_control", on_off);
+        editor.apply();
     }
 
     public class SpinnerAdapter extends ArrayAdapter<String> {
