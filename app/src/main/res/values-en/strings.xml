@@ -35,7 +35,7 @@
     <string name="empty">Nothing to show</string>
     <string name="set_wake">set wake time</string>
     <string name="set_sleep">set sleep time</string>
-    <string name="selected"> Selected</string>
+    <string name="selected"> selected</string>
     <string name="room"> room(s)</string>
     <string name="choose_relay">Choose relay pin</string>
 

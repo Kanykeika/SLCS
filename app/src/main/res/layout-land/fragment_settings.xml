@@ -14,17 +14,7 @@
         tools:context="com.kanykei.slcs.RoutinesFragment"
         android:orientation="horizontal"
         android:weightSum="1">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_language"
-            android:layout_marginStart="20dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="0dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_weight="0.1"/>
+
         <TextView
             android:id="@+id/language"
             android:layout_width="wrap_content"
@@ -66,16 +56,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="15dp">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_settings_voice"
-            android:layout_marginStart="20dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="0dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="5dp"/>
+
         <TextView
             android:id="@+id/voice_control"
             android:layout_width="wrap_content"

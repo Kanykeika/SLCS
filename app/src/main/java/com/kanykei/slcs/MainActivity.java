@@ -51,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        LoadingScreen loadingscreen = new LoadingScreen(loadingImage);
-        loadingscreen.setLoadScreen();
         super.onCreate(savedInstanceState);
 
         Log.i("My tag", "on create of main activity");
@@ -147,28 +145,7 @@ public class MainActivity extends AppCompatActivity {
             return mFragmentTitleList.get(position);
         }
     }
-    public class LoadingScreen {
-        private ImageView loading;
 
-        LoadingScreen(ImageView loading) {
-            this.loading = loading;
-        }
-
-        public void setLoadScreen(){
-            final Integer[] loadingImages = {R.mipmap.ic_lauch, R.mipmap.ic_launcher};
-            final Handler loadingHandler = new Handler();
-            Runnable runnable = new Runnable() {
-                int loadingImgIndex = 0;
-                public void run() {
-                    loading.setImageResource(loadingImages[loadingImgIndex]);
-                    loadingImgIndex++;
-                    if (loadingImgIndex >= loadingImages.length)
-                        loadingImgIndex = 0;
-                    loadingHandler.postDelayed(this, 500);
-                }
-            };
-            loadingHandler.postDelayed(runnable, 500);
-        }}
 
     @Override
     public void onPause(){

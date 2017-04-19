@@ -3,6 +3,7 @@ package com.kanykei.slcs;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -11,10 +12,15 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class DBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "SLCS.db";
+    public static final String INFO_TABLE_NAME = "info";
+    public static final String INFO_COLUMN_ID = "id"; // id of info
+    public static final String INFO_COLUMN_TITLE = "title"; // title of info
+    public static final String INFO_COLUMN_DETAILS = "details"; // details of info
     public static final String ROOMS_TABLE_NAME = "rooms";
     public static final String ROOMS_COLUMN_ID = "id"; // id of room
     public static final String ROOMS_COLUMN_NAME = "name"; // name of room
@@ -23,9 +29,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String ROOMS_COLUMN_GO_SLEEP_TIME = "go_sleep_time"; // time to turn off room's lights
     public static final String ROOMS_COLUMN_RELAY_PIN = "relay_pin"; // id of relay's pin (in0, in1, in2, in3 or in4)
     private static DBHelper mInstance = null;
+    private Context context;
 
     private DBHelper(Context context) {
         super(context, DATABASE_NAME , null, 1);
+        this.context = context;
     }
 
     public static DBHelper getInstance(Context context) {
@@ -48,15 +56,82 @@ public class DBHelper extends SQLiteOpenHelper {
                 ROOMS_COLUMN_WAKE_UP_TIME + " time(0), " +
                 ROOMS_COLUMN_GO_SLEEP_TIME + " time(0), " +
                 ROOMS_COLUMN_RELAY_PIN + " integer)");
+        db.execSQL("create table " + INFO_TABLE_NAME + " (" +
+                INFO_COLUMN_ID + " integer primary key, " +
+                INFO_COLUMN_TITLE + " text, " +
+                INFO_COLUMN_DETAILS + " text)");
+        HashMap<String, String> infoMap = new HashMap<String, String>();
+        infoMap.put(context.getString(R.string.title0),context.getString(R.string.details0));
+        infoMap.put("Bla bal bla","Blue");
+        infoMap.put("Color3","Green");
+        infoMap.put("Color4","White");
+        Iterator hashMapIterator = infoMap.keySet().iterator();
+        while(hashMapIterator.hasNext()) {
+            String title=(String)hashMapIterator.next();
+            String details=(String)infoMap.get(title);
+            Log.i("My Tag", "Key: "+title+" Value: "+details);
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(INFO_COLUMN_TITLE, title);
+            contentValues.put(INFO_COLUMN_DETAILS, details);
+            db.insert(INFO_TABLE_NAME, null, contentValues);
+            Log.i("My Tag", "inserted: " + title + " " + details);
+        }
+        Log.i("My Tag","on create dbhelper");
     }
 
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + ROOMS_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + INFO_TABLE_NAME);
         onCreate(db);
     }
 
+    public HashMap<String,String> getAllInfo() {
+        HashMap<String, String> infoMap = new HashMap<String, String>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select * from " +INFO_TABLE_NAME, null );
+
+        res.moveToFirst();
+
+        while(!res.isAfterLast()){
+            infoMap.put(res.getString(res.getColumnIndex(INFO_COLUMN_TITLE)),res.getString(res.getColumnIndex(INFO_COLUMN_DETAILS)));
+            res.moveToNext();
+        }
+        if (!res.isClosed())  {
+            res.close();
+        }
+        return infoMap;
+    }
+
+    public ArrayList<String> getInfoDetails(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select * from " + INFO_TABLE_NAME + " where " + INFO_COLUMN_ID + " = " + id + "", null );
+        res.moveToFirst();
+        ArrayList<String> details = new ArrayList<>();
+        details.add(res.getString(res.getColumnIndex(INFO_COLUMN_TITLE)));
+        details.add(res.getString(res.getColumnIndex(INFO_COLUMN_DETAILS)));
+        if (!res.isClosed())  {
+            res.close();
+        }
+        return details;
+    }
+
+    public ArrayList<String> getInfoTitles() {
+        ArrayList<String> titles = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select * from " +INFO_TABLE_NAME, null );
+        res.moveToFirst();
+        while(!res.isAfterLast()){
+            titles.add(res.getString(res.getColumnIndex(INFO_COLUMN_TITLE)));
+            res.moveToNext();
+        }
+        if (!res.isClosed())  {
+            res.close();
+        }
+        return titles;
+    }
     public boolean insertRoom (String name, int relay_pin) {
         SQLiteDatabase db = this.getWritableDatabase();
 

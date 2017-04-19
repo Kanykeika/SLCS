@@ -35,8 +35,18 @@
     <string name="empty">Nothing to show</string>
     <string name="set_wake">set wake time</string>
     <string name="set_sleep">set sleep time</string>
-    <string name="selected"> Selected</string>
+    <string name="selected"> selected</string>
     <string name="room"> room(s)</string>
     <string name="choose_relay">Choose relay pin</string>
+    <string name="send_feedback">Send feedback</string>
+    <string name="mail_feedback_email">lighting_control@gmail.com</string>
+    <string name="title_send_feedback">Send feedback</string>
+    <string name="mail_feedback_subject">Feedback on Lighting Control App</string>
+    <string name="mail_feedback_message">Hi,
+\n\nYour Feedback sample app rocks! I would like to give you some feedback:</string>
+    <string name="help">Help</string>
+    <string name="title0">Create a new room</string>
+    <string name="details0">Open Home tab and click on add button. In input text write name of room. Then choose corresponding relay\'s pin.</string>
+
 
 </resources>

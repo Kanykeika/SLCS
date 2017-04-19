@@ -35,7 +35,7 @@
     <string name="empty">Пусто</string>
     <string name="set_wake">установить время</string>
     <string name="set_sleep">установить время сна</string>
-    <string name="selected"> Выбрано</string>
+    <string name="selected"> выбрано</string>
     <string name="room"> комнат(ы)</string>
     <string name="choose_relay">Выберите pin реле</string>
 

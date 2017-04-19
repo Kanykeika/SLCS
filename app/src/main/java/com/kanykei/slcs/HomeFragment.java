@@ -115,7 +115,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
                 getFragmentManager().beginTransaction().replace(R.id.home_frame, createRoomFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).addToBackStack(null).commit();
             }
         });
-        final ViewGroup  decorView = (ViewGroup) getActivity().getWindow().getDecorView();
+
         obj.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
 
             @Override
@@ -132,39 +132,19 @@ public class HomeFragment extends Fragment implements OnClickListener {
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.delete:
-                        AlertDialog.Builder aat = new AlertDialog.Builder(getContext());
-                        aat.setTitle(getString(R.string.delete_dialog) + "?")
-                                .setMessage(getString(R.string.delete_dialog_sure) + obj.getCheckedItemCount() + " " + getString(R.string.room) + "?")
-                                .setCancelable(true)
-                                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener(){
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                })
-                                .setPositiveButton(R.string.delete_dialog, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // Calls getSelectedIds method from ListViewAdapter Class
-                                        SparseBooleanArray selected = adapter.getSelectedIds();
-                                        // Captures all selected ids with a loop
-                                        for (int i = (selected.size() - 1); i >= 0; i--) {
-                                            if (selected.valueAt(i)) {
-                                                final Room selecteditem = adapter.getItem(selected.keyAt(i));
-                                                // Remove selected items following the ids
-                                                adapter.remove(selecteditem);
-                                                mydb.deleteRoom(selecteditem.getId());
-                                            }
-                                        }
-
-                                        Toast.makeText(getContext(), getString(R.string.success_delete), Toast.LENGTH_SHORT).show();
-                                        getFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit(); //call it here to refresh listView upon delete
-                                    }
-                                });
-                        AlertDialog art = aat.create();
-
-                        art.show();
-
+                        // Calls getSelectedIds method from ListViewAdapter Class
+                        SparseBooleanArray selected = adapter.getSelectedIds();
+                        // Captures all selected ids with a loop
+                        for (int i = (selected.size() - 1); i >= 0; i--) {
+                            if (selected.valueAt(i)) {
+                                final Room selecteditem = adapter.getItem(selected.keyAt(i));
+                                // Remove selected items following the ids
+                                adapter.remove(selecteditem);
+                                mydb.deleteRoom(selecteditem.getId());
+                            }
+                        }
+                        Toast.makeText(getContext(), getString(R.string.success_delete), Toast.LENGTH_SHORT).show();
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit(); //call it here to refresh listView upon delete
                         // Close CAB
                         mode.finish();
                         return true;
@@ -183,6 +163,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
             public void onDestroyActionMode(ActionMode mode) {
                 // TODO Auto-generated method stub
                 adapter.removeSelection();
+
             }
 
             @Override

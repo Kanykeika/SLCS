@@ -91,6 +91,15 @@ public class CreateRoomFragment extends Fragment{
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        for(int i=0; i<relay_pins.length; i++){
+            Cursor rs = mydb.getDataByRelayPin(getArguments().getInt("id"),i);
+            if (rs.getCount() != 0) {
+                continue;
+            } else {
+                spinner.setSelection(adapter.getPosition(relay_pins[i]));
+                break;
+            }
+        }
         Bundle extras = getArguments();
         if(extras != null) {
             int Value = extras.getInt("id");

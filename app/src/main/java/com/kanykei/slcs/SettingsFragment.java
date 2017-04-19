@@ -82,15 +82,38 @@ public class SettingsFragment extends Fragment{
 
             @Override
             public void onCheckedChanged(CompoundButton arg0, boolean isChecked) {
-//                int isCheckedInt = (isChecked) ? 1 : 0;
                 saveVoiceControl(isChecked);
+            }
+        });
+
+        settingsView.findViewById(R.id.send_feedback).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendFeedback();
+            }
+        });
+
+        settingsView.findViewById(R.id.help_info).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), HelpActivity.class);
+                startActivity(intent);
+//                getFragmentManager().beginTransaction().replace(R.id.settings_frame, new InfoFragment() ).addToBackStack(null).commit();
             }
         });
         return settingsView;
     }
 
 
-
+    //Start a new activity for sending a feedback email
+    private void sendFeedback() {
+        final Intent _Intent = new Intent(android.content.Intent.ACTION_SEND);
+        _Intent.setType("text/html");
+        _Intent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{ getString(R.string.mail_feedback_email) });
+        _Intent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.mail_feedback_subject));
+        _Intent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.mail_feedback_message));
+        startActivity(Intent.createChooser(_Intent, getString(R.string.title_send_feedback)));
+    }
 
     public String loadLanguage(String defaultLanguage)
     {

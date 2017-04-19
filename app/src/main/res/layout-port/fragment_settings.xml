@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.kanykei.slcs.SettingsFragment"
+    android:layout_marginTop="15dp"
     >
 
     <LinearLayout
@@ -14,17 +15,7 @@
         tools:context="com.kanykei.slcs.RoutinesFragment"
         android:orientation="horizontal"
         android:weightSum="1">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_language"
-            android:layout_marginStart="20dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="0dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_weight="0.1"/>
+
         <TextView
             android:id="@+id/language"
             android:layout_width="wrap_content"
@@ -32,13 +23,16 @@
             android:textSize="20sp"
             android:fontFamily="@string/font_fontFamily_medium"
             android:layout_gravity="center"
+            android:drawableLeft="@drawable/ic_language_small"
+            android:drawableStart="@drawable/ic_language_small"
+            android:drawablePadding="15dp"
             android:text="@string/language"
             android:clickable="true"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_weight="0.5"/>
+            android:layout_weight="0.6"/>
         <Spinner
             android:id="@+id/spinner_lang"
             android:layout_width="wrap_content"
@@ -53,7 +47,14 @@
 
 
     </LinearLayout>
-
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/lang"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        />
     <LinearLayout
         android:id="@+id/voice"
         android:layout_width="match_parent"
@@ -62,31 +63,29 @@
         android:orientation="horizontal"
         android:weightSum="1"
         android:layout_below="@+id/lang"
+        android:paddingTop="15dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="15dp">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_settings_voice"
-            android:layout_marginStart="20dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="0dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="5dp"/>
+
         <TextView
             android:id="@+id/voice_control"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textSize="20sp"
+            android:drawableStart="@drawable/ic_voice_control_small"
+            android:drawableLeft="@drawable/ic_voice_control_small"
+            android:drawablePadding="15dp"
             android:fontFamily="@string/font_fontFamily_medium"
             android:text="@string/voice_control"
-            android:clickable="true"
             android:paddingStart="10dp"
-            android:paddingLeft="10dp"/>
+            android:paddingEnd="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:clickable="true"
+            android:layout_weight="0.6"/>
         <ToggleButton
             android:id="@+id/toggleButtonVoiceControl"
             android:layout_width="50dp"
@@ -98,7 +97,90 @@
             android:textOn=""
             android:layout_gravity="center"
             android:focusable="false"
-            android:focusableInTouchMode="false"/>
+            android:focusableInTouchMode="false"
+            android:layout_weight="0.4"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
+            />
+    </LinearLayout>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/voice"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        />
+    <LinearLayout
+        android:id="@+id/feedback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context="com.kanykei.slcs.RoutinesFragment"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        android:layout_below="@+id/voice"
+        android:paddingTop="15dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="15dp">
+
+
+        <TextView
+            android:id="@+id/send_feedback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="20sp"
+            android:drawableStart="@drawable/ic_feedback_small"
+            android:drawableLeft="@drawable/ic_feedback_small"
+            android:drawablePadding="15dp"
+            android:fontFamily="@string/font_fontFamily_medium"
+            android:text="@string/send_feedback"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:clickable="true"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/feedback"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        />
+    <LinearLayout
+        android:id="@+id/help"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context="com.kanykei.slcs.RoutinesFragment"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        android:layout_below="@id/feedback"
+        android:paddingTop="15dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="15dp">
+
+
+        <TextView
+            android:id="@+id/help_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="20sp"
+            android:drawableStart="@drawable/ic_info_small"
+            android:drawableLeft="@drawable/ic_info_small"
+            android:drawablePadding="15dp"
+            android:fontFamily="@string/font_fontFamily_medium"
+            android:text="@string/help"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:clickable="true"/>
     </LinearLayout>
 
 </RelativeLayout>
