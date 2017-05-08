@@ -8,6 +8,7 @@ import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -30,10 +31,12 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String ROOMS_COLUMN_RELAY_PIN = "relay_pin"; // id of relay's pin (in0, in1, in2, in3 or in4)
     private static DBHelper mInstance = null;
     private Context context;
+    SQLiteDatabase db = this.getWritableDatabase();
 
-    private DBHelper(Context context) {
+    public DBHelper(Context context) {
         super(context, DATABASE_NAME , null, 1);
         this.context = context;
+        Log.i("My Tag", "DBHelper(Context context)");
     }
 
     public static DBHelper getInstance(Context context) {
@@ -43,12 +46,17 @@ public class DBHelper extends SQLiteOpenHelper {
         // See this article for more information: http://bit.ly/6LRzfx
         if (mInstance == null) {
             mInstance = new DBHelper(context.getApplicationContext());
+            Log.i("My Tag", "if (mInstance == null)");
+
         }
+        Log.i("My Tag", "DBHelper getInstance(Context context)");
+
         return mInstance;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        Log.i("My Tag", "DBHelper onCreate");
         db.execSQL("create table " + ROOMS_TABLE_NAME + " (" +
                 ROOMS_COLUMN_ID + " integer primary key, " +
                 ROOMS_COLUMN_NAME + " text, " +
@@ -133,7 +141,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return titles;
     }
     public boolean insertRoom (String name, int relay_pin) {
-        SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor res =  db.rawQuery( "select * from " + ROOMS_TABLE_NAME + " where " + ROOMS_COLUMN_NAME + "=\"" + name + "\" or " + ROOMS_COLUMN_RELAY_PIN + "=" + relay_pin + "", null );
         res.moveToFirst();
@@ -176,7 +183,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public boolean updateRoom (Integer id, String name, int relay_pin) {
-        SQLiteDatabase db = this.getWritableDatabase();
+
         Cursor res =  db.rawQuery( "select * from " + ROOMS_TABLE_NAME +
                 " where (" + ROOMS_COLUMN_NAME + "=\"" + name + "\" or " + ROOMS_COLUMN_RELAY_PIN + "=" + relay_pin + ") and " +
                 ROOMS_COLUMN_ID + " <> " + id + "", null );
@@ -199,21 +206,21 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public boolean updateStateOfRoom (Integer id, Integer state) {
-        SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues contentValues = new ContentValues();
         contentValues.put(ROOMS_COLUMN_STATE, state);
         db.update(ROOMS_TABLE_NAME, contentValues, "id = ? ", new String[]{Integer.toString(id)});
         return true;
     }
     public boolean updateWakeUpTimer (Integer id, String wake_timer) {
-        SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues contentValues = new ContentValues();
         contentValues.put(ROOMS_COLUMN_WAKE_UP_TIME, wake_timer);
         db.update(ROOMS_TABLE_NAME, contentValues, "id = ? ", new String[]{Integer.toString(id)});
         return true;
     }
     public boolean updateGoSleepTimer (Integer id, String sleep_timer) {
-        SQLiteDatabase db = this.getWritableDatabase();
+
         ContentValues contentValues = new ContentValues();
         contentValues.put(ROOMS_COLUMN_GO_SLEEP_TIME, sleep_timer);
         db.update(ROOMS_TABLE_NAME, contentValues, "id = ? ", new String[]{Integer.toString(id)});
@@ -221,12 +228,12 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Integer deleteRoom (Integer id) {
-        SQLiteDatabase db = this.getWritableDatabase();
+
         return db.delete(ROOMS_TABLE_NAME, "id = ? ", new String[] { Integer.toString(id) });
     }
 
 //    public boolean updateStateOfRoomEveryMinute () {
-//        SQLiteDatabase db = this.getWritableDatabase();
+//
 //        String MY_QUERY =
 //                " CREATE EVENT reset " +
 //                " ON SCHEDULE " +

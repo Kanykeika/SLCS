@@ -46,7 +46,6 @@ public class ConnectToArduinoWithBluetooth extends Activity {
     private boolean isBtConnected = false;
     private ListView lv_paired;
     private ListView lv_scan;
-    private OutputStream outputStream = null;
     private ArrayList<String> mScannedDeviceNameList;
     private ArrayList<String> mScannedDeviceAddressList;
     private ArrayList<String> mPairedDeviceNameList;
@@ -64,7 +63,6 @@ public class ConnectToArduinoWithBluetooth extends Activity {
         mViewAvailableTv = (TextView) findViewById(R.id.tv_view_available);
         mViewPairedTv = (TextView) findViewById(R.id.tv_view_paired);
         mNoAvailableDevicesTv = (TextView) findViewById(R.id.tv_no_available_devices);
-        mNoAvailableDevicesTv.setVisibility(View.INVISIBLE);
         mActivateBtn = (ToggleButton) findViewById(R.id.btn_enable);
         mScanBtn = (Button) findViewById(R.id.btn_scan);
         lv_paired = (ListView) findViewById(R.id.paired_devices_list);
@@ -107,7 +105,6 @@ public class ConnectToArduinoWithBluetooth extends Activity {
                     }else {
                         mBluetoothAdapter.disable();
                         showDisabled();
-                        hideScan();
                     }
                 }
             });
@@ -178,6 +175,7 @@ public class ConnectToArduinoWithBluetooth extends Activity {
         mScanBtn.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
         mScanBtn.setTextColor(Color.LTGRAY);
     }
+
     private void showScan() {
         mViewAvailableTv.setVisibility(View.VISIBLE);
         lv_scan.setVisibility(View.VISIBLE);
@@ -273,7 +271,7 @@ public class ConnectToArduinoWithBluetooth extends Activity {
         public void onItemClick (AdapterView<?> av, View v, int arg2, long arg3)
         {
             // Get the device MAC address (17 chars)
-            address = mScannedDeviceAddressList.get(arg2).toString();
+            address = mScannedDeviceAddressList.get(arg2);
             new ConnectBT().execute();
         }
     };
@@ -286,7 +284,6 @@ public class ConnectToArduinoWithBluetooth extends Activity {
         @Override
         protected void onPreExecute()
         {
-            //Toast.makeText(MainActivity.this,"Connecting",Toast.LENGTH_LONG);
             progress = ProgressDialog.show(ConnectToArduinoWithBluetooth.this, "Connecting...", "Please wait!!!");  //show a progress dialog
 
         }
@@ -303,6 +300,8 @@ public class ConnectToArduinoWithBluetooth extends Activity {
                     btSocket = dispositivo.createInsecureRfcommSocketToServiceRecord(myUUID);//create a RFCOMM (SPP) connection
                     BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
                     btSocket.connect();//start connection
+                    // set Bluetooth socket to be global variable
+                    ((MyBluetoothSocketApplication) getApplication()).setBtSocket(btSocket);
                 }
             }
             catch (IOException e)
@@ -319,7 +318,6 @@ public class ConnectToArduinoWithBluetooth extends Activity {
             if (!ConnectSuccess)
             {
                 msg("Connection Failed. Is it a SPP (Serial Port Profile)  Bluetooth? Try again.");
-//                finish();
             }
             else
             {
@@ -327,18 +325,8 @@ public class ConnectToArduinoWithBluetooth extends Activity {
                 isBtConnected = true;
                 Intent turnOn = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(turnOn);
-                try{
-                    outputStream = btSocket.getOutputStream();
-                }catch (Exception e){
-                    Toast.makeText(ConnectToArduinoWithBluetooth.this,"Failed to send",Toast.LENGTH_LONG);
-                    e.printStackTrace();
-                }
             }
             progress.dismiss();
-            // delete 2 lines after tests
-            Intent turnOn = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(turnOn);
-            // lines above should be deleted
         }
     }
     private void msg(String s)

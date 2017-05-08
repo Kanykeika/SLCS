@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class CreateRoomFragment extends Fragment{
@@ -51,7 +52,7 @@ public class CreateRoomFragment extends Fragment{
         mydb = DBHelper.getInstance(getContext());
         inputLayoutName = (TextInputLayout) createRoomView.findViewById(R.id.input_layout_name);
         inputName = (EditText) createRoomView.findViewById(R.id.input_name);
-        final String[] relay_pins = { "IN0", "IN1", "IN2", "IN3" };
+        final String[] relay_pins = { "K1", "K2", "K3", "K4" };
         Spinner spinner = (Spinner) createRoomView.findViewById(R.id.spinner_relay_pins);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item, relay_pins) {
@@ -62,11 +63,18 @@ public class CreateRoomFragment extends Fragment{
                 Cursor rs = mydb.getDataByRelayPin(getArguments().getInt("id"),position);
                 if(rs.getCount() != 0){
                     int relay = rs.getInt(rs.getColumnIndex(DBHelper.ROOMS_COLUMN_RELAY_PIN));
-                    Log.i("My tag", "relay pin get data by pin = " + relay);
+                    Log.i("My tag", "is enabled relay pin get data by pin = " + relay);
+                    if (!rs.isClosed())  {
+                        rs.close();
+                    }
                     return false;
+                }
+                if (!rs.isClosed())  {
+                    rs.close();
                 }
                 return true;
             }
+            ArrayList<Room> array_list = mydb.getAllRooms();
 
             // Change color item
             @Override
@@ -76,14 +84,19 @@ public class CreateRoomFragment extends Fragment{
                 View mView = super.getDropDownView(position, convertView, parent);
                 TextView mTextView = (TextView) mView;
                 Cursor rs = mydb.getDataByRelayPin(getArguments().getInt("id"),position);
-                    if (rs.getCount() != 0) {
-                        mTextView.setTextColor(Color.GRAY);
-                        int relay = rs.getInt(rs.getColumnIndex(DBHelper.ROOMS_COLUMN_RELAY_PIN));
-                        Log.i("My tag", "relay pin get data by pin = " + relay);
-                    } else {
-                        mTextView.setTextColor(Color.BLACK);
-                    }
+                if(rs.getCount() != 0){
 
+                            mTextView.setTextColor(Color.GRAY);
+                            Log.i("My Tag","gray");
+//                        int relay = rs.getInt(rs.getColumnIndex(DBHelper.ROOMS_COLUMN_RELAY_PIN));
+//                        Log.i("My tag", "getDropDownView relay pin get data by pin = " + relay);
+                        } else {
+                            mTextView.setTextColor(Color.BLACK);
+                        }
+
+                if (!rs.isClosed())  {
+                    rs.close();
+                }
 
                 return mView;
             }
@@ -94,12 +107,19 @@ public class CreateRoomFragment extends Fragment{
         for(int i=0; i<relay_pins.length; i++){
             Cursor rs = mydb.getDataByRelayPin(getArguments().getInt("id"),i);
             if (rs.getCount() != 0) {
-                continue;
+                if (!rs.isClosed())  {
+                    rs.close();
+                }
             } else {
                 spinner.setSelection(adapter.getPosition(relay_pins[i]));
+                if (!rs.isClosed())  {
+                    rs.close();
+                }
                 break;
             }
+
         }
+
         Bundle extras = getArguments();
         if(extras != null) {
             int Value = extras.getInt("id");
@@ -225,7 +245,7 @@ public class CreateRoomFragment extends Fragment{
     private boolean validateName() {
         if (inputName.getText().toString().trim().isEmpty()) {
             inputLayoutName.setError(getString(R.string.err_msg_name));
-//            requestFocus(inputName);
+            requestFocus(inputName);
             return false;
         } else {
             inputLayoutName.setErrorEnabled(false);

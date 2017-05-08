@@ -1,10 +1,12 @@
 package com.kanykei.slcs;
 
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 //import android.text.format.DateFormat;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,7 +19,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,7 +37,10 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private ImageView loadingImage;
+    BluetoothSocket btSocket;
+    OutputStream outputStream;
+    InputStream inputStream;
+    DBHelper mydb;
     private int[] tabIcons = {
             R.drawable.ic_tab_home,
             R.drawable.ic_tab_schedule,
@@ -51,8 +59,16 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (BuildConfig.DEBUG) {
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                    .detectLeakedSqlLiteObjects()
+                    .detectLeakedClosableObjects()
+                    .penaltyLog()
+                    .penaltyDeath()
+                    .build());
+        }
         super.onCreate(savedInstanceState);
-
+        mydb = new DBHelper(this);
         Log.i("My tag", "on create of main activity");
         String lan = loadLanguage("en");
         setLocale(lan);
@@ -77,15 +93,6 @@ public class MainActivity extends AppCompatActivity {
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
         if (findViewById(R.id.viewpager) != null) {
-
-            // However, if we're being restored from a previous state,
-            // then we don't need to do anything and should return or else
-            // we could end up with overlapping fragments.
-//            if (savedInstanceState != null) {
-//                Log.i("My Tag","savedInstanceState != null");
-
-//                return;
-//            }
 
             // Create a new Fragment to be placed in the activity layout
             HomeFragment firstFragment = new HomeFragment();
@@ -169,7 +176,18 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                this.moveTaskToBack(true);
+//                this.moveTaskToBack(true);
+                btSocket = ((MyBluetoothSocketApplication) getApplication()).getBtSocket();
+                try{
+                    outputStream = btSocket.getOutputStream();
+                    inputStream = btSocket.getInputStream();
+                    outputStream.close();
+                    inputStream.close();
+                    btSocket.close();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
                 return true;
         }
         return false;

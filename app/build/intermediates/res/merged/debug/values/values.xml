@@ -628,7 +628,7 @@
     <string name="abc_shareactionprovider_share_with">Share with</string>
     <string name="abc_shareactionprovider_share_with_application">Share with %s</string>
     <string name="abc_toolbar_collapse_description">Collapse</string>
-    <string name="app_name">Lighting Control App</string>
+    <string name="app_name">Light Control App</string>
     <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
     <string name="auth_google_play_services_client_facebook_display_name">Facebook</string>
     <string name="auth_google_play_services_client_google_display_name">Google</string>
@@ -673,7 +673,13 @@
     <string name="deleteRoomTitle">Are you sure</string>
     <string name="delete_dialog">Delete</string>
     <string name="delete_dialog_sure">Are you sure you want to delete </string>
-    <string name="details0">Open Home tab and click on add button. In input text write name of room. Then choose corresponding relay\'s pin.</string>
+    <string name="details0">Go to Home tab and click ‘+’ add button. In input text, write the name of room. Then choose corresponding relay\'s pin. Hit save. Now you can see the newly created room in the list of all rooms.</string>
+    <string name="details1">Go to Home tab. Select room (-s) to delete. Click trash box.</string>
+    <string name="details2">Go to Routines tab. To set time of turning the light on in room click wake up. The list of all the rooms with corresponding wake up time to the right will appear. Click the room and set the time in the dialog appeared. To set time of turning the light off in room click go to sleep. The list of all the rooms with corresponding go sleep time to the right will appear. Click the room and set the time in the dialog appeared.</string>
+    <string name="details3">Go to Settings tab.<b> Choose the language</b> from list.</string>
+    <string name="details4">If you want to voice control on Russian language (there is no Kyrgyz language voice library) first do the following steps.
+\nTo install a voice library from Google go to Menu in mobile phone. Choose Settings ⇒ My device ⇒ Language and input ⇒ Voice search ⇒ Speech recognition offline ⇒ tab All ⇒ download Russian language. Now you can use voice control feature on Russian language.\n
+Go to Settings tab.  Turn on voice control. Go to Home tab. Voice control button appeared. Click voice control button and command. The commands are following: “Turn on room_name” or “Turn off room_name”, “Room_name turn on” or “Room_name turn off”; “Включить room_name”, “Отключить room_name” or “Выключить room_name”, “Room_name включить”, “Room_name отключить” or “Room_name выключить”.</string>
     <string name="disp_room">Display room</string>
     <string name="done">Done</string>
     <string name="edit">Edit Room</string>
@@ -685,10 +691,10 @@
     <string name="hint_name_of_room">Name of room</string>
     <string name="kg_lang">Kyrgyz</string>
     <string name="language">Language</string>
-    <string name="mail_feedback_email">lighting_control@gmail.com</string>
+    <string name="mail_feedback_email">light.control.app@gmail.com</string>
     <string name="mail_feedback_message">Hi,
 \n\nYour Feedback sample app rocks! I would like to give you some feedback:</string>
-    <string name="mail_feedback_subject">Feedback on Lighting Control App</string>
+    <string name="mail_feedback_subject">Feedback on Light Control App</string>
     <string name="name">Name</string>
     <string name="no">No</string>
     <string name="not_done">Not done</string>
@@ -709,6 +715,10 @@
     <string name="status_bar_notification_info_overflow">999+</string>
     <string name="success_delete">Deleted successfully</string>
     <string name="title0">Create a new room</string>
+    <string name="title1">Delete room (-s)</string>
+    <string name="title2">Set time to turn the light on (off) in room</string>
+    <string name="title3">Change language settings</string>
+    <string name="title4">Manage voice control</string>
     <string name="title_home">Home</string>
     <string name="title_routines">Routines</string>
     <string name="title_send_feedback">Send feedback</string>

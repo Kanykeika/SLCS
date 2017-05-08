@@ -1,8 +1,10 @@
 package com.kanykei.slcs;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.SparseBooleanArray;
@@ -12,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class RoomAdapter extends ArrayAdapter<Room> {
@@ -21,6 +24,8 @@ public class RoomAdapter extends ArrayAdapter<Room> {
     private DBHelper mydb;
     private SparseBooleanArray mSelectedItemsIds;
     LayoutInflater inflater;
+    private OutputStream outputStream = null;
+    private BluetoothSocket btSocket;
     // Container Class for item
     private class ViewHolder {
         TextView labelView;
@@ -58,7 +63,13 @@ public class RoomAdapter extends ArrayAdapter<Room> {
         holder.valueView.setText(String.valueOf(roomsArrayList.get(position).getName()));
 
         mydb = DBHelper.getInstance(getContext());
-
+        btSocket = ((MyBluetoothSocketApplication) context.getApplicationContext()).getBtSocket();
+        try{
+            outputStream = btSocket.getOutputStream();
+        }catch (Exception e){
+            Toast.makeText(getContext(),"Failed to getOutputStream",Toast.LENGTH_LONG);
+            e.printStackTrace();
+        }
         // 5. Set listener for toggle button
         Cursor res = mydb.getData(roomsArrayList.get(position).getId());
         if(res.getCount() != 0) {
@@ -74,10 +85,40 @@ public class RoomAdapter extends ArrayAdapter<Room> {
                 public void onCheckedChanged(CompoundButton arg0, boolean isChecked) {
                     int isCheckedInt = (isChecked) ? 1 : 0;
                     mydb.updateStateOfRoom(roomsArrayList.get(position).getId(), isCheckedInt);
+
+                        try{
+                            if(isChecked){ // to turn on
+                                if(roomsArrayList.get(position).getRelayPin() == 0){
+                                    outputStream.write('5');
+                                }else if(roomsArrayList.get(position).getRelayPin() == 1){
+                                    outputStream.write('6');
+                                }else if(roomsArrayList.get(position).getRelayPin() == 2){
+                                    outputStream.write('7');
+                                }else if(roomsArrayList.get(position).getRelayPin() == 3){
+                                    outputStream.write('8');
+                                }
+                            }else{ // to turn off
+                                if(roomsArrayList.get(position).getRelayPin() == 0){
+                                    outputStream.write('1');
+                                }else if(roomsArrayList.get(position).getRelayPin() == 1){
+                                    outputStream.write('2');
+                                }else if(roomsArrayList.get(position).getRelayPin() == 2){
+                                    outputStream.write('3');
+                                }else if(roomsArrayList.get(position).getRelayPin() == 3){
+                                    outputStream.write('4');
+                                }
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+
+
                 }
             });
         }
-
+        if (!res.isClosed())  {
+            res.close();
+        }
         return view;
 
     }
