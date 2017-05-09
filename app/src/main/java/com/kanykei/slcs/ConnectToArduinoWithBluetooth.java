@@ -1,5 +1,6 @@
 package com.kanykei.slcs;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -13,6 +14,7 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -81,6 +83,12 @@ public class ConnectToArduinoWithBluetooth extends Activity {
         });
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        filter.addAction(BluetoothDevice.ACTION_FOUND);
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        registerReceiver(mReceiver, filter);
 
         if (mBluetoothAdapter == null) {
             showUnsupported();
@@ -91,7 +99,12 @@ public class ConnectToArduinoWithBluetooth extends Activity {
                     showScan();
                     mScannedDeviceNameList = new ArrayList<String>();
                     mScannedDeviceAddressList = new ArrayList<String>();
+                    int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 1;
+                    ActivityCompat.requestPermissions(ConnectToArduinoWithBluetooth.this,
+                            new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                            MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
                     mBluetoothAdapter.startDiscovery();
+                    Log.i("My tag", "start discovery");
                 }
             });
 
@@ -118,12 +131,7 @@ public class ConnectToArduinoWithBluetooth extends Activity {
             }
         }
 
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        filter.addAction(BluetoothDevice.ACTION_FOUND);
-        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
-        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        registerReceiver(mReceiver, filter);
+
     }
 
     @Override
@@ -133,23 +141,28 @@ public class ConnectToArduinoWithBluetooth extends Activity {
                 mBluetoothAdapter.cancelDiscovery();
             }
         }
-        Log.i("tag","on pause");
-
+        Log.i("My tag","on pause connect to ard bt");
         super.onPause();
-
     }
 
     @Override
     public void onDestroy() {
         unregisterReceiver(mReceiver);
-        Log.i("tag","on destroy");
+        Log.i("My tag","on destroy connect to ard bt");
         super.onDestroy();
+    }
+
+    @Override
+    public void onStop() {
+        unregisterReceiver(mReceiver);
+        Log.i("My tag","on stop connect to ard bt");
+        super.onStop();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.i("tag","on resume");
+        Log.i("My tag","on resume connect to ard bt");
         if (mBluetoothAdapter.isEnabled()) {
             mActivateBtn.setChecked(true);
             showEnabled();
@@ -165,6 +178,7 @@ public class ConnectToArduinoWithBluetooth extends Activity {
         lv_paired.setVisibility(View.VISIBLE);
         mScanBtn.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         mScanBtn.setTextColor(getResources().getColor(android.R.color.white));
+        Log.i("My tag", "show enabled");
     }
 
     private void showDisabled() {
@@ -174,17 +188,23 @@ public class ConnectToArduinoWithBluetooth extends Activity {
         lv_paired.setVisibility(View.INVISIBLE);
         mScanBtn.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
         mScanBtn.setTextColor(Color.LTGRAY);
+        Log.i("My tag", "show disabled");
+
     }
 
     private void showScan() {
         mViewAvailableTv.setVisibility(View.VISIBLE);
         lv_scan.setVisibility(View.VISIBLE);
+        Log.i("My tag", "showScan");
+
     }
 
     private void hideScan() {
         mViewAvailableTv.setVisibility(View.INVISIBLE);
         mNoAvailableDevicesTv.setVisibility(View.INVISIBLE);
         lv_scan.setVisibility(View.INVISIBLE);
+        Log.i("My tag", "hideScan");
+
     }
 
     private void showUnsupported() {
@@ -208,13 +228,13 @@ public class ConnectToArduinoWithBluetooth extends Activity {
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 mProgressDlg.dismiss();
                 try {
-                    if (!mScannedDeviceNameList.isEmpty() && mScannedDeviceNameList != null) {
+                    if (!mScannedDeviceNameList.isEmpty() && mScannedDeviceNameList != null ) {
                         ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), R.layout.list_item, mScannedDeviceNameList);
                         lv_scan.setAdapter(adapter);
                         lv_scan.setOnItemClickListener(myScannedListClickListener);
-                    } else {
-                        mViewAvailableTv.setVisibility(View.VISIBLE);
+                    } else if(mBluetoothAdapter.isEnabled()) {
                         mNoAvailableDevicesTv.setVisibility(View.VISIBLE);
+                        Log.i("My tag", "show not found");
                     }
                 }catch (Exception e){
                     Log.e("My Tag",e.toString());
@@ -261,7 +281,7 @@ public class ConnectToArduinoWithBluetooth extends Activity {
         public void onItemClick (AdapterView<?> av, View v, int arg2, long arg3)
         {
             // Get the device MAC address (17 chars)
-            address = mPairedDeviceAddressList.get(arg2).toString();
+            address = mPairedDeviceAddressList.get(arg2);
             new ConnectBT().execute();
         }
     };

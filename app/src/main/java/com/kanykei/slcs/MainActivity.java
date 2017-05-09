@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                     .build());
         }
         super.onCreate(savedInstanceState);
-        mydb = new DBHelper(this);
+        mydb = DBHelper.getInstance(this);
         Log.i("My tag", "on create of main activity");
         String lan = loadLanguage("en");
         setLocale(lan);

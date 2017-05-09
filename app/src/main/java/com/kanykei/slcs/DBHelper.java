@@ -30,13 +30,14 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String ROOMS_COLUMN_GO_SLEEP_TIME = "go_sleep_time"; // time to turn off room's lights
     public static final String ROOMS_COLUMN_RELAY_PIN = "relay_pin"; // id of relay's pin (in0, in1, in2, in3 or in4)
     private static DBHelper mInstance = null;
-    private Context context;
+    public Context context;
     SQLiteDatabase db = this.getWritableDatabase();
 
-    public DBHelper(Context context) {
+    private DBHelper(Context context) {
         super(context, DATABASE_NAME , null, 1);
         this.context = context;
-        Log.i("My Tag", "DBHelper(Context context)");
+        insertInfo();
+        Log.i("My Tag", "DBHelper(Context context)\n insertInfo();");
     }
 
     public static DBHelper getInstance(Context context) {
@@ -68,11 +69,25 @@ public class DBHelper extends SQLiteOpenHelper {
                 INFO_COLUMN_ID + " integer primary key, " +
                 INFO_COLUMN_TITLE + " text, " +
                 INFO_COLUMN_DETAILS + " text)");
+        Log.i("My Tag","on create dbhelper");
+    }
+
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + ROOMS_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + INFO_TABLE_NAME);
+        onCreate(db);
+    }
+
+    public void insertInfo(){
         HashMap<String, String> infoMap = new HashMap<String, String>();
         infoMap.put(context.getString(R.string.title0),context.getString(R.string.details0));
-        infoMap.put("Bla bal bla","Blue");
-        infoMap.put("Color3","Green");
-        infoMap.put("Color4","White");
+        infoMap.put(context.getString(R.string.title1),context.getString(R.string.details1));
+        infoMap.put(context.getString(R.string.title2),context.getString(R.string.details2));
+        infoMap.put(context.getString(R.string.title3),context.getString(R.string.details3));
+        infoMap.put(context.getString(R.string.title4),context.getString(R.string.details4));
+
         Iterator hashMapIterator = infoMap.keySet().iterator();
         while(hashMapIterator.hasNext()) {
             String title=(String)hashMapIterator.next();
@@ -84,15 +99,6 @@ public class DBHelper extends SQLiteOpenHelper {
             db.insert(INFO_TABLE_NAME, null, contentValues);
             Log.i("My Tag", "inserted: " + title + " " + details);
         }
-        Log.i("My Tag","on create dbhelper");
-    }
-
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + ROOMS_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + INFO_TABLE_NAME);
-        onCreate(db);
     }
 
     public HashMap<String,String> getAllInfo() {
