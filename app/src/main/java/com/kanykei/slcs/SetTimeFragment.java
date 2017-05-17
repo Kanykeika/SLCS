@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +16,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 public class SetTimeFragment extends Fragment implements TimePickerFragment.TimeDialogListener {
@@ -24,7 +29,7 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
     private String message;
     private RoutinesAdapter adapter;
     private TextView empty_text;
-
+    TextView toolbar_title;
     public SetTimeFragment() {
         // Required empty public constructor
     }
@@ -40,7 +45,7 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
         String lan = loadLanguage("en");
         setLocale(lan);
         View routineView = inflater.inflate(R.layout.fragment_set_time, container, false);
-
+        toolbar_title = (TextView) getActivity().findViewById(R.id.toolbar_title);
         mydb = DBHelper.getInstance(getContext());
         array_list = mydb.getAllRooms();
         if(array_list.isEmpty()){
@@ -49,9 +54,13 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
         }
         message = getArguments().getString("message");
         if(message == "wake"){
+            toolbar_title.setText(R.string.wake);
             adapter = new RoutinesAdapter(routineView.getContext(), array_list, "wake");
         } else if(message == "sleep") {
+            toolbar_title.setText(R.string.sleep);
             adapter = new RoutinesAdapter(routineView.getContext(), array_list, "sleep");
+        }else{
+            toolbar_title.setText(R.string.app_name);
         }
         final ListView obj = (ListView) routineView.findViewById(R.id.listViewSetTime);
 
@@ -75,12 +84,65 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
 
     @Override
     public void onFinishDialog(String time) {
-        if(message == "wake"){
-            mydb.updateWakeUpTimer(array_list.get(position_value).getId(),time);
-            Toast.makeText(getActivity(), "Updated wake up time : "+ time + " of " + array_list.get(position_value).getName(), Toast.LENGTH_SHORT).show();
-        } else if(message == "sleep"){
+        msg("time = " +  time);
+        String hours;
+        String minutes;
+        Log.i("My tag", "onFinishDialog of set time fragment");
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        String startTime = sdf.format(new Date());
+        Log.i("My Tag", "current time is " + startTime);
+
+        if(message.equals("wake")) {
+            mydb.updateWakeUpTimer(array_list.get(position_value).getId(), time);
+            Toast.makeText(getActivity(), "Updated wake up time : " + time + " of " + array_list.get(position_value).getName(), Toast.LENGTH_SHORT).show();
+            try {
+                Date startdate = sdf.parse(startTime);
+                Date enddate = sdf.parse(time);
+                long diff = enddate.getTime() - startdate.getTime();
+                String differ = sdf.format(diff);
+                String[] tokens = differ.split(":");
+                msg(differ);
+                hours = tokens[0] + " hours";
+                minutes = tokens[1] + " minutes";
+                if (tokens[0].equals("00")) {
+                    hours = "";
+                }
+                if (tokens[1].equals("00")) {
+                    minutes = "";
+                }
+                msg("Turn lights on in " + array_list.get(position_value).getName() +
+                        " after " + hours + " " + minutes + ".");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if(message.equals("sleep")){
             mydb.updateGoSleepTimer(array_list.get(position_value).getId(),time);
             Toast.makeText(getActivity(), "Updated go to sleep time : "+ time + " of " + array_list.get(position_value).getName(), Toast.LENGTH_SHORT).show();
+            try {
+                String[] startTimeArray = startTime.split(":");
+                long startTimeInMilliseconds = Integer.parseInt(startTimeArray[1])*3600 + Integer.parseInt(startTimeArray[0])*216000;
+                String[] endTimeArray = time.split(":");
+                long endTimeInMilliseconds = Integer.parseInt(endTimeArray[1])*3600 + Integer.parseInt(endTimeArray[0])*216000;
+                long diff = endTimeInMilliseconds - startTimeInMilliseconds;
+                long min = (diff/3600)%60;
+                long hour = (diff/3600) - min;
+                hours = hour + " hours";
+                minutes = min + " minutes";
+                if (hour == 0) {
+                    hours = "";
+                }
+                if (min == 0) {
+                    minutes = "";
+                }
+                msg("Turn lights off in " + array_list.get(position_value).getName() +
+                        " after " + hours + " " + minutes + ".");
+                ((MyBluetoothSocketApplication) getActivity().getApplication()).setTime_difference(diff);
+                ((MyBluetoothSocketApplication) getActivity().getApplication()).setRoom_id(array_list.get(position_value).getId());
+                ((MyBluetoothSocketApplication) getActivity().getApplication()).setState(0);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         Bundle bundle = new Bundle();
         bundle.putString("message", message);
@@ -101,6 +163,22 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
         conf.locale = myLocale;
         getResources().updateConfiguration(conf, null);
     }
+
+    private void msg(String s)
+    {
+        Log.i("My tag", s);
+        Toast.makeText(getActivity(),s,Toast.LENGTH_LONG).show();
+    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case android.R.id.home:
+//                toolbar_title.setText(R.string.app_name);
+//                getActivity().onBackPressed();
+//                return true;
+//        }
+//        return false;
+//    }
 
 }
 

@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.app.ActionBar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -25,6 +26,7 @@ public class DetailsFragment extends Fragment{
     TextView tv_title;
     TextView tv_details;
     DBHelper mydb;
+    TextView toolbar_title;
     public DetailsFragment() {
         // Required empty public constructor
     }
@@ -41,10 +43,10 @@ public class DetailsFragment extends Fragment{
         View detaisView = inflater.inflate(R.layout.fragment_details, container, false);
 
         mydb = DBHelper.getInstance(getContext());
-        ArrayList<String> arrayList  = mydb.getInfoDetails(getArguments().getInt("info_id"));
+        ArrayList<String> arrayList  = mydb.getInfoDetails(getArguments().getInt("info_id"), lan);
         String title = arrayList.get(0);
         String details = arrayList.get(1);
-        TextView toolbar_title = (TextView) getActivity().findViewById(R.id.toolbar_title);
+        toolbar_title = (TextView) getActivity().findViewById(R.id.toolbar_title);
         toolbar_title.setText(title);
         tv_details = (TextView) detaisView.findViewById(R.id.details);
         tv_details.setText(details);
@@ -52,7 +54,19 @@ public class DetailsFragment extends Fragment{
         return detaisView;
     }
 
-
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case android.R.id.home:
+////                getFragmentManager().beginTransaction().replace(R.id.settings_frame, new InfoFragment()).commit();
+////getActivity().onBackPressed();
+//                Log.i("My tag","case home");
+//                if(getFragmentManager().getBackStackEntryCount()>0)
+//                    getFragmentManager().popBackStack();
+//                return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     public String loadLanguage(String defaultLanguage)
     {

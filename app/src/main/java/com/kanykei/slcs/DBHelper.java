@@ -22,6 +22,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String INFO_COLUMN_ID = "id"; // id of info
     public static final String INFO_COLUMN_TITLE = "title"; // title of info
     public static final String INFO_COLUMN_DETAILS = "details"; // details of info
+    public static final String INFO_COLUMN_LANGUAGE = "language"; // details of info
     public static final String ROOMS_TABLE_NAME = "rooms";
     public static final String ROOMS_COLUMN_ID = "id"; // id of room
     public static final String ROOMS_COLUMN_NAME = "name"; // name of room
@@ -29,6 +30,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String ROOMS_COLUMN_WAKE_UP_TIME = "wake_up_time"; // time to turn on room's lights
     public static final String ROOMS_COLUMN_GO_SLEEP_TIME = "go_sleep_time"; // time to turn off room's lights
     public static final String ROOMS_COLUMN_RELAY_PIN = "relay_pin"; // id of relay's pin (in0, in1, in2, in3 or in4)
+    public static final String ROOMS_COLUMN_DELAY = "delay"; // delay time when to switch state of room
     private static DBHelper mInstance = null;
     public Context context;
     SQLiteDatabase db = this.getWritableDatabase();
@@ -36,7 +38,6 @@ public class DBHelper extends SQLiteOpenHelper {
     private DBHelper(Context context) {
         super(context, DATABASE_NAME , null, 1);
         this.context = context;
-        insertInfo();
         Log.i("My Tag", "DBHelper(Context context)\n insertInfo();");
     }
 
@@ -64,11 +65,14 @@ public class DBHelper extends SQLiteOpenHelper {
                 ROOMS_COLUMN_STATE + " integer, " +
                 ROOMS_COLUMN_WAKE_UP_TIME + " time(0), " +
                 ROOMS_COLUMN_GO_SLEEP_TIME + " time(0), " +
-                ROOMS_COLUMN_RELAY_PIN + " integer)");
+                ROOMS_COLUMN_RELAY_PIN + " integer, " +
+                ROOMS_COLUMN_DELAY + " integer)");
         db.execSQL("create table " + INFO_TABLE_NAME + " (" +
                 INFO_COLUMN_ID + " integer primary key, " +
                 INFO_COLUMN_TITLE + " text, " +
-                INFO_COLUMN_DETAILS + " text)");
+                INFO_COLUMN_DETAILS + " text, " +
+                INFO_COLUMN_LANGUAGE + " text)");
+        insertInfo();
         Log.i("My Tag","on create dbhelper");
     }
 
@@ -81,21 +85,92 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void insertInfo(){
-        HashMap<String, String> infoMap = new HashMap<String, String>();
-        infoMap.put(context.getString(R.string.title0),context.getString(R.string.details0));
-        infoMap.put(context.getString(R.string.title1),context.getString(R.string.details1));
-        infoMap.put(context.getString(R.string.title2),context.getString(R.string.details2));
-        infoMap.put(context.getString(R.string.title3),context.getString(R.string.details3));
-        infoMap.put(context.getString(R.string.title4),context.getString(R.string.details4));
+        HashMap<String, String> infoMapEn = new HashMap<String, String>();
+        infoMapEn.put("Create a new room","Go to Home tab and click ‘+’ add button in bottom right corner. In input text, write the name of room. Then choose corresponding relay\\'s pin. Hit save. Now you can see the newly created room in the list of all rooms.");
+        infoMapEn.put("Delete room (-s)","Go to Home tab. Select room (-s) to delete. Click trash box in the top right corner.");
+        infoMapEn.put("Set time to turn the light on (off) in room","Go to Routines tab. To set time of turning the light on in room click wake up. The list of all the rooms with corresponding wake up time to the right will appear. Click the room and set the time in the dialog appeared. To set time of turning the light off in room click go to sleep. The list of all the rooms with corresponding go sleep time to the right will appear. Click the room and set the time in the dialog appeared.");
+        infoMapEn.put("Change language settings","Go to Settings tab.Choose the language from list.");
+        infoMapEn.put("Manage voice control","If you want to voice control on Russian language (there is no Kyrgyz language voice library) first do the following steps.\n" +
+                "\\nTo install a voice library from Google go to Menu in mobile phone. Choose Settings ⇒ My device ⇒ Language and input ⇒ Voice search ⇒ Speech recognition offline ⇒ tab All ⇒ download Russian language. Now you can use voice control feature on Russian language.\\n\n" +
+                "Go to Settings tab.  Turn on voice control. Go to Home tab. Voice control button appeared. Click voice control button and command. The commands are following: “Turn on room_name” or “Turn off room_name”, “Room_name turn on” or “Room_name turn off”; “Включить room_name”, “Отключить room_name” or “Выключить room_name”, “Room_name включить”, “Room_name отключить” or “Room_name выключить”.");
+        HashMap<String, String> infoMapRu = new HashMap<String, String>();
+        infoMapRu.put("Создать новое помещение","Пройдите во вкладку Главная и нажмите кнопку ‘+’ в правом нижнем углу. Введите название помещения ( комнаты ). Затем выберите соответствующий pin релейного модуля. Нажмите кнопку \"Сохранить\". Теперь можете проверить новое помещение в списке помещений во вкладке Главная.");
+        infoMapRu.put("Удалить комнату(-ы)","Пройдите во вкладку Главная. Выберите комнату(-ы), которую (-ые) вы хотели бы удалить. Нажмите кнопку \"Удалить\" (мусорное ведро) в правом верхнем углу.");
+        infoMapRu.put("Установить время когда включать(выключать) лампочки","Пройдите во вкладку Время. " +
+                "Чтобы установить время включения света в комнате, нажмите \"Проснуться\". " +
+                "Появится список всех комнат с соответсвтующим временем включения справа." +
+                "Нажмите на название комнаты, в появившемся окне установите время. \\nЧтобы установить время выключения света в комнате, нажмите \"Уснуть\". Появится список всех комнат с соответсвтующим временем вsключения справа. Нажмите на название комнаты, в появившемся окне установите время.");
+        infoMapRu.put("Настройки языка","Пройдите во вкладку Настройки. Выберите язык из списка.");
+        infoMapRu.put("Управление голосом","Если вы хотите управлять на русском языке " +
+                "(голосовая библиотека кыргызского языка пока не имплементирована) выполните следующие шаги: " +
+                "\\nДля установки голосовой библиотеки Google пройдите в Меню на своем смартфоне. " +
+                "Выберите Настройки ⇒ Мое устройство ⇒ Язык и ввод ⇒ Голосовое управление ⇒ Распознавание речи офлайн ⇒ " +
+                "вкладка ВСЕ ⇒ скачайте Русский язык. Теперь вы можете управлять голосом на русском языке.\\n " +
+                "Пройдите во вкладку Настройки.  Включите голосовое управление.\\n " +
+                "Перейдите во вклдаку Home. Появилась кнопка для управления голосом. Нажмите на кнопку и говорите, командуйте. " +
+                "Команды могут быть следующие: \\n“Turn on название_комнаты” or “Turn off название_комнаты”, " +
+                "“Название_комнаты turn on” or “Название_комнаты turn off”; “Включить название_комнаты”, " +
+                "“Отключить название_комнаты” or “Выключить название_комнаты”, “Название_комнаты включить”, " +
+                "“Название_комнаты отключить” or “Название_комнаты выключить”.");
+        HashMap<String, String> infoMapKg = new HashMap<String, String>();
+        infoMapRu.put("Жаңы бөлмө кошуу","Башкы бетке барып, ‘+’ кошуу баскычын басыңыз. Текст киргизүү кутучасына бөлмөнүн атын жазыңыз." +
+                " Реленин тиешелүү PINин тандаңыз. Сактоо баскычын басыңыз. Эми бүт бөлмөлөрдүн тизмесинде жаңы кошулган бөлмөнү көрө аласыз.");
+        infoMapRu.put("Бөлмөнү(-лөрдү) жок кылуу","Башкы бетке барыңыз. Жок кыла турган бөлмөнү(-лөрдү) тандаңыз. Таштанды кутучасын басыңыз.");
+        infoMapRu.put("Бөлмөдө жарыкты күйгүзүп өчүрүү убактысын белгилөө","\"Убакыт\" кошумча баракчасына барыңыз." +
+                " Бөлмөдө жарыкты күйгүзүү убактысын белгилөө үчүн \"Ойгонуу\" баскычын басыңыз." +
+                " Бардык бөлмөлөрдүн тизмеси жана аларга тиешелүү жарыкты күйгүзүү убактысы пайда болот." +
+                " Бөлмөнү басыңыз жана пайда болгон диалогдо убакыт тандаңыз." +
+                " \\nБөлмөдө жарыкты өчүрүү убактысын белгилөө үчүн \"Уктоо\" баскычын басыңыз." +
+                " Бардык бөлмөлөрдүн тизмеси жана аларга тиешелүү жарыкты өчүрүү убактысы пайда болот." +
+                " Бөлмөнү басыңыз жана пайда болгон диалогдо убакыт тандаңыз.");
+        infoMapRu.put("Тил орнотуулар","\"Орнотуулар\" кошумча баракчасына барыңыз. Тизменен тилди тандаңыз.");
+        infoMapRu.put("Yн башкаруу","Орус тилинде үн менен башкаргыңыз келсе (кыргыз тилинин үн китепканасы жок)" +
+                " биринчи төмөнкү кадамдарды жасаңыз. Google үн китепканасын орнотуу үчүн мобилдик аппаратта Менюну басыңыз." +
+                " Настройки ⇒ Мое устройство ⇒ Язык и ввод ⇒ Голосовое управление ⇒ Распознавание речи офлайн ⇒" +
+                " вкладка ВСЕ ⇒ Орус тилин жүктөп алыңыз. Эми сиз орус тилинде үн башкаруу мүмкүнчүлүгүн колдоно аласыз. \\n" +
+                " Орнотуулар кошумча баракчасына барыңыз. Үн башкарууну күйгүзүңүз. Башкы бетке барыңыз." +
+                " Үн менен башкаруу баскычы көрүндү. Үн менен башкаруу баскычын басып жана буйрукту айтыңыз." +
+                " Буйрук болуп төмөнкүлөр саналат: “Turn on room_name” or “Turn off room_name”, “Room_name turn on” or “Room_name turn off”;" +
+                " “Включить room_name”, “Отключить room_name” or “Выключить room_name”, “Room_name включить”," +
+                " “Room_name отключить” or “Room_name выключить”.");
 
-        Iterator hashMapIterator = infoMap.keySet().iterator();
-        while(hashMapIterator.hasNext()) {
-            String title=(String)hashMapIterator.next();
-            String details=(String)infoMap.get(title);
+
+        Iterator hashMapIteratorEn = infoMapEn.keySet().iterator();
+        while(hashMapIteratorEn.hasNext()) {
+            String language = "en";
+            String title=(String)hashMapIteratorEn.next();
+            String details=(String)infoMapEn.get(title);
             Log.i("My Tag", "Key: "+title+" Value: "+details);
             ContentValues contentValues = new ContentValues();
             contentValues.put(INFO_COLUMN_TITLE, title);
             contentValues.put(INFO_COLUMN_DETAILS, details);
+            contentValues.put(INFO_COLUMN_LANGUAGE, language);
+            db.insert(INFO_TABLE_NAME, null, contentValues);
+            Log.i("My Tag", "inserted: " + title + " " + details);
+        }
+        Iterator hashMapIteratorRu = infoMapRu.keySet().iterator();
+        while(hashMapIteratorRu.hasNext()) {
+            String language = "ru";
+            String title=(String)hashMapIteratorRu.next();
+            String details=(String)infoMapRu.get(title);
+            Log.i("My Tag", "Key: "+title+" Value: "+details);
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(INFO_COLUMN_TITLE, title);
+            contentValues.put(INFO_COLUMN_DETAILS, details);
+            contentValues.put(INFO_COLUMN_LANGUAGE, language);
+            db.insert(INFO_TABLE_NAME, null, contentValues);
+            Log.i("My Tag", "inserted: " + title + " " + details);
+        }
+        Iterator hashMapIteratorKg = infoMapKg.keySet().iterator();
+        while(hashMapIteratorKg.hasNext()) {
+            String language = "kg";
+            String title=(String)hashMapIteratorKg.next();
+            String details=(String)infoMapKg.get(title);
+            Log.i("My Tag", "Key: "+title+" Value: "+details);
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(INFO_COLUMN_TITLE, title);
+            contentValues.put(INFO_COLUMN_DETAILS, details);
+            contentValues.put(INFO_COLUMN_LANGUAGE, language);
             db.insert(INFO_TABLE_NAME, null, contentValues);
             Log.i("My Tag", "inserted: " + title + " " + details);
         }
@@ -119,9 +194,10 @@ public class DBHelper extends SQLiteOpenHelper {
         return infoMap;
     }
 
-    public ArrayList<String> getInfoDetails(int id) {
+    public ArrayList<String> getInfoDetails(int id, String language) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from " + INFO_TABLE_NAME + " where " + INFO_COLUMN_ID + " = " + id + "", null );
+        Cursor res =  db.rawQuery( "select * from " + INFO_TABLE_NAME + " where " + INFO_COLUMN_ID + " = " + id + " and " +
+                INFO_COLUMN_LANGUAGE + " = " + language, null );
         res.moveToFirst();
         ArrayList<String> details = new ArrayList<>();
         details.add(res.getString(res.getColumnIndex(INFO_COLUMN_TITLE)));
@@ -132,10 +208,10 @@ public class DBHelper extends SQLiteOpenHelper {
         return details;
     }
 
-    public ArrayList<String> getInfoTitles() {
+    public ArrayList<String> getInfoTitles(String language) {
         ArrayList<String> titles = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from " +INFO_TABLE_NAME, null );
+        Cursor res =  db.rawQuery( "select * from " +INFO_TABLE_NAME + " where " + INFO_COLUMN_LANGUAGE + " = " + language, null );
         res.moveToFirst();
         while(!res.isAfterLast()){
             titles.add(res.getString(res.getColumnIndex(INFO_COLUMN_TITLE)));
@@ -154,6 +230,7 @@ public class DBHelper extends SQLiteOpenHelper {
             ContentValues contentValues = new ContentValues();
             contentValues.put(ROOMS_COLUMN_NAME, name);
             contentValues.put(ROOMS_COLUMN_STATE, 0);
+            contentValues.put(ROOMS_COLUMN_DELAY, 0);
             contentValues.put(ROOMS_COLUMN_RELAY_PIN, relay_pin);
             db.insert(ROOMS_TABLE_NAME, null, contentValues);
             if (!res.isClosed())  {
@@ -212,11 +289,35 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public boolean updateStateOfRoom (Integer id, Integer state) {
-
         ContentValues contentValues = new ContentValues();
         contentValues.put(ROOMS_COLUMN_STATE, state);
         db.update(ROOMS_TABLE_NAME, contentValues, "id = ? ", new String[]{Integer.toString(id)});
         return true;
+    }
+
+    public boolean updateDelay (Integer id, long delay) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ROOMS_COLUMN_DELAY, delay);
+        db.update(ROOMS_TABLE_NAME, contentValues, "id = ? ", new String[]{Integer.toString(id)});
+        return true;
+    }
+    public boolean updateStateOfRoomByRelayPin (Integer relay_pin, Integer state) {
+        Cursor res =  db.rawQuery( "select * from " + ROOMS_TABLE_NAME + " where " + ROOMS_COLUMN_RELAY_PIN + "=" + relay_pin + "", null );
+        res.moveToFirst();
+        if(res.getCount() != 0) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(ROOMS_COLUMN_STATE, state);
+            Log.i("My tag", "update state by relay pin");
+            db.update(ROOMS_TABLE_NAME, contentValues, ROOMS_COLUMN_RELAY_PIN + " = ? ", new String[]{Integer.toString(relay_pin)});
+            if (!res.isClosed())  {
+                res.close();
+            }
+            return true;
+        }
+        if (!res.isClosed())  {
+            res.close();
+        }
+        return false;
     }
     public boolean updateWakeUpTimer (Integer id, String wake_timer) {
 

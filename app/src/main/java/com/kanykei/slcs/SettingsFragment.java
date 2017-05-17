@@ -26,6 +26,8 @@ import java.util.Locale;
 
 public class SettingsFragment extends Fragment{
     ToggleButton toggleButton;
+    TextView toolbar_title;
+
     public SettingsFragment() {
         // Required empty public constructor
     }
@@ -42,6 +44,8 @@ public class SettingsFragment extends Fragment{
         setLocale(lan);
 
         View settingsView = inflater.inflate(R.layout.fragment_settings, container, false);
+        toolbar_title = (TextView) getActivity().findViewById(R.id.toolbar_title);
+        toolbar_title.setText(R.string.app_name);
 
         String[] languages = { getContext().getString(R.string.en_lang), getContext().getString(R.string.ru_lang), getContext().getString(R.string.kg_lang) };
         Integer[] images = { R.drawable.united_kingdom, R.drawable.russia, R.drawable.kyrgyzstan };
@@ -96,9 +100,9 @@ public class SettingsFragment extends Fragment{
         settingsView.findViewById(R.id.help_info).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), HelpActivity.class);
-                startActivity(intent);
-//                getFragmentManager().beginTransaction().replace(R.id.settings_frame, new InfoFragment() ).addToBackStack(null).commit();
+//                Intent intent = new Intent(getContext(), HelpActivity.class);
+//                startActivity(intent);
+                getFragmentManager().beginTransaction().replace(R.id.settings_frame, new InfoFragment() ).addToBackStack(null).commit();
             }
         });
         return settingsView;

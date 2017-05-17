@@ -36,6 +36,7 @@ public class CreateRoomFragment extends Fragment{
     private DBHelper mydb;
     int id_To_Update = 0;
     int relay_pin;
+    TextView toolbar_title;
 
     public CreateRoomFragment() {
         // Required empty public constructor
@@ -49,6 +50,7 @@ public class CreateRoomFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View createRoomView = inflater.inflate(R.layout.fragment_create_room, container, false);
+        toolbar_title = (TextView) getActivity().findViewById(R.id.toolbar_title);
         mydb = DBHelper.getInstance(getContext());
         inputLayoutName = (TextInputLayout) createRoomView.findViewById(R.id.input_layout_name);
         inputName = (EditText) createRoomView.findViewById(R.id.input_name);
@@ -124,6 +126,8 @@ public class CreateRoomFragment extends Fragment{
         if(extras != null) {
             int Value = extras.getInt("id");
             if (Value > 0) {
+                toolbar_title.setText(R.string.edit_room);
+
                 //means this is the view room part not the add room part.
                 Cursor rs = mydb.getData(Value);
                 rs.moveToFirst();
@@ -142,6 +146,8 @@ public class CreateRoomFragment extends Fragment{
                 inputName.setEnabled(true);
                 inputName.setFocusableInTouchMode(true);
                 inputName.setClickable(true);
+            }else{
+                toolbar_title.setText(R.string.create_room);
             }
         }
 
@@ -235,6 +241,9 @@ public class CreateRoomFragment extends Fragment{
                 d.show();
 
                 return true;
+//            case android.R.id.home:
+//                getFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit();
+//                return true;
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -258,6 +267,7 @@ public class CreateRoomFragment extends Fragment{
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
     }
+
 
 }
 

@@ -59,8 +59,13 @@ public class ConnectToArduinoWithBluetooth extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.connect);
-
-
+        btSocket = ((MyBluetoothSocketApplication) getApplication()).getBtSocket();
+        if(btSocket != null && btSocket.isConnected()){
+            Log.i("My tag","if(btSocket is connected) start main activity");
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
         mStatusTv = (TextView) findViewById(R.id.tv_status);
         mViewAvailableTv = (TextView) findViewById(R.id.tv_view_available);
         mViewPairedTv = (TextView) findViewById(R.id.tv_view_paired);
@@ -79,6 +84,7 @@ public class ConnectToArduinoWithBluetooth extends Activity {
                 dialog.dismiss();
                 hideScan();
                 mBluetoothAdapter.cancelDiscovery();
+                lv_scan.setVisibility(View.VISIBLE);
             }
         });
 
@@ -154,7 +160,6 @@ public class ConnectToArduinoWithBluetooth extends Activity {
 
     @Override
     public void onStop() {
-        unregisterReceiver(mReceiver);
         Log.i("My tag","on stop connect to ard bt");
         super.onStop();
     }
@@ -345,6 +350,7 @@ public class ConnectToArduinoWithBluetooth extends Activity {
                 isBtConnected = true;
                 Intent turnOn = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(turnOn);
+                finish();
             }
             progress.dismiss();
         }
@@ -352,5 +358,11 @@ public class ConnectToArduinoWithBluetooth extends Activity {
     private void msg(String s)
     {
         Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
+    }
+    @Override
+    public void onBackPressed()
+    {
+        this.moveTaskToBack(true);
+
     }
 }

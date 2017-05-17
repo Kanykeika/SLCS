@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class InfoFragment extends Fragment{
-
+    TextView toolbar_title;
     public InfoFragment() {
         // Required empty public constructor
     }
@@ -36,9 +37,9 @@ public class InfoFragment extends Fragment{
         setLocale(lan);
         View infoView = inflater.inflate(R.layout.fragment_info, container, false);
         mydb = DBHelper.getInstance(getContext());
-        TextView toolbar_title = (TextView) getActivity().findViewById(R.id.toolbar_title);
+        toolbar_title = (TextView) getActivity().findViewById(R.id.toolbar_title);
         toolbar_title.setText(R.string.help);
-        ArrayList<String> infoList = mydb.getInfoTitles();
+        ArrayList<String> infoList = mydb.getInfoTitles(lan);
         final ListView list = (ListView) infoView.findViewById(R.id.listViewInfo);
         list.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.info_listview, R.id.textViewInfo, infoList));
         list.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -48,14 +49,22 @@ public class InfoFragment extends Fragment{
                 dataBundle.putInt("info_id", position+1);
                 DetailsFragment detailsFragment = new DetailsFragment();
                 detailsFragment.setArguments(dataBundle);
-                getFragmentManager().beginTransaction().replace(R.id.help_frame, detailsFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).addToBackStack(null).commit();
+                getFragmentManager().beginTransaction().replace(R.id.settings_frame, detailsFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).addToBackStack(null).commit();
             }
         });
 
         return infoView;
     }
 
-
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case android.R.id.home:
+//                getFragmentManager().beginTransaction().replace(R.id.settings_frame, new SettingsFragment()).commit();
+//                return true;
+//        }
+//        return false;
+//    }
 
     public String loadLanguage(String defaultLanguage)
     {

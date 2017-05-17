@@ -4,17 +4,18 @@
 xmlns:android="http://schemas.android.com/apk/res/android"
 android:layout_width="fill_parent"
     android:orientation="horizontal"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="10dp">
 
     <TextView
         android:id="@+id/room_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size"
-        android:textAllCaps="true"
         android:textStyle="bold"
         android:layout_gravity="center"
         android:layout_weight="0.10"
+        android:textColor="@color/colorPrimary"
         android:fontFamily="@string/font_fontFamily_medium"
         />
 
@@ -23,7 +24,6 @@ android:layout_width="fill_parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size"
-        android:textAllCaps="true"
         android:textStyle="bold"
         android:fontFamily="@string/font_fontFamily_medium"
         android:textColor="@color/colorPrimary"
@@ -36,6 +36,7 @@ android:layout_width="fill_parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size"
+        android:textColor="@color/colorPrimary"
         android:layout_weight="0.40"
         android:fontFamily="@string/font_fontFamily_medium"
         android:layout_gravity="start|center_vertical"

@@ -2,6 +2,7 @@ package com.kanykei.slcs;
 
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 //import android.text.format.DateFormat;
@@ -163,6 +164,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStop(){
         super.onStop();
+        btSocket = ((MyBluetoothSocketApplication) getApplication()).getBtSocket();
+        try{
+            outputStream = btSocket.getOutputStream();
+            inputStream = btSocket.getInputStream();
+            outputStream.close();
+            inputStream.close();
+            btSocket.close();
+            Log.i("My tag", "Bluetooth socket closed");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        Intent intent = new Intent(this, ConnectToArduinoWithBluetooth.class);
+        startActivity(intent);
         Log.i("My tag", "on stop of main activity");
     }
 
@@ -176,18 +190,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-//                this.moveTaskToBack(true);
-                btSocket = ((MyBluetoothSocketApplication) getApplication()).getBtSocket();
-                try{
-                    outputStream = btSocket.getOutputStream();
-                    inputStream = btSocket.getInputStream();
-                    outputStream.close();
-                    inputStream.close();
-                    btSocket.close();
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-
+                this.moveTaskToBack(true);
                 return true;
         }
         return false;

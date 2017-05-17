@@ -3,22 +3,19 @@ package com.kanykei.slcs;
 import android.app.Activity;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
@@ -30,13 +27,10 @@ import android.widget.ListView;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Objects;
 
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.support.design.widget.FloatingActionButton;
@@ -45,13 +39,17 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import static java.lang.Integer.parseInt;
+
 
 public class HomeFragment extends Fragment implements TextToSpeech.OnInitListener, OnClickListener {
 
     public HomeFragment() {
         // Required empty public constructor
     }
-// recognizer
+    TextView toolbar_title;
+
+    // recognizer
     TextToSpeech tts;
     Spinner spinnerResult;
     OutputStream outputStream;
@@ -63,7 +61,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
     volatile boolean stopWorker;
     BluetoothSocket btSocket;
     private static final int RQS_RECOGNITION = 1;
-
+    int sensor;
     // CRUD rooms
     private ListView obj;
     private DBHelper mydb;
@@ -71,8 +69,11 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
     private Button fab_voice_control;
     private TextView empty_text;
 
-
-
+    Handler bluetoothIn;
+    final int handlerState = 0;                        //used to identify handler message
+    private StringBuilder recDataString;
+    ArrayList<Room> array_list;
+    int value_to_send;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,9 +92,10 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
 
         final View myView = inflater.inflate(R.layout.fragment_home, container, false);
-
+        toolbar_title = (TextView) getActivity().findViewById(R.id.toolbar_title);
+        toolbar_title.setText(R.string.app_name);
         mydb = DBHelper.getInstance(getContext());
-        final ArrayList<Room> array_list = mydb.getAllRooms();
+        array_list = mydb.getAllRooms();
         if(array_list.isEmpty()){
             empty_text = (TextView) myView.findViewById(R.id.emptyText);
             empty_text.setText(getText(R.string.empty));
@@ -108,7 +110,6 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
         }
 
 
-
         //-----------------------
         //speech recognition code
 
@@ -121,20 +122,29 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
             fab_voice_control.setVisibility(View.INVISIBLE);
         }else{
             fab_voice_control.setVisibility(View.VISIBLE);
-            btSocket = ((MyBluetoothSocketApplication) getActivity().getApplication()).getBtSocket(); // get global Bluetooth Socket variable from application class
-            try{
-                outputStream = btSocket.getOutputStream();
-                inputStream = btSocket.getInputStream();
-                beginListenForData();
-                beginListenForData1();
-            }catch (Exception e){
-                Toast.makeText(getContext(),"Failed to getOutputStream",Toast.LENGTH_LONG);
-                Toast.makeText(getContext(),"Failed to getInputStream",Toast.LENGTH_LONG);
-                e.printStackTrace();
-            }
             fab_voice_control.setOnClickListener(startRecognizerOnClickListener);
             spinnerResult = (Spinner) myView.findViewById(R.id.result);
             tts = new TextToSpeech(getContext(), this);
+        }
+        btSocket = ((MyBluetoothSocketApplication) getActivity().getApplication()).getBtSocket(); // get global Bluetooth Socket variable from application class
+        try{
+            outputStream = btSocket.getOutputStream();
+            outputStream.write(9);
+            Log.i("My tag", "sending 9");
+            inputStream = btSocket.getInputStream();
+            beginListenForData();
+            Log.i("My tag", "beginListenForData()");
+        }
+//        catch (Exception e){
+//            Toast.makeText(getContext(),"Failed to getOutputStream",Toast.LENGTH_LONG);
+//            Toast.makeText(getContext(),"Failed to getInputStream",Toast.LENGTH_LONG);
+//            e.printStackTrace();
+//        }
+        catch (IOException e){
+            Toast.makeText(getContext(),"Socket closed. Reconnect with bluetooth",Toast.LENGTH_LONG);
+
+            e.printStackTrace();
+            Log.i("My tag", "socket closed");
         }
         final RoomAdapter adapter = new RoomAdapter(myView.getContext(),R.layout.listview, array_list);
         obj = (ListView) myView.findViewById(R.id.listView);
@@ -214,9 +224,8 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
         return myView;
     }
 
+    public void beginListenForData() {
 
-    void beginListenForData()
-    {
         final Handler handler = new Handler();
         final byte delimiter = 10; //This is the ASCII code for a newline character
 
@@ -243,16 +252,68 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                                 {
                                     byte[] encodedBytes = new byte[readBufferPosition];
                                     System.arraycopy(readBuffer, 0, encodedBytes, 0, encodedBytes.length);
-                                    final String data = new String(encodedBytes, "US-ASCII");
+                                    String data = new String(encodedBytes, "US-ASCII");
+                                    recDataString = new StringBuilder(data);
+                                    Log.i("My tag", "data length = " + data.length());
+                                    Log.i("My tag", "data= " + data);
                                     readBufferPosition = 0;
+                                    Log.i("My tag", "Data Received = " + recDataString);
+                                    int dataLength = recDataString.length();                          //get length of data received
+                                    Log.i("My tag", "String Length = " + String.valueOf(dataLength));
 
+                                    if(dataLength != 0){
+                                        if(!String.valueOf(recDataString.charAt(0)).equals("")){
+                                            msg("no sensor value");
+                                        }
+                                        else if(dataLength == 0){
+                                            msg("no data");
+                                        }
+                                        else{
+                                            int indexOf = recDataString.indexOf("�");
+                                            msg("index of = " + indexOf);
+                                            while (indexOf != -1) {
+                                                recDataString.delete(indexOf, indexOf + recDataString.length());
+                                            }
+                                            sensor = parseInt(String.valueOf(recDataString.charAt(0)));             //get sensor value from string at index 0
+                                            Log.i("My tag", " Sensor = " + sensor);
+                                        }
+                                    }
+
+                                    recDataString.delete(0,recDataString.length()); //clear all string data
                                     handler.post(new Runnable()
                                     {
                                         public void run()
                                         {
-                                            Toast.makeText(getContext(), data, Toast.LENGTH_LONG).show();
+                                            switch (sensor) {
+                                                case 1:
+                                                    mydb.updateStateOfRoomByRelayPin(0, 0);
+                                                    break;
+                                                case 2:
+                                                    mydb.updateStateOfRoomByRelayPin(1, 0);
+                                                    break;
+                                                case 3:
+                                                    mydb.updateStateOfRoomByRelayPin(2, 0);
+                                                    break;
+                                                case 4:
+                                                    mydb.updateStateOfRoomByRelayPin(3, 0);
+                                                    break;
+                                                case 5:
+                                                    mydb.updateStateOfRoomByRelayPin(0, 1);
+                                                    break;
+                                                case 6:
+                                                    mydb.updateStateOfRoomByRelayPin(1, 1);
+                                                    break;
+                                                case 7:
+                                                    mydb.updateStateOfRoomByRelayPin(2, 1);
+                                                    break;
+                                                case 8:
+                                                    mydb.updateStateOfRoomByRelayPin(3, 1);
+                                                    break;
+                                            }
+
                                         }
                                     });
+
                                 }
                                 else
                                 {
@@ -266,47 +327,20 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                         stopWorker = true;
                     }
                 }
+                if(Thread.currentThread().isInterrupted()){
+                    Intent intent = new Intent(getActivity(), ConnectToArduinoWithBluetooth.class);
+                    startActivity(intent);
+                }
             }
         });
 
         workerThread.start();
     }
 
-    final int handlerState = 0;                        //used to identify handler message
-    private StringBuilder recDataString = new StringBuilder();
 
-    void beginListenForData1(){
-        Handler bluetoothIn = new Handler() {
-            public void handleMessage(android.os.Message msg) {
-                if (msg.what == handlerState) {                                     //if message is what we want
-                    String readMessage = (String) msg.obj;                                                                // msg.arg1 = bytes from connect thread
-                    recDataString.append(readMessage);                                      //keep appending to string until ~
-                    int endOfLineIndex = recDataString.indexOf("~");                    // determine the end-of-line
-                    if (endOfLineIndex > 0) {                                           // make sure there data before ~
-                        String dataInPrint = recDataString.substring(0, endOfLineIndex);    // extract string
-                        Toast.makeText(getContext(), "Data Received = " + dataInPrint, Toast.LENGTH_SHORT).show();
-                        int dataLength = dataInPrint.length();                          //get length of data received
-                        Toast.makeText(getContext(), "String Length = " + String.valueOf(dataLength), Toast.LENGTH_SHORT).show();
-
-                        if (recDataString.charAt(0) == '#')                             //if it starts with # we know it is what we are looking for
-                        {
-                            String sensor0 = recDataString.substring(1, 2);             //get sensor value from string between indices 1-5
-                            String sensor1 = recDataString.substring(3, 4);            //same again...
-                            String sensor2 = recDataString.substring(5, 6);
-                            String sensor3 = recDataString.substring(7, 8);
-
-                            Toast.makeText(getContext(), " Sensor 0  = " + sensor0 , Toast.LENGTH_SHORT).show();
-                            Toast.makeText(getContext(), " Sensor 1  = " + sensor1 , Toast.LENGTH_SHORT).show();
-                            Toast.makeText(getContext(), " Sensor 2  = " + sensor2 , Toast.LENGTH_SHORT).show();
-                            Toast.makeText(getContext(), " Sensor 3  = " + sensor3 , Toast.LENGTH_SHORT).show();
-                        }
-                        recDataString.delete(0, recDataString.length());                    //clear all string data
-                        // strIncom =" ";
-                        dataInPrint = " ";
-                    }
-                }
-            }
-        };
+    private void msg(String s)
+    {
+        Log.i("My tag", s);
     }
 
     //----------------------------
@@ -339,32 +373,93 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             String selectedResult = parent.getItemAtPosition(position).toString();
-            //Toast.makeText(MainActivity.this, selectedResult, Toast.LENGTH_LONG).show();
-            //tts.speak(selectedResult, TextToSpeech.QUEUE_ADD, null);
-            //String answer = spinnerResult.getSelectedItem().toString();
-            int b = '4';
-            if(selectedResult.toLowerCase().equals("turn on kitchen") || selectedResult.toLowerCase().equals("включить kitchen")){
-                b = '5';
-            }else
-            if(selectedResult.toLowerCase().equals("turn off kitchen") || selectedResult.toLowerCase().equals("включить kitchen")){
-                b = '1'; // if b == ReLAY_1 // then go / turn off
-            }else
-            if(selectedResult.toLowerCase().equals("turn on room") || selectedResult.toLowerCase().equals("включить kitchen")){
-                b = '3';
-            }else
-            if(selectedResult.toLowerCase().equals("turn off room") || selectedResult.toLowerCase().equals("включить kitchen")){
-                b = '4';
-            }else
-            if(selectedResult.toLowerCase().equals("turn on") || selectedResult.toLowerCase().equals("включить")){
-                b = '5';
+            Log.i("My tag","value_to_send 0 = " + value_to_send);
+            for(int i = 0; i < array_list.size(); i++){
+                if(selectedResult.toLowerCase().equals("turn on " + array_list.get(i).getName()) ||
+                        selectedResult.toLowerCase().equals("включить " + array_list.get(i).getName()) ||
+                        selectedResult.toLowerCase().equals(array_list.get(i).getName() + "turn on ") ||
+                        selectedResult.toLowerCase().equals(array_list.get(i).getName() + "включить ")){
+                    if(array_list.get(i).getRelayPin() == 0){
+                        value_to_send = 5;
+                    }else if(array_list.get(i).getRelayPin() == 1){
+                        value_to_send = 6;
+                    }else if(array_list.get(i).getRelayPin() == 2){
+                        value_to_send = 7;
+                    }else if(array_list.get(i).getRelayPin() == 3){
+                        value_to_send = 8;
+                    }
+                }else
+                if(selectedResult.toLowerCase().equals("turn off " + array_list.get(i).getName()) ||
+                        selectedResult.toLowerCase().equals("выключить " + array_list.get(i).getName()) ||
+                        selectedResult.toLowerCase().equals("отключить " + array_list.get(i).getName()) ||
+                        selectedResult.toLowerCase().equals(array_list.get(i).getName() + "turn off ") ||
+                        selectedResult.toLowerCase().equals(array_list.get(i).getName() + "выключить ") ||
+                        selectedResult.toLowerCase().equals(array_list.get(i).getName() + "отключить ")){
+                    if(array_list.get(i).getRelayPin() == 0){
+                        value_to_send = 1;
+                    }else if(array_list.get(i).getRelayPin() == 1){
+                        value_to_send = 2;
+                    }else if(array_list.get(i).getRelayPin() == 2){
+                        value_to_send = 3;
+                    }else if(array_list.get(i).getRelayPin() == 3){
+                        value_to_send = 4;
+                    }
+                }
             }
+            switch (value_to_send) {
+                case 1:
+                    mydb.updateStateOfRoomByRelayPin(0, 0);
+                    Log.i("My tag","mydb.updateStateOfRoomByRelayPin(0, 0);");
 
+                    break;
+                case 2:
+                    mydb.updateStateOfRoomByRelayPin(1, 0);
+                    Log.i("My tag","mydb.updateStateOfRoomByRelayPin(1, 0);");
+
+                    break;
+                case 3:
+                    mydb.updateStateOfRoomByRelayPin(2, 0);
+                    Log.i("My tag","mydb.updateStateOfRoomByRelayPin(2, 0);");
+
+                    break;
+                case 4:
+                    mydb.updateStateOfRoomByRelayPin(3, 0);
+                    Log.i("My tag","mydb.updateStateOfRoomByRelayPin(3, 0);");
+
+                    break;
+                case 5:
+                    mydb.updateStateOfRoomByRelayPin(0, 1);
+                    Log.i("My tag","mydb.updateStateOfRoomByRelayPin(0, 1);");
+
+                    break;
+                case 6:
+                    mydb.updateStateOfRoomByRelayPin(1, 1);
+                    Cursor r = mydb.getData(1);
+                    Log.i("My tag", "+" + r.getInt(r.getColumnIndex(DBHelper.ROOMS_COLUMN_STATE)));
+                    Log.i("My tag","mydb.updateStateOfRoomByRelayPin(1, 1);");
+
+                    break;
+                case 7:
+                    mydb.updateStateOfRoomByRelayPin(2, 1);
+                    Log.i("My tag","mydb.updateStateOfRoomByRelayPin(2, 1);");
+
+                    break;
+                case 8:
+                    mydb.updateStateOfRoomByRelayPin(3, 1);
+                    Log.i("My tag","mydb.updateStateOfRoomByRelayPin(3, 1);");
+                    break;
+            }
             try{
-                outputStream.write(b);
-                Toast.makeText(getContext(), "sending "+b, Toast.LENGTH_LONG).show();
+                outputStream.write(value_to_send);
+                Log.i("My tag","value_to_send = " + value_to_send);
+                Toast.makeText(getContext(), "sending "+ value_to_send, Toast.LENGTH_LONG).show();
             }catch (Exception e){
+                Log.i("My tag", "try send in voice control");
                 e.printStackTrace();
             }
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            fm.beginTransaction().replace(R.id.home_frame, new HomeFragment()).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
+            Log.i("My tag","update Home fragment in voice control");
         }
 
         @Override
@@ -393,13 +488,82 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
 
     @Override
     public void onDestroyView(){
-        super.onDestroyView();
+        //Close the Text to Speech Library
+        if(tts != null) {
+
+            tts.stop();
+            tts.shutdown();
+            Log.d("My tag", "TTS Destroyed");
+        }super.onDestroyView();
         Log.i("My tag", "on DestroyView of home fragment");
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
+        final int id = ((MyBluetoothSocketApplication) getActivity().getApplication()).getRoom_id();
+        final int state = ((MyBluetoothSocketApplication) getActivity().getApplication()).getState();
+        long diff = ((MyBluetoothSocketApplication) getActivity().getApplication()).getTime_difference();
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {//Do something after 100ms
+                mydb.updateStateOfRoom(id, state);
+//                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit();
+            }
+        }, diff);
+
+        DBHelper mydb = DBHelper.getInstance(getContext());
+        ArrayList<Room> roomArrayList = mydb.getAllRooms();
+
+        if(roomArrayList.size() != 0) {
+            System.out.println("Turn lights on in: ");
+            for (int i = 0; i < roomArrayList.size(); i++) {
+                if(roomArrayList.get(i) != null) {
+                    String wake_time = roomArrayList.get(i).getWake();
+//                    try {
+//                        Date enddate = sdf.parse(endTime);
+//                        Date startdate = sdf.parse(wake_time);
+//                        long diff = startdate.getTime() - enddate.getTime();
+//                        String differ = sdf.format(diff);
+//                        String[] tokens = differ.split(":");
+//                        System.out.println(roomArrayList.get(i).getName() +
+//                                " after " + tokens[0] + " hours " + tokens[1] + " minutes.");
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+                }
+            }
+            System.out.println("Turn lights off in: ");
+            for (int i = 0; i < roomArrayList.size(); i++) {
+                if(roomArrayList.get(i) != null) {
+                    String sleep_time = roomArrayList.get(i).getSleep();
+
+//                    try {
+//                        Date enddate = sdf.parse(endTime);
+//                        Date startdate = sdf.parse(sleep_time);
+//                        long diff = startdate.getTime() - enddate.getTime();
+//                        String differ = sdf.format(diff);
+//                        String[] tokens = differ.split(":");
+//                        hours = tokens[0] + " hours";
+//                        minutes = tokens[1] + " minutes";
+//                        if (tokens[0] == "00") {
+//                            hours = "";
+//                        }
+//                        if (tokens[1] == "00") {
+//                            minutes = "";
+//                        }
+//
+//                        System.out.println(roomArrayList.get(i).getName() +
+//                                " after " + hours + minutes + ".");
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+                }
+            }
+    }
+
+
 //        String hours = "";
 //        String minutes = "";
 //        Log.i("My tag", "on resume of home fragment");
@@ -465,6 +629,17 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
         super.onStop();
         Log.i("My tag", "on stop of home fragment");
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().moveTaskToBack(true);
+                return true;
+        }
+        return false;
+    }
+
 //    @Override
 //    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 //        // Inflate the menu; this adds items to the action bar if it is present.

@@ -29,7 +29,6 @@
     <color name="button_material_light">#ffd6d7d7</color>
     <color name="colorAccent">#c8e8ff</color>
     <color name="colorPrimary">#125688</color>
-    <color name="colorPrimaryDark">#125688</color>
     <color name="common_action_bar_splitter">#d2d2d2</color>
     <color name="common_google_signin_btn_text_dark_default">@android:color/white</color>
     <color name="common_google_signin_btn_text_dark_disabled">#1F000000</color>
@@ -78,7 +77,6 @@
     <color name="material_grey_800">#ff424242</color>
     <color name="material_grey_850">#ff303030</color>
     <color name="material_grey_900">#ff212121</color>
-    <color name="navigationBarColor">#125688</color>
     <color name="notification_action_color_filter">#ffffffff</color>
     <color name="notification_icon_bg_color">#ff9e9e9e</color>
     <color name="notification_material_background_media_default_color">#ff424242</color>
@@ -101,7 +99,6 @@
     <color name="switch_thumb_normal_material_dark">#ffbdbdbd</color>
     <color name="switch_thumb_normal_material_light">#fff1f1f1</color>
     <color name="textColorPrimary">#FFFFFF</color>
-    <color name="windowBackground">#FFFFFF</color>
     <declare-styleable name="ActionBar"><attr name="navigationMode">
             
             <enum name="normal" value="0"/>
@@ -495,9 +492,7 @@
     <dimen name="abc_text_size_subtitle_material_toolbar">16dp</dimen>
     <dimen name="abc_text_size_title_material">20sp</dimen>
     <dimen name="abc_text_size_title_material_toolbar">20dp</dimen>
-    <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="custom_tab_layout_height">72dp</dimen>
     <dimen name="design_appbar_elevation">4dp</dimen>
     <dimen name="design_bottom_navigation_active_item_max_width">168dp</dimen>
     <dimen name="design_bottom_navigation_active_text_size">14sp</dimen>
@@ -538,7 +533,6 @@
     <dimen name="design_tab_text_size_2line">12sp</dimen>
     <item format="float" name="disabled_alpha_material_dark" type="dimen">0.30</item>
     <item format="float" name="disabled_alpha_material_light" type="dimen">0.26</item>
-    <dimen name="fab_margin">16dp</dimen>
     <item format="float" name="highlight_alpha_material_colored" type="dimen">0.26</item>
     <item format="float" name="highlight_alpha_material_dark" type="dimen">0.20</item>
     <item format="float" name="highlight_alpha_material_light" type="dimen">0.12</item>
@@ -564,12 +558,7 @@
     <dimen name="notification_subtext_size">13sp</dimen>
     <dimen name="notification_top_pad">10dp</dimen>
     <dimen name="notification_top_pad_large_text">5dp</dimen>
-    <dimen name="tab_label">14sp</dimen>
-    <dimen name="tab_max_width">264dp</dimen>
-    <dimen name="tab_padding_bottom">16dp</dimen>
     <dimen name="text_size">17sp</dimen>
-    <dimen name="toggle_btn_margin">35dp</dimen>
-    <dimen name="toggle_btn_margin_top_bottom">5dp</dimen>
     <drawable name="notification_template_icon_bg">#3333B5E5</drawable>
     <drawable name="notification_template_icon_low_bg">#0cffffff</drawable>
     <item name="action_bar_activity_content" type="id"/>
@@ -673,16 +662,16 @@
     <string name="deleteRoomTitle">Are you sure</string>
     <string name="delete_dialog">Delete</string>
     <string name="delete_dialog_sure">Are you sure you want to delete </string>
-    <string name="details0">Go to Home tab and click ‘+’ add button. In input text, write the name of room. Then choose corresponding relay\'s pin. Hit save. Now you can see the newly created room in the list of all rooms.</string>
-    <string name="details1">Go to Home tab. Select room (-s) to delete. Click trash box.</string>
+    <string name="details0">Go to Home tab and click ‘+’ add button in bottom right corner. In input text, write the name of room. Then choose corresponding relay\'s pin. Hit save. Now you can see the newly created room in the list of all rooms.</string>
+    <string name="details1">Go to Home tab. Select room (-s) to delete. Click trash box in the top right corner.</string>
     <string name="details2">Go to Routines tab. To set time of turning the light on in room click wake up. The list of all the rooms with corresponding wake up time to the right will appear. Click the room and set the time in the dialog appeared. To set time of turning the light off in room click go to sleep. The list of all the rooms with corresponding go sleep time to the right will appear. Click the room and set the time in the dialog appeared.</string>
     <string name="details3">Go to Settings tab.<b> Choose the language</b> from list.</string>
     <string name="details4">If you want to voice control on Russian language (there is no Kyrgyz language voice library) first do the following steps.
 \nTo install a voice library from Google go to Menu in mobile phone. Choose Settings ⇒ My device ⇒ Language and input ⇒ Voice search ⇒ Speech recognition offline ⇒ tab All ⇒ download Russian language. Now you can use voice control feature on Russian language.\n
 Go to Settings tab.  Turn on voice control. Go to Home tab. Voice control button appeared. Click voice control button and command. The commands are following: “Turn on room_name” or “Turn off room_name”, “Room_name turn on” or “Room_name turn off”; “Включить room_name”, “Отключить room_name” or “Выключить room_name”, “Room_name включить”, “Room_name отключить” or “Room_name выключить”.</string>
-    <string name="disp_room">Display room</string>
     <string name="done">Done</string>
     <string name="edit">Edit Room</string>
+    <string name="edit_room">Edit the room</string>
     <string name="empty">Nothing to show</string>
     <string name="en_lang">English</string>
     <string name="err_msg_duplicate_name">Room already exists</string>
@@ -1773,7 +1762,7 @@ Go to Settings tab.  Turn on voice control. Go to Home tab. Voice control button
         <item name="windowActionModeOverlay">true</item>
         <item name="windowActionBar">false</item>
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:actionModeBackground">@color/colorPrimary</item>
         <item name="backgroundSplit">@color/colorPrimary</item>

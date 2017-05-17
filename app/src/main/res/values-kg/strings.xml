@@ -15,7 +15,7 @@
     <string name="create_room">Жаңы бөлмө кошуу</string>
     <string name="title_home">Башкы бет</string>
     <string name="title_routines">Убакыт</string>
-    <string name="title_settings">Настройки</string>
+    <string name="title_settings">Орнотуулар</string>
     <string name="delete_dialog">Жок кылуу</string>
     <string name="delete_dialog_sure">Жок кылуу бөлмөлөрдүн саны: </string>
     <string name="cancel">Отмена</string>
@@ -38,24 +38,38 @@
     <string name="selected"> тандалды</string>
     <string name="room"> бөлмө</string>
     <string name="choose_relay">Реленин pin-ин тандаңыз</string>
-    <string name="send_feedback">Send feedback</string>
+    <string name="send_feedback">Пикир жөнөтүү</string>
     <string name="mail_feedback_email">light.control.app@gmail.com</string>
-    <string name="title_send_feedback">Send feedback</string>
-    <string name="mail_feedback_subject">Feedback on Light Control App</string>
-    <string name="mail_feedback_message">Hi,
-\n\nYour Feedback sample app rocks! I would like to give you some feedback:</string>
-    <string name="help">Help</string>
-    <string name="title0">Create a new room</string>
-    <string name="details0">Go to Home tab and click ‘+’ add button. In input text, write the name of room. Then choose corresponding relay\'s pin. Hit save. Now you can see the newly created room in the list of all rooms.</string>
-    <string name="title1">Delete room (-s)</string>
-    <string name="details1">Go to Home tab. Select room (-s) to delete. Click trash box.</string>
-    <string name="title2">Set time to turn the light on (off) in room</string>
-    <string name="details2">Go to Routines tab. To set time of turning the light on in room click wake up. The list of all the rooms with corresponding wake up time to the right will appear. Click the room and set the time in the dialog appeared. To set time of turning the light off in room click go to sleep. The list of all the rooms with corresponding go sleep time to the right will appear. Click the room and set the time in the dialog appeared.</string>
-    <string name="title3">Change language settings</string>
-    <string name="details3">Go to Settings tab.<b> Choose the language</b> from list.</string>
-    <string name="title4">Manage voice control</string>
-    <string name="details4">If you want to voice control on Russian language (there is no Kyrgyz language voice library) first do the following steps.
-\nTo install a voice library from Google go to Menu in mobile phone. Choose Settings ⇒ My device ⇒ Language and input ⇒ Voice search ⇒ Speech recognition offline ⇒ tab All ⇒ download Russian language. Now you can use voice control feature on Russian language.\n
-Go to Settings tab.  Turn on voice control. Go to Home tab. Voice control button appeared. Click voice control button and command. The commands are following: “Turn on room_name” or “Turn off room_name”, “Room_name turn on” or “Room_name turn off”; “Включить room_name”, “Отключить room_name” or “Выключить room_name”, “Room_name включить”, “Room_name отключить” or “Room_name выключить”.</string>
-
+    <string name="title_send_feedback">Пикир жөнөтүү</string>
+    <string name="mail_feedback_subject">"Light Control App" тиркемесине пикир</string>
+    <string name="mail_feedback_message">Салам,
+\n\nМенин пикирим:</string>
+    <string name="help">Маалымат</string>
+    <string name="title0">Жаңы бөлмө кошуу</string>
+    <string name="details0">Башкы бетке барып, ‘+’ кошуу баскычын басыңыз. Текст киргизүү кутучасына бөлмөнүн атын жазыңыз.
+        Реленин тиешелүү PINин тандаңыз. Сактоо баскычын басыңыз. Эми бүт бөлмөлөрдүн тизмесинде жаңы кошулган бөлмөнү көрө аласыз.</string>
+    <string name="title1">Бөлмөнү(-лөрдү) жок кылуу</string>
+    <string name="details1">Башкы бетке барыңыз. Жок кыла турган бөлмөнү(-лөрдү) тандаңыз. Таштанды кутучасын басыңыз.</string>
+    <string name="title2">Бөлмөдө жарыкты күйгүзүп өчүрүү убактысын белгилөө</string>
+    <string name="details2">"Убакыт" кошумча баракчасына барыңыз.
+        Бөлмөдө жарыкты күйгүзүү убактысын белгилөө үчүн "Ойгонуу" баскычын басыңыз.
+        Бардык бөлмөлөрдүн тизмеси жана аларга тиешелүү жарыкты күйгүзүү убактысы пайда болот.
+        Бөлмөнү басыңыз жана пайда болгон диалогдо убакыт тандаңыз.
+        \nБөлмөдө жарыкты өчүрүү убактысын белгилөө үчүн "Уктоо" баскычын басыңыз.
+        Бардык бөлмөлөрдүн тизмеси жана аларга тиешелүү жарыкты өчүрүү убактысы пайда болот.
+        Бөлмөнү басыңыз жана пайда болгон диалогдо убакыт тандаңыз.
+    </string>
+    <string name="title3">Тил орнотуулар</string>
+    <string name="details3">"Орнотуулар" кошумча баракчасына барыңыз. Тизменен тилди тандаңыз.</string>
+    <string name="title4">Yн башкаруу</string>
+    <string name="details4">Орус тилинде үн менен башкаргыңыз келсе (кыргыз тилинин үн китепканасы жок)
+    биринчи төмөнкү кадамдарды жасаңыз. Google үн китепканасын орнотуу үчүн мобилдик аппаратта Менюну басыңыз.
+    Настройки ⇒ Мое устройство ⇒ Язык и ввод ⇒ Голосовое управление ⇒ Распознавание речи офлайн ⇒
+        вкладка ВСЕ ⇒ Орус тилин жүктөп алыңыз. Эми сиз орус тилинде үн башкаруу мүмкүнчүлүгүн колдоно аласыз. \n
+    Орнотуулар кошумча баракчасына барыңыз. Үн башкарууну күйгүзүңүз. Башкы бетке барыңыз.
+    Үн менен башкаруу баскычы көрүндү. Үн менен башкаруу баскычын басып жана буйрукту айтыңыз.
+    Буйрук болуп төмөнкүлөр саналат: “Turn on room_name” or “Turn off room_name”, “Room_name turn on” or “Room_name turn off”;
+        “Включить room_name”, “Отключить room_name” or “Выключить room_name”, “Room_name включить”,
+        “Room_name отключить” or “Room_name выключить”.
+    </string>
 </resources>

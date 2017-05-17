@@ -19,6 +19,7 @@ public class RoutinesFragment extends Fragment{
     private TextView wake;
     private TextView sleep;
     private String lan;
+    TextView toolbar_title;
 
     public RoutinesFragment() {
         // Required empty public constructor
@@ -36,6 +37,8 @@ public class RoutinesFragment extends Fragment{
         String lan = loadLanguage("en");
         setLocale(lan);
         final View routineView = inflater.inflate(R.layout.fragment_routines, container, false);
+        toolbar_title = (TextView) getActivity().findViewById(R.id.toolbar_title);
+        toolbar_title.setText(R.string.app_name);
 
         wake = (TextView) routineView.findViewById(R.id.wake_up);
         sleep = (TextView) routineView.findViewById(R.id.go_to_sleep);

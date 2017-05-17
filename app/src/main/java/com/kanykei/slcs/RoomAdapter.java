@@ -7,6 +7,7 @@ import java.util.List;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,12 +73,17 @@ public class RoomAdapter extends ArrayAdapter<Room> {
         }
         // 5. Set listener for toggle button
         Cursor res = mydb.getData(roomsArrayList.get(position).getId());
+        Log.i("My tag", "mydb.getData(roomsArrayList.get(position).getId());" + " " + roomsArrayList.get(position).getId());
         if(res.getCount() != 0) {
             int state = res.getInt(res.getColumnIndex(DBHelper.ROOMS_COLUMN_STATE));
+            Log.i("My tag","int state");
             if (state == 1) {
                 holder.toggleButton.setChecked(true);
+                Log.i("My tag","state = 1");
+
             } else {
                 holder.toggleButton.setChecked(false);
+                Log.i("My tag","state = 0");
             }
             holder.toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -89,27 +95,28 @@ public class RoomAdapter extends ArrayAdapter<Room> {
                         try{
                             if(isChecked){ // to turn on
                                 if(roomsArrayList.get(position).getRelayPin() == 0){
-                                    outputStream.write('5');
+                                    outputStream.write(5);
                                 }else if(roomsArrayList.get(position).getRelayPin() == 1){
-                                    outputStream.write('6');
+                                    outputStream.write(6);
                                 }else if(roomsArrayList.get(position).getRelayPin() == 2){
-                                    outputStream.write('7');
+                                    outputStream.write(7);
                                 }else if(roomsArrayList.get(position).getRelayPin() == 3){
-                                    outputStream.write('8');
+                                    outputStream.write(8);
                                 }
                             }else{ // to turn off
                                 if(roomsArrayList.get(position).getRelayPin() == 0){
-                                    outputStream.write('1');
+                                    outputStream.write(1);
                                 }else if(roomsArrayList.get(position).getRelayPin() == 1){
-                                    outputStream.write('2');
+                                    outputStream.write(2);
                                 }else if(roomsArrayList.get(position).getRelayPin() == 2){
-                                    outputStream.write('3');
+                                    outputStream.write(3);
                                 }else if(roomsArrayList.get(position).getRelayPin() == 3){
-                                    outputStream.write('4');
+                                    outputStream.write(4);
                                 }
                             }
                         }catch (Exception e){
                             e.printStackTrace();
+                            Toast.makeText(getContext(), "Broken pipe. Reconnect with Bluetooth", Toast.LENGTH_SHORT).show();
                         }
 
 

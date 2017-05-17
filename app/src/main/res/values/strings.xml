@@ -18,7 +18,7 @@
     <string name="deleteRoomTitle">Are you sure</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="disp_room">Display room</string>
+    <string name="edit_room">Edit the room</string>
     <string name="create_room">Create a room</string>
     <string name="updated">Updated</string>
     <string name="not_updated">Not updated</string>
@@ -46,9 +46,9 @@
 \n\nYour Feedback sample app rocks! I would like to give you some feedback:</string>
     <string name="help">Help</string>
     <string name="title0">Create a new room</string>
-    <string name="details0">Go to Home tab and click ‘+’ add button. In input text, write the name of room. Then choose corresponding relay\'s pin. Hit save. Now you can see the newly created room in the list of all rooms.</string>
+    <string name="details0">Go to Home tab and click ‘+’ add button in bottom right corner. In input text, write the name of room. Then choose corresponding relay\'s pin. Hit save. Now you can see the newly created room in the list of all rooms.</string>
     <string name="title1">Delete room (-s)</string>
-    <string name="details1">Go to Home tab. Select room (-s) to delete. Click trash box.</string>
+    <string name="details1">Go to Home tab. Select room (-s) to delete. Click trash box in the top right corner.</string>
     <string name="title2">Set time to turn the light on (off) in room</string>
     <string name="details2">Go to Routines tab. To set time of turning the light on in room click wake up. The list of all the rooms with corresponding wake up time to the right will appear. Click the room and set the time in the dialog appeared. To set time of turning the light off in room click go to sleep. The list of all the rooms with corresponding go sleep time to the right will appear. Click the room and set the time in the dialog appeared.</string>
     <string name="title3">Change language settings</string>

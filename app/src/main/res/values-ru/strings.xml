@@ -38,24 +38,39 @@
     <string name="selected"> выбрано</string>
     <string name="room"> комнат(ы)</string>
     <string name="choose_relay">Выберите pin реле</string>
-    <string name="send_feedback">Send feedback</string>
+    <string name="send_feedback">Отправить отзыв, пожелания, жалобы</string>
     <string name="mail_feedback_email">light.control.app@gmail.com</string>
-    <string name="title_send_feedback">Send feedback</string>
-    <string name="mail_feedback_subject">Feedback on Light Control App</string>
-    <string name="mail_feedback_message">Hi,
-\n\nYour Feedback sample app rocks! I would like to give you some feedback:</string>
-    <string name="help">Help</string>
-    <string name="title0">Create a new room</string>
-    <string name="details0">Go to Home tab and click ‘+’ add button. In input text, write the name of room. Then choose corresponding relay\'s pin. Hit save. Now you can see the newly created room in the list of all rooms.</string>
-    <string name="title1">Delete room (-s)</string>
-    <string name="details1">Go to Home tab. Select room (-s) to delete. Click trash box.</string>
-    <string name="title2">Set time to turn the light on (off) in room</string>
-    <string name="details2">Go to Routines tab. To set time of turning the light on in room click wake up. The list of all the rooms with corresponding wake up time to the right will appear. Click the room and set the time in the dialog appeared. To set time of turning the light off in room click go to sleep. The list of all the rooms with corresponding go sleep time to the right will appear. Click the room and set the time in the dialog appeared.</string>
-    <string name="title3">Change language settings</string>
-    <string name="details3">Go to Settings tab.<b> Choose the language</b> from list.</string>
-    <string name="title4">Manage voice control</string>
-    <string name="details4">If you want to voice control on Russian language (there is no Kyrgyz language voice library) first do the following steps.
-\nTo install a voice library from Google go to Menu in mobile phone. Choose Settings ⇒ My device ⇒ Language and input ⇒ Voice search ⇒ Speech recognition offline ⇒ tab All ⇒ download Russian language. Now you can use voice control feature on Russian language.\n
-Go to Settings tab.  Turn on voice control. Go to Home tab. Voice control button appeared. Click voice control button and command. The commands are following: “Turn on room_name” or “Turn off room_name”, “Room_name turn on” or “Room_name turn off”; “Включить room_name”, “Отключить room_name” or “Выключить room_name”, “Room_name включить”, “Room_name отключить” or “Room_name выключить”.</string>
-
+    <string name="title_send_feedback">Отправить отзыв</string>
+    <string name="mail_feedback_subject">Отзыв о "Light Control App"</string>
+    <string name="mail_feedback_message">Привет,
+\n\nЯ бы хотел(-a) написать такой отзыв: </string>
+    <string name="help">Справка</string>
+    <string name="title0">Создать новое помещение</string>
+    <string name="details0">Пройдите во вкладку Главная и нажмите кнопку ‘+’ в правом нижнем углу.
+        Введите название помещения ( комнаты ). Затем выберите соответствующий pin релейного модуля.
+        Нажмите кнопку "Сохранить". Теперь можете проверить новое помещение в списке помещений во вкладке Главная.</string>
+    <string name="title1">Удалить комнату(-ы)</string>
+    <string name="details1">Пройдите во вкладку Главная. Выберите комнату(-ы), которую (-ые) вы хотели бы удалить.
+        Нажмите кнопку "Удалить" (мусорное ведро) в правом верхнем углу.</string>
+    <string name="title2">Установить время когда включать(выключать) лампочки</string>
+    <string name="details2">Пройдите во вкладку Время. Чтобы установить время включения света в комнате, нажмите "Проснуться".
+        Появится список всех комнат с соответсвтующим временем включения справа.
+        Нажмите на название комнаты, в появившемся окне установите время.
+        \nЧтобы установить время выключения света в комнате, нажмите "Уснуть".
+        Появится список всех комнат с соответсвтующим временем вsключения справа.
+        Нажмите на название комнаты, в появившемся окне установите время. </string>
+    <string name="title3">Настройки языка</string>
+    <string name="details3">Пройдите во вкладку Настройки.<b> Выберите язык из списка.</b></string>
+    <string name="title4">Управление голосом</string>
+    <string name="details4">Если вы хотите управлять на русском языке
+        (голосовая библиотека кыргызского языка пока не имплементирована) выполните следующие шаги:
+        \nДля установки голосовой библиотеки Google пройдите в Меню на своем смартфоне.
+        Выберите Настройки ⇒ Мое устройство ⇒ Язык и ввод ⇒ Голосовое управление ⇒ Распознавание речи офлайн ⇒
+        вкладка ВСЕ ⇒ скачайте Русский язык. Теперь вы можете управлять голосом на русском языке.\n
+        Пройдите во вкладку Настройки.  Включите голосовое управление.\n
+        Перейдите во вклдаку Home. Появилась кнопка для управления голосом. Нажмите на кнопку и говорите, командуйте.
+        Команды могут быть следующие: \n“Turn on название_комнаты” or “Turn off название_комнаты”,
+        “Название_комнаты turn on” or “Название_комнаты turn off”; “Включить название_комнаты”,
+        “Отключить название_комнаты” or “Выключить название_комнаты”, “Название_комнаты включить”,
+        “Название_комнаты отключить” or “Название_комнаты выключить”.</string>
 </resources>
