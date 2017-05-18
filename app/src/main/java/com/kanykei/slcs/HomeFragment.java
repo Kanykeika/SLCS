@@ -45,13 +45,16 @@ import static java.lang.Integer.parseInt;
 
 public class HomeFragment extends Fragment implements TextToSpeech.OnInitListener, OnClickListener {
 
+    private ListView group_list_view;
+
     public HomeFragment() {
         // Required empty public constructor
     }
-    TextView toolbar_title;
 
+    TextView toolbar_title;
     // recognizer
     TextToSpeech tts;
+
     Spinner spinnerResult;
     OutputStream outputStream;
     InputStream inputStream;
@@ -69,11 +72,12 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
     private FloatingActionButton fab;
     private Button fab_voice_control;
     private TextView empty_text;
-
     Handler bluetoothIn;
+
     final int handlerState = 0;                        //used to identify handler message
     private StringBuilder recDataString;
     ArrayList<Room> array_list;
+    ArrayList<Group> group_array_list;
     int value_to_send;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,6 +101,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
         toolbar_title.setText(R.string.app_name);
         mydb = DBHelper.getInstance(getContext());
         array_list = mydb.getAllRooms();
+        group_array_list = mydb.getAllGroups();
         if(array_list.isEmpty()){
             empty_text = (TextView) myView.findViewById(R.id.emptyText);
             empty_text.setText(getText(R.string.empty));
@@ -159,6 +164,9 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
             Intent intent = new Intent(getActivity(), ConnectToArduinoWithBluetooth.class);
             getActivity().startActivity(intent);
         }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////         ROOMS        //////////////////////////////////////////////////////////////////////
         final RoomAdapter adapter = new RoomAdapter(myView.getContext(),R.layout.listview, array_list);
         obj = (ListView) myView.findViewById(R.id.listView);
         obj.setAdapter(adapter);
@@ -190,23 +198,25 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 switch (item.getItemId()) {
-//                    case R.id.group:
-//                        // Calls getSelectedIds method from ListViewAdapter Class
-//                        SparseBooleanArray selected_group = adapter.getSelectedIds();
-//                        // Captures all selected ids with a loop
-//                        for (int i = (selected_group.size() - 1); i >= 0; i--) {
-//                            if (selected_group.valueAt(i)) {
-//                                final Room selecteditem = adapter.getItem(selected_group.keyAt(i));
-//                                // Remove selected items following the ids
-//                                adapter.remove(selecteditem);
-//                                mydb.deleteRoom(selecteditem.getId());
-//                            }
-//                        }
-//                        Toast.makeText(getContext(), getString(R.string.success_delete), Toast.LENGTH_SHORT).show();
-//                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit(); //call it here to refresh listView upon delete
-//                        // Close CAB
-//                        mode.finish();
-//                        return true;
+                    case R.id.group:
+                        // Calls getSelectedIds method from ListViewAdapter Class
+                        SparseBooleanArray selected_group = adapter.getSelectedIds();
+                        ArrayList<Integer> room_ids = new ArrayList<Integer>();
+                        Bundle dataBundle = new Bundle();
+                        // Captures all selected ids with a loop
+                        for (int i = 0; i < selected_group.size(); i++) {
+                            if (selected_group.valueAt(i)) {
+                                final Room selecteditem = adapter.getItem(selected_group.keyAt(i));
+                                room_ids.add(selecteditem.getId());
+                            }
+                        }
+                        dataBundle.putIntegerArrayList("room_ids", room_ids);
+                        CreateGroupFragment createGroupFragment = new CreateGroupFragment();
+                        createGroupFragment.setArguments(dataBundle);
+                        getFragmentManager().beginTransaction().replace(R.id.home_frame, createGroupFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).addToBackStack(null).commit();
+                        // Close CAB
+                        mode.finish();
+                        return true;
                     case R.id.delete:
                         // Calls getSelectedIds method from ListViewAdapter Class
                         SparseBooleanArray selected = adapter.getSelectedIds();
@@ -239,6 +249,87 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
             public void onDestroyActionMode(ActionMode mode) {
                 // TODO Auto-generated method stub
                 adapter.removeSelection();
+
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                // TODO Auto-generated method stub
+                return false;
+            }
+
+        });
+
+
+
+
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////           GROUPS                 /////////////////////////////////////////////////////
+
+        final GroupAdapter groupAdapter = new GroupAdapter(myView.getContext(),R.layout.group_listview, group_array_list);
+        group_list_view = (ListView) myView.findViewById(R.id.group_listView);
+        group_list_view.setAdapter(adapter);
+        group_list_view.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+
+        group_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position,long arg3) {
+                Bundle dataBundle = new Bundle();
+                dataBundle.putInt("group_id", group_array_list.get(position).getId());
+                CreateGroupFragment createGroupFragment = new CreateGroupFragment();
+                createGroupFragment.setArguments(dataBundle);
+                getFragmentManager().beginTransaction().replace(R.id.home_frame, createGroupFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).addToBackStack(null).commit();
+            }
+        });
+
+        group_list_view.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+                // Capture total checked items
+                final int checkedCount = group_list_view.getCheckedItemCount();
+                // Set the CAB title according to total checked items
+                mode.setTitle(checkedCount + " " + getString(R.string.selected));
+                // Calls toggleSelection method from ListViewAdapter Class
+                groupAdapter.toggleSelection(position);
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.delete:
+                        // Calls getSelectedIds method from ListViewAdapter Class
+                        SparseBooleanArray selected = groupAdapter.getSelectedIds();
+                        // Captures all selected ids with a loop
+                        for (int i = (selected.size() - 1); i >= 0; i--) {
+                            if (selected.valueAt(i)) {
+                                final Group selecteditem = groupAdapter.getItem(selected.keyAt(i));
+                                // Remove selected items following the ids
+                                groupAdapter.remove(selecteditem);
+                                mydb.deleteGroup(selecteditem.getId());
+                            }
+                        }
+                        Toast.makeText(getContext(), getString(R.string.success_delete), Toast.LENGTH_SHORT).show();
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit(); //call it here to refresh listView upon delete
+                        // Close CAB
+                        mode.finish();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                mode.getMenuInflater().inflate(R.menu.delete_groups, menu);
+                return true;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                // TODO Auto-generated method stub
+                groupAdapter.removeSelection();
 
             }
 
