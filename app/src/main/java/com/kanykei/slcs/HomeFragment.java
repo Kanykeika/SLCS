@@ -16,6 +16,7 @@ import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
@@ -141,10 +142,22 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
 //            e.printStackTrace();
 //        }
         catch (IOException e){
-            Toast.makeText(getContext(),"Socket closed. Reconnect with bluetooth",Toast.LENGTH_LONG);
-
+            Toast.makeText(getActivity(),"Socket closed. Reconnect with bluetooth",Toast.LENGTH_LONG).show();
             e.printStackTrace();
             Log.i("My tag", "socket closed");
+            btSocket = ((MyBluetoothSocketApplication) getActivity().getApplicationContext()).getBtSocket();
+            try{
+                outputStream = btSocket.getOutputStream();
+                inputStream = btSocket.getInputStream();
+                outputStream.close();
+                inputStream.close();
+                btSocket.close();
+                Log.i("My tag", "Bluetooth socket closed");
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+            Intent intent = new Intent(getActivity(), ConnectToArduinoWithBluetooth.class);
+            getActivity().startActivity(intent);
         }
         final RoomAdapter adapter = new RoomAdapter(myView.getContext(),R.layout.listview, array_list);
         obj = (ListView) myView.findViewById(R.id.listView);
@@ -177,6 +190,23 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 switch (item.getItemId()) {
+//                    case R.id.group:
+//                        // Calls getSelectedIds method from ListViewAdapter Class
+//                        SparseBooleanArray selected_group = adapter.getSelectedIds();
+//                        // Captures all selected ids with a loop
+//                        for (int i = (selected_group.size() - 1); i >= 0; i--) {
+//                            if (selected_group.valueAt(i)) {
+//                                final Room selecteditem = adapter.getItem(selected_group.keyAt(i));
+//                                // Remove selected items following the ids
+//                                adapter.remove(selecteditem);
+//                                mydb.deleteRoom(selecteditem.getId());
+//                            }
+//                        }
+//                        Toast.makeText(getContext(), getString(R.string.success_delete), Toast.LENGTH_SHORT).show();
+//                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit(); //call it here to refresh listView upon delete
+//                        // Close CAB
+//                        mode.finish();
+//                        return true;
                     case R.id.delete:
                         // Calls getSelectedIds method from ListViewAdapter Class
                         SparseBooleanArray selected = adapter.getSelectedIds();
@@ -501,26 +531,26 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
     @Override
     public void onResume() {
         super.onResume();
-        final int id = ((MyBluetoothSocketApplication) getActivity().getApplication()).getRoom_id();
-        final int state = ((MyBluetoothSocketApplication) getActivity().getApplication()).getState();
-        long diff = ((MyBluetoothSocketApplication) getActivity().getApplication()).getTime_difference();
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {//Do something after 100ms
-                mydb.updateStateOfRoom(id, state);
-//                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit();
-            }
-        }, diff);
+//        final int id = ((MyBluetoothSocketApplication) getActivity().getApplication()).getRoom_id();
+//        final int state = ((MyBluetoothSocketApplication) getActivity().getApplication()).getState();
+//        long diff = ((MyBluetoothSocketApplication) getActivity().getApplication()).getTime_difference();
+//        final Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {//Do something after 100ms
+//                mydb.updateStateOfRoom(id, state);
+////                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit();
+//            }
+//        }, diff);
 
-        DBHelper mydb = DBHelper.getInstance(getContext());
-        ArrayList<Room> roomArrayList = mydb.getAllRooms();
-
-        if(roomArrayList.size() != 0) {
-            System.out.println("Turn lights on in: ");
-            for (int i = 0; i < roomArrayList.size(); i++) {
-                if(roomArrayList.get(i) != null) {
-                    String wake_time = roomArrayList.get(i).getWake();
+//        DBHelper mydb = DBHelper.getInstance(getContext());
+//        ArrayList<Room> roomArrayList = mydb.getAllRooms();
+//
+//        if(roomArrayList.size() != 0) {
+//            System.out.println("Turn lights on in: ");
+//            for (int i = 0; i < roomArrayList.size(); i++) {
+//                if(roomArrayList.get(i) != null) {
+//                    String wake_time = roomArrayList.get(i).getWake();
 //                    try {
 //                        Date enddate = sdf.parse(endTime);
 //                        Date startdate = sdf.parse(wake_time);
@@ -532,12 +562,12 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
 //                    } catch (Exception e) {
 //                        e.printStackTrace();
 //                    }
-                }
-            }
-            System.out.println("Turn lights off in: ");
-            for (int i = 0; i < roomArrayList.size(); i++) {
-                if(roomArrayList.get(i) != null) {
-                    String sleep_time = roomArrayList.get(i).getSleep();
+//                }
+//            }
+//            System.out.println("Turn lights off in: ");
+//            for (int i = 0; i < roomArrayList.size(); i++) {
+//                if(roomArrayList.get(i) != null) {
+//                    String sleep_time = roomArrayList.get(i).getSleep();
 
 //                    try {
 //                        Date enddate = sdf.parse(endTime);
@@ -559,9 +589,9 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
 //                    } catch (Exception e) {
 //                        e.printStackTrace();
 //                    }
-                }
-            }
-    }
+//                }
+//            }
+//    }
 
 
 //        String hours = "";
@@ -637,14 +667,14 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                 getActivity().moveTaskToBack(true);
                 return true;
         }
-        return false;
+        return super.onOptionsItemSelected(item);
     }
 
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        inflater.inflate(R.menu.display_rooms, menu);
-//        super.onCreateOptionsMenu(menu,inflater);
-//    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.empty_menu, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
 
 }

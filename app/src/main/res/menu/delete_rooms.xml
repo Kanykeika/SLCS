@@ -4,6 +4,11 @@
     >
 
     <item
+        android:id="@+id/group"
+        android:icon="@drawable/ic_group"
+        android:title=""
+        />
+    <item
         android:id="@+id/delete"
         android:icon="@drawable/ic_delete"
         android:title=""

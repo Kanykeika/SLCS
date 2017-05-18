@@ -1,11 +1,13 @@
 package com.kanykei.slcs;
 
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -26,6 +28,7 @@ public class RoomAdapter extends ArrayAdapter<Room> {
     private SparseBooleanArray mSelectedItemsIds;
     LayoutInflater inflater;
     private OutputStream outputStream = null;
+    private InputStream inputStream = null;
     private BluetoothSocket btSocket;
     // Container Class for item
     private class ViewHolder {
@@ -116,7 +119,20 @@ public class RoomAdapter extends ArrayAdapter<Room> {
                             }
                         }catch (Exception e){
                             e.printStackTrace();
-                            Toast.makeText(getContext(), "Broken pipe. Reconnect with Bluetooth", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Broken pipe. Reconnect with Bluetooth", Toast.LENGTH_LONG).show();
+                            btSocket = ((MyBluetoothSocketApplication) getContext().getApplicationContext()).getBtSocket();
+                            try{
+                                outputStream = btSocket.getOutputStream();
+                                inputStream = btSocket.getInputStream();
+                                outputStream.close();
+                                inputStream.close();
+                                btSocket.close();
+                                Log.i("My tag", "Bluetooth socket closed");
+                            }catch (Exception ex){
+                                ex.printStackTrace();
+                            }
+                            Intent intent = new Intent(getContext(), ConnectToArduinoWithBluetooth.class);
+                            getContext().startActivity(intent);
                         }
 
 

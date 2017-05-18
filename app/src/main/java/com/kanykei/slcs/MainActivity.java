@@ -19,6 +19,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -33,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static java.security.AccessController.getContext;
+
 public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
@@ -41,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     BluetoothSocket btSocket;
     OutputStream outputStream;
     InputStream inputStream;
-    DBHelper mydb;
+    static  DBHelper mydb;
     private int[] tabIcons = {
             R.drawable.ic_tab_home,
             R.drawable.ic_tab_schedule,
@@ -87,9 +90,16 @@ public class MainActivity extends AppCompatActivity {
 
         // Custom action bar
         ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         Log.i("My Tag","action bar");
-
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
@@ -164,26 +174,100 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStop(){
         super.onStop();
-        btSocket = ((MyBluetoothSocketApplication) getApplication()).getBtSocket();
-        try{
-            outputStream = btSocket.getOutputStream();
-            inputStream = btSocket.getInputStream();
-            outputStream.close();
-            inputStream.close();
-            btSocket.close();
-            Log.i("My tag", "Bluetooth socket closed");
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        Intent intent = new Intent(this, ConnectToArduinoWithBluetooth.class);
-        startActivity(intent);
         Log.i("My tag", "on stop of main activity");
     }
 
     @Override
-    public void onResume(){
+    public void onDestroy(){
+        super.onDestroy();
+        Log.i("My tag", "on destroy of main activity");
+    }
+
+    @Override
+    public void onResume() {
         super.onResume();
         Log.i("My tag", "on Resume of main activity");
+
+    }
+
+    public void timer_handler(){
+//        handler_wake.removeCallbacks(runnable);
+
+        final int[] value_to_send = new int[1];
+
+        final ArrayList<Room> roomArrayList = mydb.getAllRooms();
+
+        if (roomArrayList.size() != 0) {
+//            System.out.println("Turn lights on in: ");
+            for (int i = 0; i < roomArrayList.size(); i++) {
+                if (roomArrayList.get(i) != null) {
+                    long wake_time_delay = roomArrayList.get(i).getDelay_wake();
+                    if(wake_time_delay != 0) {
+                        Handler handler_wake = new Handler();
+                        final int finalI = i;
+                        handler_wake.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {//Do something after .....
+                                mydb.updateStateOfRoom(roomArrayList.get(finalI).getId(), 1);
+                                if(roomArrayList.get(finalI).getRelayPin() == 0){
+                                    value_to_send[0] = 5;
+                                }else if(roomArrayList.get(finalI).getRelayPin() == 1){
+                                    value_to_send[0] = 6;
+                                }else if(roomArrayList.get(finalI).getRelayPin() == 2){
+                                    value_to_send[0] = 7;
+                                }else if(roomArrayList.get(finalI).getRelayPin() == 3){
+                                    value_to_send[0] = 8;
+                                }
+                                try{
+                                    outputStream.write(value_to_send[0]);
+                                    Log.i("My tag","main activity on set time wake = " + value_to_send[0]);
+                                    Toast.makeText(MainActivity.this, "sending "+ value_to_send[0], Toast.LENGTH_LONG).show();
+                                }catch (Exception e){
+                                    Log.i("My tag", "try send in main activity on set time wake");
+                                    e.printStackTrace();
+                                }
+                                getSupportFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit();
+                            }
+                        }, wake_time_delay);
+                    }
+                }
+            }
+//            System.out.println("Turn lights off in: ");
+            for (int i = 0; i < roomArrayList.size(); i++) {
+                if (roomArrayList.get(i) != null) {
+                    long sleep_time_delay = roomArrayList.get(i).getDelay_sleep();
+                    if(sleep_time_delay != 0) {
+                        Handler handler_sleep = new Handler();
+                        final int finalI = i;
+                        handler_sleep.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {//Do something after .....
+                                mydb.updateStateOfRoom(roomArrayList.get(finalI).getId(), 0);
+                                if(roomArrayList.get(finalI).getRelayPin() == 0){
+                                    value_to_send[0] = 1;
+                                }else if(roomArrayList.get(finalI).getRelayPin() == 1){
+                                    value_to_send[0] = 2;
+                                }else if(roomArrayList.get(finalI).getRelayPin() == 2){
+                                    value_to_send[0] = 3;
+                                }else if(roomArrayList.get(finalI).getRelayPin() == 3){
+                                    value_to_send[0] = 4;
+                                }
+                                try{
+                                    outputStream.write(value_to_send[0]);
+                                    Log.i("My tag","main activity on set time sleep = " + value_to_send[0]);
+                                    Toast.makeText(MainActivity.this, "sending "+ value_to_send[0], Toast.LENGTH_LONG).show();
+                                }catch (Exception e){
+                                    Log.i("My tag", "try send in main activity on set time sleep");
+                                    e.printStackTrace();
+                                }
+                                getSupportFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit();
+                            }
+                        }, sleep_time_delay);
+                    }
+                }
+            }
+
+        }
     }
 
     @Override
@@ -193,7 +277,7 @@ public class MainActivity extends AppCompatActivity {
                 this.moveTaskToBack(true);
                 return true;
         }
-        return false;
+        return super.onOptionsItemSelected(item);
     }
 
 }

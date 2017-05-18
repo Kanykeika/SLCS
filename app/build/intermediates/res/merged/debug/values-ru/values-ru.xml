@@ -82,9 +82,9 @@
         “Название_комнаты turn on” or “Название_комнаты turn off”; “Включить название_комнаты”,
         “Отключить название_комнаты” or “Выключить название_комнаты”, “Название_комнаты включить”,
         “Название_комнаты отключить” or “Название_комнаты выключить”.</string>
-    <string name="disp_room">Изменить</string>
     <string name="done">Создана новая комната</string>
     <string name="edit">Изменить</string>
+    <string name="edit_room">Изменить</string>
     <string name="empty">Пусто</string>
     <string name="en_lang">Английский</string>
     <string name="err_msg_duplicate_name">Комната с таким именем уже существует</string>

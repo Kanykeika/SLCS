@@ -11,7 +11,7 @@
     <string name="deleteRoom">Вы уверены, что хотите удалить это?</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
-    <string name="disp_room">Изменить</string>
+    <string name="edit_room">Изменить</string>
     <string name="create_room">Создайте новую комнату</string>
     <string name="title_home">Главная</string>
     <string name="title_routines">Время</string>

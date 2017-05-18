@@ -44,12 +44,15 @@ public class DetailsFragment extends Fragment{
 
         mydb = DBHelper.getInstance(getContext());
         ArrayList<String> arrayList  = mydb.getInfoDetails(getArguments().getInt("info_id"), lan);
-        String title = arrayList.get(0);
-        String details = arrayList.get(1);
-        toolbar_title = (TextView) getActivity().findViewById(R.id.toolbar_title);
-        toolbar_title.setText(title);
-        tv_details = (TextView) detaisView.findViewById(R.id.details);
-        tv_details.setText(details);
+        if(arrayList.size() != 0){
+            String title = arrayList.get(0);
+            String details = arrayList.get(1);
+            toolbar_title = (TextView) getActivity().findViewById(R.id.toolbar_title);
+            toolbar_title.setText(title);
+            tv_details = (TextView) detaisView.findViewById(R.id.details);
+            tv_details.setText(details);
+        }
+
 
         return detaisView;
     }

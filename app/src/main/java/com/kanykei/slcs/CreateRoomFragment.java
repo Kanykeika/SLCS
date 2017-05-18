@@ -142,8 +142,6 @@ public class CreateRoomFragment extends Fragment{
                 }
 
                 inputName.setText(col_name);
-                inputLayoutName.setError(col_id);
-                inputName.setEnabled(true);
                 inputName.setFocusableInTouchMode(true);
                 inputName.setClickable(true);
             }else{
@@ -241,9 +239,10 @@ public class CreateRoomFragment extends Fragment{
                 d.show();
 
                 return true;
-//            case android.R.id.home:
-//                getFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit();
-//                return true;
+            case android.R.id.home:
+                toolbar_title.setText(R.string.app_name);
+                getActivity().onBackPressed();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
 

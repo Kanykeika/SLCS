@@ -11,7 +11,7 @@
     <string name="deleteRoom">Вы уверены, что хотите удалить это?</string>
     <string name="yes">Ооба</string>
     <string name="no">Жок</string>
-    <string name="disp_room">Оңдоо</string>
+    <string name="edit_room">Оңдоо</string>
     <string name="create_room">Жаңы бөлмө кошуу</string>
     <string name="title_home">Башкы бет</string>
     <string name="title_routines">Убакыт</string>

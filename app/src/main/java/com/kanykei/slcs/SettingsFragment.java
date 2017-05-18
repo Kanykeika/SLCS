@@ -100,8 +100,6 @@ public class SettingsFragment extends Fragment{
         settingsView.findViewById(R.id.help_info).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(getContext(), HelpActivity.class);
-//                startActivity(intent);
                 getFragmentManager().beginTransaction().replace(R.id.settings_frame, new InfoFragment() ).addToBackStack(null).commit();
             }
         });

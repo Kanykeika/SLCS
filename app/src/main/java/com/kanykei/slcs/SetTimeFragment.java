@@ -10,6 +10,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -84,10 +87,8 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
 
     @Override
     public void onFinishDialog(String time) {
-        msg("time = " +  time);
         String hours;
         String minutes;
-        Log.i("My tag", "onFinishDialog of set time fragment");
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         String startTime = sdf.format(new Date());
         Log.i("My Tag", "current time is " + startTime);
@@ -96,22 +97,26 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
             mydb.updateWakeUpTimer(array_list.get(position_value).getId(), time);
             Toast.makeText(getActivity(), "Updated wake up time : " + time + " of " + array_list.get(position_value).getName(), Toast.LENGTH_SHORT).show();
             try {
-                Date startdate = sdf.parse(startTime);
-                Date enddate = sdf.parse(time);
-                long diff = enddate.getTime() - startdate.getTime();
-                String differ = sdf.format(diff);
-                String[] tokens = differ.split(":");
-                msg(differ);
-                hours = tokens[0] + " hours";
-                minutes = tokens[1] + " minutes";
-                if (tokens[0].equals("00")) {
+                String[] startTimeArray = startTime.split(":");
+                long startTimeInMilliseconds = Integer.parseInt(startTimeArray[1])*3600 + Integer.parseInt(startTimeArray[0])*216000;
+                String[] endTimeArray = time.split(":");
+                long endTimeInMilliseconds = Integer.parseInt(endTimeArray[1])*3600 + Integer.parseInt(endTimeArray[0])*216000;
+                long diff = endTimeInMilliseconds - startTimeInMilliseconds;
+                long min = (diff/3600)%60;
+                long hour = (diff/3600) - min;
+                hours = hour + " hours";
+                minutes = min + " minutes";
+                if (hour == 0) {
                     hours = "";
                 }
-                if (tokens[1].equals("00")) {
+                if (min == 0) {
                     minutes = "";
                 }
                 msg("Turn lights on in " + array_list.get(position_value).getName() +
                         " after " + hours + " " + minutes + ".");
+                mydb.updateDelayWake(array_list.get(position_value).getId(),diff);
+                ((MainActivity)getActivity()).timer_handler();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -136,9 +141,8 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
                 }
                 msg("Turn lights off in " + array_list.get(position_value).getName() +
                         " after " + hours + " " + minutes + ".");
-                ((MyBluetoothSocketApplication) getActivity().getApplication()).setTime_difference(diff);
-                ((MyBluetoothSocketApplication) getActivity().getApplication()).setRoom_id(array_list.get(position_value).getId());
-                ((MyBluetoothSocketApplication) getActivity().getApplication()).setState(0);
+                mydb.updateDelaySleep(array_list.get(position_value).getId(),diff);
+                ((MainActivity)getActivity()).timer_handler();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -169,16 +173,23 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
         Log.i("My tag", s);
         Toast.makeText(getActivity(),s,Toast.LENGTH_LONG).show();
     }
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case android.R.id.home:
-//                toolbar_title.setText(R.string.app_name);
-//                getActivity().onBackPressed();
-//                return true;
-//        }
-//        return false;
-//    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                toolbar_title.setText(R.string.app_name);
+                getActivity().onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.empty_menu, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
 
 }
 

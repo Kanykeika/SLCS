@@ -9,7 +9,11 @@ public class Room {
     private int state;
     private int relay_pin;
 
-    public Room(int id, String name, int state, String wake_time, String sleep_time, int relay_pin) {
+
+    private long delay_wake;
+    private long delay_sleep;
+
+    public Room(int id, String name, int state, String wake_time, String sleep_time, int relay_pin, long delay_wake, long delay_sleep) {
         super();
         this.id = id;
         this.name = name;
@@ -17,8 +21,9 @@ public class Room {
         this.wake_time = wake_time;
         this.sleep_time = sleep_time;
         this.relay_pin = relay_pin;
+        this.delay_wake = delay_wake;
+        this.delay_sleep = delay_sleep;
     }
-
     // getters
     public int getId() {return id;}
     public String getName(){return name;}
@@ -26,6 +31,15 @@ public class Room {
     public String getSleep(){ return sleep_time; }
     public int getState() {return state;}
     public int getRelayPin() {return relay_pin;}
+    public long getDelay_wake() {
+        return delay_wake;
+    }
+
+    public long getDelay_sleep() {
+        return delay_sleep;
+    }
+
+
 
     // setters
     public void setId(int id) {this.id = id;}
@@ -37,4 +51,10 @@ public class Room {
     }
     public void setRelayPin(int state) { this.relay_pin = relay_pin; }
 
+    public void setDelay_wake(long delay_wake) {
+        this.delay_wake = delay_wake;
+    }
+    public void setDelay_sleep(long delay_sleep) {
+        this.delay_sleep = delay_sleep;
+    }
 }
