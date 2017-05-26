@@ -656,8 +656,9 @@
     <string name="common_open_on_phone">Open on phone</string>
     <string name="common_signin_button_text">Sign in</string>
     <string name="common_signin_button_text_long">Sign in with Google</string>
+    <string name="create_group">Create a group</string>
     <string name="create_room">Create a room</string>
-    <string name="delete">Delete Room</string>
+    <string name="delete">Delete</string>
     <string name="deleteRoom">Are you sure, you want to delete it?</string>
     <string name="deleteRoomTitle">Are you sure</string>
     <string name="delete_dialog">Delete</string>
@@ -669,14 +670,17 @@
     <string name="details4">If you want to voice control on Russian language (there is no Kyrgyz language voice library) first do the following steps.
 \nTo install a voice library from Google go to Menu in mobile phone. Choose Settings ⇒ My device ⇒ Language and input ⇒ Voice search ⇒ Speech recognition offline ⇒ tab All ⇒ download Russian language. Now you can use voice control feature on Russian language.\n
 Go to Settings tab.  Turn on voice control. Go to Home tab. Voice control button appeared. Click voice control button and command. The commands are following: “Turn on room_name” or “Turn off room_name”, “Room_name turn on” or “Room_name turn off”; “Включить room_name”, “Отключить room_name” or “Выключить room_name”, “Room_name включить”, “Room_name отключить” or “Room_name выключить”.</string>
-    <string name="done">Done</string>
+    <string name="done_room">Done</string>
     <string name="edit">Edit Room</string>
+    <string name="edit_group">Edit the group</string>
     <string name="edit_room">Edit the room</string>
     <string name="empty">Nothing to show</string>
     <string name="en_lang">English</string>
+    <string name="err_msg_duplicate_group">Group already exists</string>
     <string name="err_msg_duplicate_name">Room already exists</string>
     <string name="err_msg_name">Name of room can not be empty</string>
     <string name="help">Help</string>
+    <string name="hint_name_of_group">Name of group</string>
     <string name="hint_name_of_room">Name of room</string>
     <string name="kg_lang">Kyrgyz</string>
     <string name="language">Language</string>
@@ -686,7 +690,7 @@ Go to Settings tab.  Turn on voice control. Go to Home tab. Voice control button
     <string name="mail_feedback_subject">Feedback on Light Control App</string>
     <string name="name">Name</string>
     <string name="no">No</string>
-    <string name="not_done">Not done</string>
+    <string name="not_done_room">Not done</string>
     <string name="not_updated">Not updated</string>
     <string name="password_toggle_content_description">Toggle password visibility</string>
     <string name="path_password_eye" translatable="false">M12,4.5C7,4.5 2.73,7.61 1,12c1.73,4.39 6,7.5 11,7.5s9.27,-3.11 11,-7.5c-1.73,-4.39 -6,-7.5 -11,-7.5zM12,17c-2.76,0 -5,-2.24 -5,-5s2.24,-5 5,-5 5,2.24 5,5 -2.24,5 -5,5zM12,9c-1.66,0 -3,1.34 -3,3s1.34,3 3,3 3,-1.34 3,-3 -1.34,-3 -3,-3z</string>

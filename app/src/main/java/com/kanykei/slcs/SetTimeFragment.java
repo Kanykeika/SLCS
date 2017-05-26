@@ -1,6 +1,10 @@
 package com.kanykei.slcs;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -20,10 +24,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SetTimeFragment extends Fragment implements TimePickerFragment.TimeDialogListener {
     private DBHelper mydb;
@@ -32,7 +41,15 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
     private String message;
     private RoutinesAdapter adapter;
     private TextView empty_text;
+    OutputStream outputStream;
+    BluetoothSocket btSocket;
     TextView toolbar_title;
+    Timer timer;
+    TimerTask timerTask;
+
+    final Handler timerHandler = new Handler(); //we are going to use a handler to be able to run in our TimerTask
+
+    boolean restartSetTimeFragment = false;
     public SetTimeFragment() {
         // Required empty public constructor
     }
@@ -65,6 +82,31 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
         }else{
             toolbar_title.setText(R.string.app_name);
         }
+
+        btSocket = ((MyBluetoothSocketApplication) getActivity().getApplication()).getBtSocket(); // get global Bluetooth Socket variable from application class
+        try{
+            outputStream = btSocket.getOutputStream();
+            Log.i("Kani", "get  set time frag 78");
+            Log.i("My tag", "beginListenForData()");
+        }
+        catch (IOException e){
+            Toast.makeText(getActivity(),"Socket closed. Reconnect with bluetooth",Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+            Log.i("My tag", "socket closed");
+            btSocket = ((MyBluetoothSocketApplication) getActivity().getApplicationContext()).getBtSocket();
+            try{
+                outputStream = btSocket.getOutputStream();
+                Log.i("Kani", "get  set time frag 88");
+                outputStream.close();
+                Log.i("Kani", "close  set time frag 90");
+                btSocket.close();
+                Log.i("My tag", "Bluetooth socket closed");
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+            Intent intent = new Intent(getActivity(), ConnectToArduinoWithBluetooth.class);
+            getActivity().startActivity(intent);
+        }
         final ListView obj = (ListView) routineView.findViewById(R.id.listViewSetTime);
 
         obj.setAdapter(adapter);
@@ -92,7 +134,7 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         String startTime = sdf.format(new Date());
         Log.i("My Tag", "current time is " + startTime);
-
+        final int[] value_to_send = new int[1];
         if(message.equals("wake")) {
             mydb.updateWakeUpTimer(array_list.get(position_value).getId(), time);
             Toast.makeText(getActivity(), "Updated wake up time : " + time + " of " + array_list.get(position_value).getName(), Toast.LENGTH_SHORT).show();
@@ -115,7 +157,56 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
                 msg("Turn lights on in " + array_list.get(position_value).getName() +
                         " after " + hours + " " + minutes + ".");
                 mydb.updateDelayWake(array_list.get(position_value).getId(),diff);
-                ((MainActivity)getActivity()).timer_handler();
+                ((MyBluetoothSocketApplication) getActivity().getApplication()).setTime_difference(diff);
+
+
+//                Handler handler_wake = new Handler();
+//                handler_wake.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {//Do something after .....
+//                        mydb.updateStateOfRoom(array_list.get(position_value).getId(), 1);
+//                        if(array_list.get(position_value).getRelayPin() == 0){
+//                            value_to_send[0] = 5;
+//                        }else if(array_list.get(position_value).getRelayPin() == 1){
+//                            value_to_send[0] = 6;
+//                        }else if(array_list.get(position_value).getRelayPin() == 2){
+//                            value_to_send[0] = 7;
+//                        }else if(array_list.get(position_value).getRelayPin() == 3){
+//                            value_to_send[0] = 8;
+//                        }
+//                        try{
+//                            outputStream.write(value_to_send[0]);
+//                            restartSetTimeFragment = true;
+//                            Log.i("Kani", "write  set time frag 165");
+//                            Log.i("My tag","set time on set time wake = " + value_to_send[0]);
+//                            Toast.makeText(getActivity(), "sending set time frag"+ value_to_send[0], Toast.LENGTH_LONG).show();
+//                        }catch (Exception e){
+//                            Log.i("My tag", "try send in set time frag on set time wake");
+//                            e.printStackTrace();
+//                        }
+//                        if(restartSetTimeFragment) {
+//                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+//                            HomeFragment homeFragment = new HomeFragment();
+//                            if (!homeFragment.isAdded()) {
+//                                ft.replace(R.id.home_frame, homeFragment, "HomeFrag");
+//                                ft.addToBackStack("HomeFrag");
+//
+//                                ft.commitAllowingStateLoss();
+//
+//                            } else {
+//                                ft.remove(homeFragment);
+//                                ft.add(R.id.home_frame, homeFragment);
+//                                ft.addToBackStack("HomeFrag");
+//
+//                                ft.commitAllowingStateLoss();
+//
+//                            }
+//                            restartSetTimeFragment = false;
+//                        }
+//
+//
+//                    }
+//                }, diff);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -156,6 +247,77 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
         fm.popBackStack();
         fm.beginTransaction().replace(R.id.routines_frame, time_fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).addToBackStack(null).commit();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(message == "wake"){
+            toolbar_title.setText(R.string.wake);
+        } else if(message == "sleep") {
+            toolbar_title.setText(R.string.sleep);
+        }else{
+            toolbar_title.setText(R.string.app_name);
+        }
+        //onResume we start our timer so it can start when the app comes from the background
+        startTimer();
+    }
+
+    public void startTimer() {
+        long firstStart = ((MyBluetoothSocketApplication) getActivity().getApplication()).getTime_difference();
+
+        //set a new Timer
+        timer = new Timer();
+
+        //initialize the TimerTask's job
+        initializeTimerTask();
+
+        //schedule the timer, after the first 5000ms the TimerTask will run every 1000*60*60*24ms = 24hours
+        timer.schedule(timerTask, firstStart, 10000); //
+    }
+
+    public void stoptimertask(View v) {
+        //stop the timer, if it's not already null
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+    }
+
+    public void initializeTimerTask() {
+
+        timerTask = new TimerTask() {
+            public void run() {
+
+                //use a handler to run a toast that shows the current timestamp
+                timerHandler.post(new Runnable() {
+                    public void run() {
+                        mydb.updateStateOfRoom(array_list.get(position_value).getId(), 1);
+                        int[] value_to_send = new int[1];
+                        if(array_list.get(position_value).getRelayPin() == 0){
+                            value_to_send[0] = 5;
+                        }else if(array_list.get(position_value).getRelayPin() == 1){
+                            value_to_send[0] = 6;
+                        }else if(array_list.get(position_value).getRelayPin() == 2){
+                            value_to_send[0] = 7;
+                        }else if(array_list.get(position_value).getRelayPin() == 3){
+                            value_to_send[0] = 8;
+                        }
+                        try{
+                            outputStream.write(value_to_send[0]);
+                            restartSetTimeFragment = true;
+                            Log.i("My tag", "write  set time frag 308");
+                            Log.i("My tag","set time on set time wake = " + value_to_send[0]);
+                            Toast.makeText(getActivity(), "sending set time frag"+ value_to_send[0], Toast.LENGTH_LONG).show();
+                        }catch (Exception e){
+                            Log.i("My tag", "error: try send in set time frag on set time wake");
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        };
+    }
+
     public String loadLanguage(String defaultLanguage)
     {
         SharedPreferences pref = getContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);

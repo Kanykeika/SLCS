@@ -1,18 +1,22 @@
 <resources>
     <string name="app_name">Жарык башкаруу тиркемеси</string>
     <string name="hint_name_of_room">Бөлмөнүн аты</string>
+    <string name="hint_name_of_group">Топтун аты</string>
     <string name="btn_create">Кошуу</string>
     <string name="btn_save">Сактоо</string>
     <string name="err_msg_name">Бөлмөнүн аты бош болбош керек</string>
     <string name="err_msg_duplicate_name">Мындай бөлмө бар</string>
+    <string name="err_msg_duplicate_group">Мындай топ бар</string>
     <string name="edit">Оңдоо</string>
     <string name="delete">Жок кылуу</string>
     <string name="name">Аты</string>
     <string name="deleteRoom">Вы уверены, что хотите удалить это?</string>
     <string name="yes">Ооба</string>
     <string name="no">Жок</string>
-    <string name="edit_room">Оңдоо</string>
+    <string name="edit_room">Бөлмөнүн атын оңдоо</string>
     <string name="create_room">Жаңы бөлмө кошуу</string>
+    <string name="edit_group">Топтун атын оңдоо</string>
+    <string name="create_group">Жаңы топ кошуу</string>
     <string name="title_home">Башкы бет</string>
     <string name="title_routines">Убакыт</string>
     <string name="title_settings">Орнотуулар</string>
@@ -22,8 +26,10 @@
     <string name="deleteRoomTitle">Вы уверены</string>
     <string name="updated">Оңдолду</string>
     <string name="not_updated">Оңдолгон жок</string>
-    <string name="done">Жаңы бөлмө кошулду</string>
-    <string name="not_done">Жаңы бөлмө кошулган жок</string>
+    <string name="done_room">Жаңы бөлмө кошулду</string>
+    <string name="not_done_room">Жаңы бөлмө кошулган жок</string>
+    <string name="done_group">Жаңы топ кошулду</string>
+    <string name="not_done_group">Жаңы топ кошулган жок</string>
     <string name="success_delete">Жок болду</string>
     <string name="wake">Ойгонуу</string>
     <string name="sleep">Уктоо</string>

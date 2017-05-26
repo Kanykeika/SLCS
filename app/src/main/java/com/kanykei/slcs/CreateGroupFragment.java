@@ -2,9 +2,11 @@ package com.kanykei.slcs;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,10 +29,10 @@ public class CreateGroupFragment extends Fragment{
     private TextInputLayout inputLayoutName;
     private DBHelper mydb;
     int id_To_Update = 0;
-    int relay_pin;
     TextView toolbar_title;
     private ListView listView;
-    ArrayList<Room> array_list;
+    ArrayList<Room> rooms_array_list;
+    ArrayList<Integer> room_ids;
     public CreateGroupFragment() {
         // Required empty public constructor
     }
@@ -42,51 +44,38 @@ public class CreateGroupFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View createGroupView = inflater.inflate(R.layout.fragment_create_group, container, false);
+        final View createGroupView = inflater.inflate(R.layout.fragment_create_group, container, false);
+        Log.i("My tag", "on createview CreateGroupFragment");
         toolbar_title = (TextView) getActivity().findViewById(R.id.toolbar_title);
         mydb = DBHelper.getInstance(getContext());
-        Bundle extras = getArguments();
+        final Bundle extras = getArguments();
         if(extras != null) {
-            ArrayList<Integer> array_list = extras.getIntegerArrayList("room_ids");
+            room_ids = extras.getIntegerArrayList("room_ids");
+            rooms_array_list = mydb.getRoomsByIds(room_ids);
         }
         inputLayoutName = (TextInputLayout) createGroupView.findViewById(R.id.input_layout_name);
         inputName = (EditText) createGroupView.findViewById(R.id.input_name);
-        final CreateGroupAdapter adapter = new CreateGroupAdapter(createGroupView.getContext(),R.layout.create_group_listview, array_list);
+        final CreateGroupAdapter adapter = new CreateGroupAdapter(createGroupView.getContext(),R.layout.create_group_listview, rooms_array_list);
         listView = (ListView) createGroupView.findViewById(R.id.listViewGroup);
         listView.setAdapter(adapter);
+        toolbar_title.setText(R.string.create_group);
 
         Button b = (Button)createGroupView.findViewById(R.id.btn_save);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle extras = getArguments();
                 if(extras != null) {
-                    int Value = extras.getInt("id");
-                    if(Value > 0){ // update existing room
-                        if(!validateName()) {
-                        }
-                        else if(mydb.updateRoom(id_To_Update,inputName.getText().toString(), relay_pin)){
-                            Toast.makeText(getContext(), R.string.updated, Toast.LENGTH_SHORT).show();
-                            getFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit();
-
-                        } else{
-                            inputLayoutName.setError(getString(R.string.err_msg_duplicate_name));
+                    // insert a new group
+                    if(!validateName()) {
+                    }
+                    else if (!mydb.isDuplicateGroup(inputName.getText().toString())) {
+                        mydb.insertGroup(inputName.getText().toString(), room_ids);
+                        Toast.makeText(getContext(), R.string.done_group, Toast.LENGTH_SHORT).show();
+                        getFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit();
+                    } else {
+                        inputLayoutName.setError(getString(R.string.err_msg_duplicate_group));
 //                            requestFocus(inputName);
-                            Toast.makeText(getContext(), R.string.not_updated, Toast.LENGTH_SHORT).show();
-                        }
-                    } else{  // insert a new room
-                        if(!validateName()) {
-                        }
-                        else if (mydb.insertRoom(inputName.getText().toString(), relay_pin)) {
-                            Toast.makeText(getContext(), R.string.done, Toast.LENGTH_SHORT).show();
-                            getFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit();
-
-                        } else {
-                            inputLayoutName.setError(getString(R.string.err_msg_duplicate_name));
-//                            requestFocus(inputName);
-                            Toast.makeText(getContext(), R.string.not_done, Toast.LENGTH_SHORT).show();
-                        }
-
+                        Toast.makeText(getContext(), R.string.not_done_group, Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -115,7 +104,7 @@ public class CreateGroupFragment extends Fragment{
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setMessage(R.string.deleteRoom).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        mydb.deleteRoom(id_To_Update);
+                        mydb.deleteGroup(id_To_Update);
                         Toast.makeText(getContext(), R.string.success_delete, Toast.LENGTH_SHORT).show();
                         getFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit();
                     }

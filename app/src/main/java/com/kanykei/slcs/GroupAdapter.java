@@ -25,6 +25,7 @@ public class GroupAdapter extends ArrayAdapter<Group> {
 
     private final Context context;
     private final ArrayList<Group> groupsArrayList;
+    private ArrayList<Room> roomsArrayList;
     private DBHelper mydb;
     private SparseBooleanArray mSelectedItemsIds;
     LayoutInflater inflater;
@@ -71,6 +72,7 @@ public class GroupAdapter extends ArrayAdapter<Group> {
         btSocket = ((MyBluetoothSocketApplication) context.getApplicationContext()).getBtSocket();
         try{
             outputStream = btSocket.getOutputStream();
+            Log.i("Kani", "get stream Group adapter 74");
         }catch (Exception e){
             Toast.makeText(getContext(),"Failed to getOutputStream",Toast.LENGTH_LONG);
             e.printStackTrace();
@@ -91,33 +93,51 @@ public class GroupAdapter extends ArrayAdapter<Group> {
                 public void onCheckedChanged(CompoundButton arg0, boolean isChecked) {
                     int isCheckedInt = (isChecked) ? 1 : 0;
                     mydb.updateStateOfGroup(groupsArrayList.get(position).getId(), isCheckedInt);
-
+                    roomsArrayList = mydb.getRoomsByGroupId(groupsArrayList.get(position).getId());
                         try{
                             if(isChecked){ // to turn on
-                                if( mydb.getRelayPinById(groupsArrayList.get(position).getRoom_id()) == 0){
-                                    outputStream.write(5);
+                                for(int i=0; i<roomsArrayList.size();i++){
+//                                    mydb.updateStateOfRoom(roomsArrayList.get(i).getId(),isCheckedInt);
+                                    if( mydb.getRelayPinById(roomsArrayList.get(i).getId()) == 0){
+                                        outputStream.write(5);
+                                        Log.i("My tag", "room id[i]=" + roomsArrayList.get(i).getId());
+                                        Log.i("Kani", "write Group adapter 102");
+
+                                    }
+                                    else if( mydb.getRelayPinById(roomsArrayList.get(i).getId()) == 1){
+                                        outputStream.write(6);
+                                        Log.i("Kani", "write Group adapter 107");
+                                    }
+                                    else if( mydb.getRelayPinById(roomsArrayList.get(i).getId()) == 2){
+                                        outputStream.write(7);
+                                        Log.i("Kani", "write Group adapter 111");
+                                    }
+                                    else if( mydb.getRelayPinById(roomsArrayList.get(i).getId()) == 3){
+                                        outputStream.write(8);
+                                        Log.i("Kani", "write Group adapter 115");
+                                    }
                                 }
-                                if( mydb.getRelayPinById(groupsArrayList.get(position).getRoom_id()) == 1){
-                                    outputStream.write(6);
-                                }
-                                if( mydb.getRelayPinById(groupsArrayList.get(position).getRoom_id()) == 2){
-                                    outputStream.write(7);
-                                }
-                                if( mydb.getRelayPinById(groupsArrayList.get(position).getRoom_id()) == 3){
-                                    outputStream.write(8);
-                                }
+
                             }else{ // to turn off
-                                if( mydb.getRelayPinById(groupsArrayList.get(position).getRoom_id()) == 0){
-                                    outputStream.write(1);
-                                }
-                                if( mydb.getRelayPinById(groupsArrayList.get(position).getRoom_id()) == 1){
-                                    outputStream.write(2);
-                                }
-                                if( mydb.getRelayPinById(groupsArrayList.get(position).getRoom_id()) == 2){
-                                    outputStream.write(3);
-                                }
-                                if( mydb.getRelayPinById(groupsArrayList.get(position).getRoom_id()) == 3){
-                                    outputStream.write(4);
+                                for(int i=0; i<roomsArrayList.size();i++) {
+//                                    mydb.updateStateOfRoom(roomsArrayList.get(i).getId(), isCheckedInt);
+
+                                    if (mydb.getRelayPinById(roomsArrayList.get(i).getId()) == 0) {
+                                        outputStream.write(1);
+                                        Log.i("Kani", "write Group adapter 125");
+                                    }
+                                    else if (mydb.getRelayPinById(roomsArrayList.get(i).getId()) == 1) {
+                                        outputStream.write(2);
+                                        Log.i("Kani", "write Group adapter 129");
+                                    }
+                                    else if (mydb.getRelayPinById(roomsArrayList.get(i).getId()) == 2) {
+                                        outputStream.write(3);
+                                        Log.i("Kani", "write Group adapter 133");
+                                    }
+                                    else if (mydb.getRelayPinById(roomsArrayList.get(i).getId()) == 3) {
+                                        outputStream.write(4);
+                                        Log.i("Kani", "write Group adapter 137");
+                                    }
                                 }
                             }
                         }catch (Exception e){
@@ -126,8 +146,10 @@ public class GroupAdapter extends ArrayAdapter<Group> {
                             btSocket = ((MyBluetoothSocketApplication) getContext().getApplicationContext()).getBtSocket();
                             try{
                                 outputStream = btSocket.getOutputStream();
+                                Log.i("Kani", "get  Group adapter 147");
                                 inputStream = btSocket.getInputStream();
                                 outputStream.close();
+                                Log.i("Kani", "close Group adapter 150");
                                 inputStream.close();
                                 btSocket.close();
                                 Log.i("My tag", "Bluetooth socket closed");

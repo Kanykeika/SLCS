@@ -2,13 +2,11 @@ package com.kanykei.slcs;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,7 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 
 public class CreateRoomFragment extends Fragment{
@@ -65,7 +62,6 @@ public class CreateRoomFragment extends Fragment{
                 Cursor rs = mydb.getDataByRelayPin(getArguments().getInt("id"),position);
                 if(rs.getCount() != 0){
                     int relay = rs.getInt(rs.getColumnIndex(DBHelper.ROOMS_COLUMN_RELAY_PIN));
-                    Log.i("My tag", "is enabled relay pin get data by pin = " + relay);
                     if (!rs.isClosed())  {
                         rs.close();
                     }
@@ -87,14 +83,10 @@ public class CreateRoomFragment extends Fragment{
                 TextView mTextView = (TextView) mView;
                 Cursor rs = mydb.getDataByRelayPin(getArguments().getInt("id"),position);
                 if(rs.getCount() != 0){
-
-                            mTextView.setTextColor(Color.GRAY);
-                            Log.i("My Tag","gray");
-//                        int relay = rs.getInt(rs.getColumnIndex(DBHelper.ROOMS_COLUMN_RELAY_PIN));
-//                        Log.i("My tag", "getDropDownView relay pin get data by pin = " + relay);
-                        } else {
-                            mTextView.setTextColor(Color.BLACK);
-                        }
+                    mTextView.setTextColor(Color.GRAY);
+                } else {
+                    mTextView.setTextColor(Color.BLACK);
+                }
 
                 if (!rs.isClosed())  {
                     rs.close();
@@ -187,13 +179,13 @@ public class CreateRoomFragment extends Fragment{
                         if(!validateName()) {
                         }
                         else if (mydb.insertRoom(inputName.getText().toString(), relay_pin)) {
-                            Toast.makeText(getContext(), R.string.done, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), R.string.done_room, Toast.LENGTH_SHORT).show();
                             getFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit();
 
                         } else {
                             inputLayoutName.setError(getString(R.string.err_msg_duplicate_name));
 //                            requestFocus(inputName);
-                            Toast.makeText(getContext(), R.string.not_done, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), R.string.not_done_room, Toast.LENGTH_SHORT).show();
                         }
 
                     }

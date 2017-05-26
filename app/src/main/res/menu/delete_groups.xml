@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+<menu
     xmlns:android="http://schemas.android.com/apk/res/android"
     >
+
+
+    <item
+        android:id="@+id/group"
+        android:icon="@drawable/ic_group_24"
+        android:title=""
+        />
 
     <item
         android:id="@+id/delete"

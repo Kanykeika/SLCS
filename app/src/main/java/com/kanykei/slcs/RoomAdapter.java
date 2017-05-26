@@ -31,10 +31,13 @@ public class RoomAdapter extends ArrayAdapter<Room> {
     private InputStream inputStream = null;
     private BluetoothSocket btSocket;
     // Container Class for item
-    private class ViewHolder {
+    public class ViewHolder {
         TextView labelView;
         TextView valueView;
         ToggleButton toggleButton;
+        ToggleButton getToggleBtn(){
+            return toggleButton;
+        }
     }
     public RoomAdapter(Context context, int resourceId, ArrayList<Room> itemsArrayList) {
 
@@ -63,79 +66,87 @@ public class RoomAdapter extends ArrayAdapter<Room> {
         }
         // Capture position and set to the  TextViews
         //  Set the text for textView
-        holder.labelView.setText(String.valueOf(roomsArrayList.get(position).getId()));
+        holder.labelView.setText(String.valueOf(position+1));
         holder.valueView.setText(String.valueOf(roomsArrayList.get(position).getName()));
 
         mydb = DBHelper.getInstance(getContext());
-        btSocket = ((MyBluetoothSocketApplication) context.getApplicationContext()).getBtSocket();
-        try{
-            outputStream = btSocket.getOutputStream();
-        }catch (Exception e){
-            Toast.makeText(getContext(),"Failed to getOutputStream",Toast.LENGTH_LONG);
-            e.printStackTrace();
-        }
+
         // 5. Set listener for toggle button
         Cursor res = mydb.getData(roomsArrayList.get(position).getId());
-        Log.i("My tag", "mydb.getData(roomsArrayList.get(position).getId());" + " " + roomsArrayList.get(position).getId());
         if(res.getCount() != 0) {
             int state = res.getInt(res.getColumnIndex(DBHelper.ROOMS_COLUMN_STATE));
-            Log.i("My tag","int state");
             if (state == 1) {
                 holder.toggleButton.setChecked(true);
-                Log.i("My tag","state = 1");
-
             } else {
                 holder.toggleButton.setChecked(false);
-                Log.i("My tag","state = 0");
             }
             holder.toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
                 @Override
-                public void onCheckedChanged(CompoundButton arg0, boolean isChecked) {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     int isCheckedInt = (isChecked) ? 1 : 0;
-                    mydb.updateStateOfRoom(roomsArrayList.get(position).getId(), isCheckedInt);
+                    if(buttonView.isPressed()) {
+                        mydb.updateStateOfRoom(roomsArrayList.get(position).getId(), isCheckedInt);
 
-                        try{
-                            if(isChecked){ // to turn on
-                                if(roomsArrayList.get(position).getRelayPin() == 0){
+                        try {
+                            btSocket = ((MyBluetoothSocketApplication) context.getApplicationContext()).getBtSocket();
+                            try{
+                                outputStream = btSocket.getOutputStream();
+                                Log.i("Kani", "get room adapter 92");
+                            }catch (Exception e){
+                                Toast.makeText(getContext(),"Failed to getOutputStream",Toast.LENGTH_LONG);
+                                e.printStackTrace();
+                            }
+                            if (isCheckedInt == 1) { // to turn on
+                                if (roomsArrayList.get(position).getRelayPin() == 0) {
                                     outputStream.write(5);
-                                }else if(roomsArrayList.get(position).getRelayPin() == 1){
+                                    Log.i("Kani", "write room adapter 97");
+                                } else if (roomsArrayList.get(position).getRelayPin() == 1) {
                                     outputStream.write(6);
-                                }else if(roomsArrayList.get(position).getRelayPin() == 2){
+                                    Log.i("Kani", "write room adapter 100");
+                                } else if (roomsArrayList.get(position).getRelayPin() == 2) {
                                     outputStream.write(7);
-                                }else if(roomsArrayList.get(position).getRelayPin() == 3){
+                                    Log.i("Kani", "write room adapter 103");
+                                } else if (roomsArrayList.get(position).getRelayPin() == 3) {
                                     outputStream.write(8);
+                                    Log.i("Kani", "write room adapter 106");
                                 }
-                            }else{ // to turn off
-                                if(roomsArrayList.get(position).getRelayPin() == 0){
+                            } else { // to turn off
+                                if (roomsArrayList.get(position).getRelayPin() == 0) {
                                     outputStream.write(1);
-                                }else if(roomsArrayList.get(position).getRelayPin() == 1){
+                                    Log.i("Kani", "write room adapter 111");
+                                } else if (roomsArrayList.get(position).getRelayPin() == 1) {
                                     outputStream.write(2);
-                                }else if(roomsArrayList.get(position).getRelayPin() == 2){
+                                    Log.i("Kani", "write room adapter 114");
+                                } else if (roomsArrayList.get(position).getRelayPin() == 2) {
                                     outputStream.write(3);
-                                }else if(roomsArrayList.get(position).getRelayPin() == 3){
+                                    Log.i("Kani", "write room adapter 117");
+                                } else if (roomsArrayList.get(position).getRelayPin() == 3) {
                                     outputStream.write(4);
+                                    Log.i("Kani", "write room adapter 120");
                                 }
                             }
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                             Toast.makeText(getContext(), "Broken pipe. Reconnect with Bluetooth", Toast.LENGTH_LONG).show();
                             btSocket = ((MyBluetoothSocketApplication) getContext().getApplicationContext()).getBtSocket();
-                            try{
+                            try {
                                 outputStream = btSocket.getOutputStream();
+                                Log.i("Kani", "get room adapter 129");
                                 inputStream = btSocket.getInputStream();
                                 outputStream.close();
+                                Log.i("Kani", "close room adapter 132");
                                 inputStream.close();
                                 btSocket.close();
                                 Log.i("My tag", "Bluetooth socket closed");
-                            }catch (Exception ex){
+                            } catch (Exception ex) {
                                 ex.printStackTrace();
                             }
                             Intent intent = new Intent(getContext(), ConnectToArduinoWithBluetooth.class);
                             getContext().startActivity(intent);
                         }
 
-
+                    }
                 }
             });
         }

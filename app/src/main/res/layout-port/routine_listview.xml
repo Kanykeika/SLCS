@@ -35,9 +35,18 @@ android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size"
         android:textColor="@color/colorPrimary"
-        android:layout_weight="0.40"
+        android:layout_weight="0.30"
         android:layout_gravity="start|center_vertical"
         />
+
+    <ImageView
+        android:layout_width="10dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_delete"
+        android:id="@+id/btn_delete"
+        android:layout_weight="0.10"
+        android:layout_gravity="center"
+        android:contentDescription="delete" />
 
 </LinearLayout>
 

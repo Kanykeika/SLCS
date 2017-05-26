@@ -220,6 +220,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 try{
                                     outputStream.write(value_to_send[0]);
+                                    Log.i("Kani", "write  main activity 222");
                                     Log.i("My tag","main activity on set time wake = " + value_to_send[0]);
                                     Toast.makeText(MainActivity.this, "sending "+ value_to_send[0], Toast.LENGTH_LONG).show();
                                 }catch (Exception e){
@@ -254,6 +255,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 try{
                                     outputStream.write(value_to_send[0]);
+                                    Log.i("Kani", "write  main activity 257");
                                     Log.i("My tag","main activity on set time sleep = " + value_to_send[0]);
                                     Toast.makeText(MainActivity.this, "sending "+ value_to_send[0], Toast.LENGTH_LONG).show();
                                 }catch (Exception e){

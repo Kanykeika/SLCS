@@ -1,15 +1,17 @@
 <resources>
     <string name="app_name">Light Control App</string>
     <string name="hint_name_of_room">Name of room</string>
+    <string name="hint_name_of_group">Name of group</string>
     <string name="btn_create">Create</string>
     <string name="btn_save">Save</string>
     <string name="err_msg_name">Name of room can not be empty</string>
     <string name="err_msg_duplicate_name">Room already exists</string>
+    <string name="err_msg_duplicate_group">Group already exists</string>
     <string name="title_home">Home</string>
     <string name="title_routines">Routines</string>
     <string name="title_settings">Settings</string>
     <string name="edit">Edit Room</string>
-    <string name="delete">Delete Room</string>
+    <string name="delete">Delete</string>
     <string name="delete_dialog">Delete</string>
     <string name="delete_dialog_sure">Are you sure you want to delete </string>
     <string name="cancel">Cancel</string>
@@ -20,10 +22,14 @@
     <string name="no">No</string>
     <string name="edit_room">Edit the room</string>
     <string name="create_room">Create a room</string>
+    <string name="edit_group">Edit the group</string>
+    <string name="create_group">Create a group</string>
     <string name="updated">Updated</string>
     <string name="not_updated">Not updated</string>
-    <string name="done">Done</string>
-    <string name="not_done">Not done</string>
+    <string name="done_room">New room added</string>
+    <string name="not_done_room">Not done</string>
+   <string name="done_group">New group of lamps added</string>
+    <string name="not_done_group">Not done</string>
     <string name="success_delete">Deleted successfully</string>
     <string name="wake">Wake up</string>
     <string name="sleep">Go to sleep</string>

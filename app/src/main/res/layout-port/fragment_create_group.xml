@@ -20,18 +20,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="78dp"
                 android:maxLines="1"
-                android:hint="@string/hint_name_of_room"
+                android:hint="@string/hint_name_of_group"
                 android:textSize="16sp"
                 android:textColorLink="@color/colorPrimary"
                 android:textColorHighlight="@color/colorPrimary" />
         </android.support.design.widget.TextInputLayout>
 
     <ScrollView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
         android:id="@+id/scrollView"
         android:descendantFocusability="blocksDescendants"
+        android:layout_weight="1"
+        android:layout_marginTop="20dp"
         >
         <ListView
             android:id="@+id/listViewGroup"

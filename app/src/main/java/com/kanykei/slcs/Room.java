@@ -24,6 +24,12 @@ public class Room {
         this.delay_wake = delay_wake;
         this.delay_sleep = delay_sleep;
     }
+
+    public Room(int id, String name) {
+        super();
+        this.id = id;
+        this.name = name;
+    }
     // getters
     public int getId() {return id;}
     public String getName(){return name;}

@@ -1,18 +1,22 @@
 <resources>
     <string name="app_name">Управление освещением</string>
     <string name="hint_name_of_room">Название комнаты (помещения)</string>
+    <string name="hint_name_of_group">Название группы комнат (помещений)</string>
     <string name="btn_create">Создать</string>
     <string name="btn_save">Сохранить</string>
     <string name="err_msg_name">Название комнаты (помещения) не может быть пустым</string>
     <string name="err_msg_duplicate_name">Комната с таким именем уже существует</string>
+    <string name="err_msg_duplicate_group">Группа с таким именем уже существует</string>
     <string name="edit">Изменить</string>
     <string name="delete">Удалить</string>
     <string name="name">Название</string>
     <string name="deleteRoom">Вы уверены, что хотите удалить это?</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
-    <string name="edit_room">Изменить</string>
+    <string name="edit_room">Изменить название комнаты</string>
     <string name="create_room">Создайте новую комнату</string>
+    <string name="edit_group">Изменить название группы</string>
+    <string name="create_group">Создайте новую группу</string>
     <string name="title_home">Главная</string>
     <string name="title_routines">Время</string>
     <string name="title_settings">Настройки</string>
@@ -22,8 +26,10 @@
     <string name="deleteRoomTitle">Вы уверены</string>
     <string name="updated">Изменено</string>
     <string name="not_updated">Не изменено</string>
-    <string name="done">Создана новая комната</string>
-    <string name="not_done">Не создана</string>
+    <string name="done_room">Создана новая комната</string>
+    <string name="not_done_room">Комната не создана</string>
+    <string name="done_group">Создана новая группа</string>
+    <string name="not_done_group">Группа не создана</string>
     <string name="success_delete">Удалено</string>
     <string name="wake">Проснуться</string>
     <string name="sleep">Уснуть</string>

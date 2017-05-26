@@ -2,21 +2,21 @@ package com.kanykei.slcs;
 
 import android.app.Application;
 import android.bluetooth.BluetoothSocket;
+import android.support.v7.widget.RecyclerView;
 
 public class MyBluetoothSocketApplication extends Application {
     BluetoothSocket btSocket;
     long time_difference;
-    int room_id;
 
-    public int getState() {
-        return state;
+    public int getCounter() {
+        return counter;
     }
 
-    public void setState(int state) {
-        this.state = state;
+    public void setCounter(int counter) {
+        this.counter = counter;
     }
 
-    int state;
+    int counter = 0;
 
     public BluetoothSocket getBtSocket() {
         return btSocket;
@@ -32,14 +32,7 @@ public class MyBluetoothSocketApplication extends Application {
         this.time_difference = time_difference;
     }
 
-    public int getRoom_id() {
-        return room_id;
-    }
-    public void setRoom_id(int room_id) {
-        this.room_id = room_id;
-    }
-
-    private static MyBluetoothSocketApplication singleton;
+   private static MyBluetoothSocketApplication singleton;
     public static MyBluetoothSocketApplication getInstance() {
         return singleton;
     }

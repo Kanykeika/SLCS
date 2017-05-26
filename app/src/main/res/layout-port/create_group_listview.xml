@@ -8,7 +8,7 @@ android:layout_width="fill_parent"
     android:background="?android:attr/activatedBackgroundIndicator"
    >
     <TextView
-        android:id="@+id/room_id"
+        android:id="@+id/position"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size"
@@ -32,14 +32,6 @@ android:layout_width="fill_parent"
         android:layout_gravity="start|center_vertical"
         android:layout_weight="0.50"
         />
-    <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/toggle_selector_checkbox"
-        />
-    <!--android:focusable="false"-->
-    <!--android:focusableInTouchMode="false"-->
 
 </LinearLayout>
 

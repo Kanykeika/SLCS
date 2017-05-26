@@ -24,7 +24,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String INFO_COLUMN_TITLE = "title"; // title of info
     public static final String INFO_COLUMN_DETAILS = "details"; // details of info
     public static final String INFO_COLUMN_LANGUAGE = "language"; // details of info
-    public static final String GROUP_TABLE_NAME = "group";
+    public static final String GROUP_TABLE_NAME = "group_of_rooms";
     public static final String GROUP_COLUMN_ID = "id"; // id of rooms group
     public static final String GROUP_COLUMN_NAME = "name"; // name of group
     public static final String GROUP_COLUMN_ROOM_ID = "room_id"; // id of room in the group
@@ -45,7 +45,6 @@ public class DBHelper extends SQLiteOpenHelper {
     private DBHelper(Context context) {
         super(context, DATABASE_NAME , null, 1);
         this.context = context;
-        Log.i("My Tag", "DBHelper(Context context)\n insertInfo();");
     }
 
     public static DBHelper getInstance(Context context) {
@@ -55,17 +54,13 @@ public class DBHelper extends SQLiteOpenHelper {
         // See this article for more information: http://bit.ly/6LRzfx
         if (mInstance == null) {
             mInstance = new DBHelper(context.getApplicationContext());
-            Log.i("My Tag", "if (mInstance == null)");
 
         }
-        Log.i("My Tag", "DBHelper getInstance(Context context)");
-
         return mInstance;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.i("My Tag", "DBHelper onCreate");
         db.execSQL("create table " + ROOMS_TABLE_NAME + " (" +
                 ROOMS_COLUMN_ID + " integer primary key, " +
                 ROOMS_COLUMN_NAME + " text, " +
@@ -83,7 +78,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("create table " + GROUP_TABLE_NAME + " (" +
                 GROUP_COLUMN_ID + " integer primary key, " +
                 GROUP_COLUMN_NAME + " text, " +
-                GROUP_COLUMN_ROOM_ID + " text, " +
+                GROUP_COLUMN_ROOM_ID + " integer, " +
                 GROUP_COLUMN_STATE + " integer) " );
         HashMap<String, String> infoMapEn = new HashMap<String, String>();
         infoMapEn.put("Create a new room","Go to Home tab and click ‘+’ add button in bottom right corner. In input text, write the name of room. Then choose corresponding relay\'s pin. Hit save. Now you can see the newly created room in the list of all rooms.");
@@ -172,9 +167,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
             Log.i("My Tag", "inserted: " + title + " " + details);
         }
-
-
-        Log.i("My Tag","on create dbhelper");
     }
 
 
@@ -210,8 +202,6 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from " + INFO_TABLE_NAME + " where " + INFO_COLUMN_ID + " = " + id + " and " +
                 INFO_COLUMN_LANGUAGE + " = \"" + language + "\"", null );
-        Log.i("My tag","select * from " + INFO_TABLE_NAME + " where " + INFO_COLUMN_ID + " = " + id + " and " +
-                INFO_COLUMN_LANGUAGE + " = \"" + language + "\"");
         res.moveToFirst();
         ArrayList<String> details = new ArrayList<>();
         while(!res.isAfterLast()){
@@ -263,25 +253,37 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public boolean insertGroup (String name, int room_id) {
+    public boolean insertGroup (String name, ArrayList<Integer> room_ids) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < room_ids.size(); i++) {
+            sb.append(room_ids.get(i));
+            if (i != room_ids.size() - 1) {
+                sb.append(", ");
+            }
+        }
+        String rooms_ids = sb.toString();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(GROUP_COLUMN_NAME, name);
+        contentValues.put(GROUP_COLUMN_ROOM_ID, rooms_ids);
+        contentValues.put(GROUP_COLUMN_STATE, 0);
+        db.insert(GROUP_TABLE_NAME, null, contentValues);
+        return true;
+    }
+
+    public boolean isDuplicateGroup (String name) {
         Cursor res =  db.rawQuery( "select * from " + GROUP_TABLE_NAME + " where "
-                + GROUP_COLUMN_NAME + "=\"" + name + "\" ", null );
+                + GROUP_COLUMN_NAME + "=\"" + name + "\"", null );
         res.moveToFirst();
         if(res.getCount() == 0) {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(GROUP_COLUMN_NAME, name);
-            contentValues.put(GROUP_COLUMN_ROOM_ID, room_id);
-            contentValues.put(GROUP_COLUMN_STATE, 0);
-            db.insert(GROUP_TABLE_NAME, null, contentValues);
-            if (!res.isClosed())  {
-                res.close();
-            }
-            return true;
-        }else{
             if (!res.isClosed())  {
                 res.close();
             }
             return false;
+        }else{
+            if (!res.isClosed())  {
+                res.close();
+            }
+            return true;
         }
     }
 
@@ -308,8 +310,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from " + ROOMS_TABLE_NAME + " where " + ROOMS_COLUMN_ID + " = " + id + "", null );
         res.moveToFirst();
-        int relay_pin = res.getInt(res.getColumnIndex(ROOMS_COLUMN_RELAY_PIN));
-        return relay_pin;
+        return res.getInt(res.getColumnIndex(ROOMS_COLUMN_RELAY_PIN));
     }
 
     public int numberOfRows(){
@@ -339,6 +340,14 @@ public class DBHelper extends SQLiteOpenHelper {
             }
             return false;
         }
+    }
+
+    public boolean updateGroup (Integer id, String name, int room_id) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(GROUP_COLUMN_NAME, name);
+        contentValues.put(GROUP_COLUMN_ROOM_ID, room_id);
+        db.update(GROUP_TABLE_NAME, contentValues, "id = ? ", new String[]{Integer.toString(id)});
+        return true;
     }
 
     public boolean updateStateOfRoom (Integer id, Integer state) {
@@ -372,7 +381,6 @@ public class DBHelper extends SQLiteOpenHelper {
         if(res.getCount() != 0) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(ROOMS_COLUMN_STATE, state);
-            Log.i("My tag", "update state by relay pin");
             db.update(ROOMS_TABLE_NAME, contentValues, ROOMS_COLUMN_RELAY_PIN + " = ? ", new String[]{Integer.toString(relay_pin)});
             if (!res.isClosed())  {
                 res.close();
@@ -447,6 +455,66 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         if (!res.isClosed())  {
             res.close();
+        }
+        return array_list;
+    }
+
+
+    public ArrayList<Room> getRoomsByIds(ArrayList<Integer> room_ids) {
+        ArrayList<Room> array_list = new ArrayList<Room>();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < room_ids.size(); i++) {
+            sb.append(room_ids.get(i));
+            if (i != room_ids.size() - 1) {
+                sb.append(", ");
+            }
+        }
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select * from " + ROOMS_TABLE_NAME + " where id in (" + sb + ")", null );
+
+        res.moveToFirst();
+
+        while(!res.isAfterLast()){
+            array_list.add(new Room(
+                    res.getInt(res.getColumnIndex(ROOMS_COLUMN_ID)),
+                    res.getString(res.getColumnIndex(ROOMS_COLUMN_NAME))
+            ));
+            res.moveToNext();
+        }
+        if (!res.isClosed())  {
+            res.close();
+        }
+        return array_list;
+    }
+
+    public ArrayList<Room> getRoomsByGroupId(int group_id) {
+        ArrayList<Room> array_list = new ArrayList<Room>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor group =  db.rawQuery( "select * from " + GROUP_TABLE_NAME + " where id = " + group_id, null );
+        group.moveToFirst();
+        while(!group.isAfterLast()) {
+            Cursor rooms = db.rawQuery("select * from " + ROOMS_TABLE_NAME + " where id = " + group.getInt(group.getColumnIndex(GROUP_COLUMN_ROOM_ID)), null);
+            rooms.moveToFirst();
+            while (!rooms.isAfterLast()) {
+                array_list.add(new Room(
+                        rooms.getInt(rooms.getColumnIndex(ROOMS_COLUMN_ID)),
+                        rooms.getString(rooms.getColumnIndex(ROOMS_COLUMN_NAME)),
+                        rooms.getInt(rooms.getColumnIndex(ROOMS_COLUMN_STATE)),
+                        rooms.getString(rooms.getColumnIndex(ROOMS_COLUMN_WAKE_UP_TIME)),
+                        rooms.getString(rooms.getColumnIndex(ROOMS_COLUMN_GO_SLEEP_TIME)),
+                        rooms.getInt(rooms.getColumnIndex(ROOMS_COLUMN_RELAY_PIN)),
+                        rooms.getLong(rooms.getColumnIndex(ROOMS_COLUMN_DELAY_WAKE)),
+                        rooms.getLong(rooms.getColumnIndex(ROOMS_COLUMN_DELAY_SLEEP))
+                ));
+                rooms.moveToNext();
+            }
+            if (!rooms.isClosed()) {
+                rooms.close();
+            }
+            group.moveToNext();
+        }
+        if (!group.isClosed()) {
+            group.close();
         }
         return array_list;
     }
