@@ -392,21 +392,25 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                                 break;
                         }
                         if(restartFlag) {
-                            FragmentTransaction ft = getFragmentManager().beginTransaction();
-                            HomeFragment homeFragment = new HomeFragment();
-                            if (!homeFragment.isAdded()) {
-                                ft.replace(R.id.home_frame, homeFragment);
-                                ft.addToBackStack(null);
-                                ft.commitAllowingStateLoss();
+                            try {
+                                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                                HomeFragment homeFragment = new HomeFragment();
+                                if (!homeFragment.isAdded()) {
+                                    ft.replace(R.id.home_frame, homeFragment);
+                                    ft.addToBackStack(null);
+                                    ft.commitAllowingStateLoss();
 
-                            } else {
-                                ft.remove(homeFragment);
-                                ft.add(R.id.home_frame, homeFragment);
-                                ft.addToBackStack(null);
-                                ft.commitAllowingStateLoss();
+                                } else {
+                                    ft.remove(homeFragment);
+                                    ft.add(R.id.home_frame, homeFragment);
+                                    ft.addToBackStack(null);
+                                    ft.commitAllowingStateLoss();
 
+                                }
+                                restartFlag = false;
+                            }catch (Exception e){
+                                Log.i("My tag",e.toString());
                             }
-                            restartFlag = false;
                         }
                     } catch (IOException e) {
                         // TODO Auto-generated catch block
@@ -468,85 +472,140 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             String selectedResult = parent.getItemAtPosition(position).toString();
             Log.i("My tag","value_to_send 0 = " + value_to_send);
+            int room_relay_pin;
+            String room_name;
             for(int i = 0; i < array_list.size(); i++){
-                if(selectedResult.toLowerCase().equals("turn on " + array_list.get(i).getName()) ||
-                        selectedResult.toLowerCase().equals("включить " + array_list.get(i).getName()) ||
-                        selectedResult.toLowerCase().equals(array_list.get(i).getName() + "turn on ") ||
-                        selectedResult.toLowerCase().equals(array_list.get(i).getName() + "включить ")){
-                    if(array_list.get(i).getRelayPin() == 0){
+                room_relay_pin = array_list.get(i).getRelayPin();
+                room_name = array_list.get(i).getName();
+                if(selectedResult.toLowerCase().equals("turn on " + room_name) ||
+                        selectedResult.toLowerCase().equals("включить " + room_name) ||
+                        selectedResult.toLowerCase().equals(room_name + "turn on ") ||
+                        selectedResult.toLowerCase().equals(room_name + "включить ")){
+                    if(room_relay_pin == 0){
                         value_to_send = 5;
-                    }else if(array_list.get(i).getRelayPin() == 1){
+                    }else if(room_relay_pin == 1){
                         value_to_send = 6;
-                    }else if(array_list.get(i).getRelayPin() == 2){
+                    }else if(room_relay_pin == 2){
                         value_to_send = 7;
-                    }else if(array_list.get(i).getRelayPin() == 3){
+                    }else if(room_relay_pin == 3){
                         value_to_send = 8;
                     }
                 }else
-                if(selectedResult.toLowerCase().equals("turn off " + array_list.get(i).getName()) ||
-                        selectedResult.toLowerCase().equals("выключить " + array_list.get(i).getName()) ||
-                        selectedResult.toLowerCase().equals("отключить " + array_list.get(i).getName()) ||
-                        selectedResult.toLowerCase().equals(array_list.get(i).getName() + "turn off ") ||
-                        selectedResult.toLowerCase().equals(array_list.get(i).getName() + "выключить ") ||
-                        selectedResult.toLowerCase().equals(array_list.get(i).getName() + "отключить ")){
-                    if(array_list.get(i).getRelayPin() == 0){
+                if(selectedResult.toLowerCase().equals("turn off " + room_name) ||
+                        selectedResult.toLowerCase().equals("выключить " + room_name) ||
+                        selectedResult.toLowerCase().equals("отключить " + room_name) ||
+                        selectedResult.toLowerCase().equals(room_name + "turn off ") ||
+                        selectedResult.toLowerCase().equals(room_name + "выключить ") ||
+                        selectedResult.toLowerCase().equals(room_name + "отключить ")){
+                    if(room_relay_pin == 0){
                         value_to_send = 1;
-                    }else if(array_list.get(i).getRelayPin() == 1){
+                    }else if(room_relay_pin == 1){
                         value_to_send = 2;
-                    }else if(array_list.get(i).getRelayPin() == 2){
+                    }else if(room_relay_pin == 2){
                         value_to_send = 3;
-                    }else if(array_list.get(i).getRelayPin() == 3){
+                    }else if(room_relay_pin == 3){
                         value_to_send = 4;
+                    }
+                }
+            }
+            ArrayList<Room> roomsArrayList;
+            int group_id;
+            String group_name;
+            for(int i = 0; i < group_array_list.size(); i++){
+                group_id = group_array_list.get(i).getId();
+                group_name = group_array_list.get(i).getName();
+                if(selectedResult.toLowerCase().equals("turn on " + group_name) ||
+                        selectedResult.toLowerCase().equals("включить " + group_name) ||
+                        selectedResult.toLowerCase().equals(group_name + "turn on ") ||
+                        selectedResult.toLowerCase().equals(group_name + "включить ")){
+                    roomsArrayList = mydb.getRoomsByGroupId(group_id);
+                    try{
+                        for(int j=0; j<roomsArrayList.size();j++){
+                            int room_id = roomsArrayList.get(j).getId();
+                            int write = 0;
+                            if( mydb.getRelayPinById(room_id) == 0){
+                                write = 5;
+                            }
+                            else if( mydb.getRelayPinById(room_id) == 1){
+                                write = 6;
+                            }
+                            else if( mydb.getRelayPinById(room_id) == 2){
+                                write = 7;
+                            }
+                            else if( mydb.getRelayPinById(room_id) == 3){
+                                write = 8;
+                            }
+                            outputStream.write(write);
+                            mydb.updateStateOfRoom(room_id,1);
+                            mydb.updateStateOfGroup(group_id,1);
+                        }
+                    }catch (Exception e){
+                        Log.i("My tag", "try send group in voice control");
+                        e.printStackTrace();
+                    }
+                }else
+                if(selectedResult.toLowerCase().equals("turn off " + group_name) ||
+                        selectedResult.toLowerCase().equals("выключить " + group_name) ||
+                        selectedResult.toLowerCase().equals("отключить " + group_name) ||
+                        selectedResult.toLowerCase().equals(group_name + "turn off ") ||
+                        selectedResult.toLowerCase().equals(group_name + "выключить ") ||
+                        selectedResult.toLowerCase().equals(group_name + "отключить ")){
+                    roomsArrayList = mydb.getRoomsByGroupId(group_id);
+                    try{
+                        for(int j=0; j<roomsArrayList.size();j++){
+                            int room_id = roomsArrayList.get(j).getId();
+                            int write = 0;
+                            if( mydb.getRelayPinById(room_id) == 0){
+                                write = 1;
+                            }
+                            else if( mydb.getRelayPinById(room_id) == 1){
+                                write = 2;
+                            }
+                            else if( mydb.getRelayPinById(room_id) == 2){
+                                write = 3;
+                            }
+                            else if( mydb.getRelayPinById(room_id) == 3){
+                                write = 4;
+                            }
+                            outputStream.write(write);
+                            mydb.updateStateOfRoom(room_id,0);
+                            mydb.updateStateOfGroup(group_id,0);
+                        }
+
+                    }catch (Exception e){
+                        Log.i("My tag", "try send group in voice control");
+                        e.printStackTrace();
                     }
                 }
             }
             switch (value_to_send) {
                 case 1:
                     mydb.updateStateOfRoomByRelayPin(0, 0);
-                    Log.i("My tag","mydb.updateStateOfRoomByRelayPin(0, 0);");
-
                     break;
                 case 2:
                     mydb.updateStateOfRoomByRelayPin(1, 0);
-                    Log.i("My tag","mydb.updateStateOfRoomByRelayPin(1, 0);");
-
                     break;
                 case 3:
                     mydb.updateStateOfRoomByRelayPin(2, 0);
-                    Log.i("My tag","mydb.updateStateOfRoomByRelayPin(2, 0);");
-
                     break;
                 case 4:
                     mydb.updateStateOfRoomByRelayPin(3, 0);
-                    Log.i("My tag","mydb.updateStateOfRoomByRelayPin(3, 0);");
-
                     break;
                 case 5:
                     mydb.updateStateOfRoomByRelayPin(0, 1);
-                    Log.i("My tag","mydb.updateStateOfRoomByRelayPin(0, 1);");
-
                     break;
                 case 6:
                     mydb.updateStateOfRoomByRelayPin(1, 1);
-                    Cursor r = mydb.getData(1);
-                    Log.i("My tag", "+" + r.getInt(r.getColumnIndex(DBHelper.ROOMS_COLUMN_STATE)));
-                    Log.i("My tag","mydb.updateStateOfRoomByRelayPin(1, 1);");
-
                     break;
                 case 7:
                     mydb.updateStateOfRoomByRelayPin(2, 1);
-                    Log.i("My tag","mydb.updateStateOfRoomByRelayPin(2, 1);");
-
                     break;
                 case 8:
                     mydb.updateStateOfRoomByRelayPin(3, 1);
-                    Log.i("My tag","mydb.updateStateOfRoomByRelayPin(3, 1);");
                     break;
             }
             try{
                 outputStream.write(value_to_send);
-                Log.i("Kani", "write  home frag 570");
-                Log.i("My tag","value_to_send = " + value_to_send);
                 Toast.makeText(getActivity(), "sending "+ value_to_send, Toast.LENGTH_LONG).show();
             }catch (Exception e){
                 Log.i("My tag", "try send in voice control");

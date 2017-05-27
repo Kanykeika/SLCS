@@ -5,14 +5,14 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.app.DialogFragment;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TimePicker;
 
-public class TimePickerFragment extends DialogFragment  {
+public class TimePickerFragment extends DialogFragment {
 
     private TimePicker timePicker;
 

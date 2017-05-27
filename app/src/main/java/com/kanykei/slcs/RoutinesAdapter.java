@@ -48,7 +48,7 @@ public class RoutinesAdapter extends ArrayAdapter<Room> {
         deleteBtn.setVisibility(View.INVISIBLE);
 
         // 4. Set the text for textView
-        labelView.setText(String.valueOf(roomsArrayList.get(position).getId()));
+        labelView.setText(String.valueOf(position+1));
         valueView.setText(String.valueOf(roomsArrayList.get(position).getName()));
 
         if(action == "wake"){
@@ -76,15 +76,9 @@ public class RoutinesAdapter extends ArrayAdapter<Room> {
                 // Perform action on click
                 if(action.equals("sleep")){
                     Log.i("My tag","btn on click sleep");
-                    timeView.setText(getContext().getText(R.string.set_sleep));
-                    deleteBtn.setVisibility(View.INVISIBLE);
                     mydb.updateGoSleepTimer(roomsArrayList.get(position).getId(),null);
-
-
                 }else if(action.equals("wake")){
-                    Log.i("My tag","btn on click sleep");
-                    timeView.setText(getContext().getText(R.string.set_wake));
-                    deleteBtn.setVisibility(View.INVISIBLE);
+                    Log.i("My tag","btn on click wake");
                     mydb.updateWakeUpTimer(roomsArrayList.get(position).getId(),null);
                 }
 

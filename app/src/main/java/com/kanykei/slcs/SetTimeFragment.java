@@ -7,9 +7,9 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -80,7 +80,6 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
         }else{
             toolbar_title.setText(R.string.app_name);
         }
-
         btSocket = ((MyBluetoothSocketApplication) getActivity().getApplication()).getBtSocket(); // get global Bluetooth Socket variable from application class
         try{
             outputStream = btSocket.getOutputStream();
@@ -242,7 +241,7 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
         bundle.putString("message", message);
         SetTimeFragment time_fragment = new SetTimeFragment();
         time_fragment.setArguments(bundle);
-        FragmentManager fm = getActivity().getFragmentManager();
+        FragmentManager fm = getActivity().getSupportFragmentManager();
         fm.popBackStack();
         fm.beginTransaction().replace(R.id.routines_frame, time_fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).addToBackStack(null).commit();
     }

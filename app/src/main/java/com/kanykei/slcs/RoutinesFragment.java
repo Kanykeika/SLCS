@@ -1,11 +1,11 @@
 package com.kanykei.slcs;
 
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,7 +50,7 @@ public class RoutinesFragment extends Fragment {
                 bundle.putString("message", "wake");
                 SetTimeFragment wake_time_fragment = new SetTimeFragment();
                 wake_time_fragment.setArguments(bundle);
-                FragmentManager fm = getActivity().getFragmentManager();
+                FragmentManager fm = getActivity().getSupportFragmentManager();
                 fm.beginTransaction().replace(R.id.routines_frame, wake_time_fragment,"routine_frag").setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).addToBackStack(null).commit();
             }
         });
@@ -62,7 +62,7 @@ public class RoutinesFragment extends Fragment {
                 bundle.putString("message", "sleep");
                 SetTimeFragment sleep_time_fragment = new SetTimeFragment();
                 sleep_time_fragment.setArguments(bundle);
-                FragmentManager fm = getActivity().getFragmentManager();
+                FragmentManager fm = getActivity().getSupportFragmentManager();
                 fm.beginTransaction().replace(R.id.routines_frame, sleep_time_fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).addToBackStack(null).commit();
             }
         });

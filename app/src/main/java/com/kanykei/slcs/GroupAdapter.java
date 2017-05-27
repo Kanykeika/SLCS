@@ -95,88 +95,75 @@ public class GroupAdapter extends ArrayAdapter<Group> {
             holder.toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
                 @Override
-                public void onCheckedChanged(CompoundButton arg0, boolean isChecked) {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     int isCheckedInt = (isChecked) ? 1 : 0;
-                    mydb.updateStateOfGroup(groupsArrayList.get(position).getId(), isCheckedInt);
-                    roomsArrayList = mydb.getRoomsByGroupId(groupsArrayList.get(position).getId());
-                        try{
-                            if(isChecked){ // to turn on
-                                for(int i=0; i<roomsArrayList.size();i++){
+                    if (buttonView.isPressed()) {
+                        mydb.updateStateOfGroup(groupsArrayList.get(position).getId(), isCheckedInt);
+                        roomsArrayList = mydb.getRoomsByGroupId(groupsArrayList.get(position).getId());
+                        try {
+                            if (isChecked) { // to turn on
+                                for (int i = 0; i < roomsArrayList.size(); i++) {
                                     int room_id = roomsArrayList.get(i).getId();
                                     int write = 0;
-                                    Log.i("My tag","i=" + i);
-                                    Log.i("My tag","roomsArrayList.size()=" + roomsArrayList.size());
-//                                    mydb.updateStateOfRoom(roomsArrayList.get(i).getId(),isCheckedInt);
-                                    if( mydb.getRelayPinById(room_id) == 0){
+                                    Log.i("My tag", "i=" + i);
+                                    Log.i("My tag", "roomsArrayList.size()=" + roomsArrayList.size());
+                                    if (mydb.getRelayPinById(room_id) == 0) {
                                         write = 5;
                                         Log.i("My tag", "room id[i]=" + room_id);
                                         Log.i("My tag", "write 5 Group adapter 102");
 
-                                    }
-                                    else if( mydb.getRelayPinById(room_id) == 1){
+                                    } else if (mydb.getRelayPinById(room_id) == 1) {
                                         write = 6;
                                         Log.i("My tag", "room id[i]=" + room_id);
                                         Log.i("My tag", "write 6 Group adapter 107");
-                                    }
-                                    else if( mydb.getRelayPinById(room_id) == 2){
+                                    } else if (mydb.getRelayPinById(room_id) == 2) {
                                         write = 7;
                                         Log.i("My tag", "room id[i]=" + room_id);
                                         Log.i("My tag", "write 7 Group adapter 111");
-                                    }
-                                    else if( mydb.getRelayPinById(room_id) == 3){
+                                    } else if (mydb.getRelayPinById(room_id) == 3) {
                                         write = 8;
                                         Log.i("My tag", "room id[i]=" + room_id);
                                         Log.i("My tag", "write 8 Group adapter 115");
                                     }
                                     outputStream.write(write);
-                                    mydb.updateStateOfRoom(room_id,1);
+                                    mydb.updateStateOfRoom(room_id, 1);
 
                                 }
-//                                FragmentTransaction ft = ((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
-//                                HomeFragment homeFragment = new HomeFragment();
-//                                ft.replace(R.id.home_frame, homeFragment);
-//                                ft.commit();
-                            }else{ // to turn off
-                                for(int i=0; i<roomsArrayList.size();i++) {
+                            } else { // to turn off
+                                for (int i = 0; i < roomsArrayList.size(); i++) {
 //                                    mydb.updateStateOfRoom(roomsArrayList.get(i).getId(), isCheckedInt);
-                                    Log.i("My tag","i=" + i);
-                                    Log.i("My tag","roomsArrayList.size()=" + roomsArrayList.size());
+                                    Log.i("My tag", "i=" + i);
+                                    Log.i("My tag", "roomsArrayList.size()=" + roomsArrayList.size());
                                     int room_id = roomsArrayList.get(i).getId();
                                     int write = 0;
                                     if (mydb.getRelayPinById(room_id) == 0) {
                                         write = 1;
                                         Log.i("My tag", "room id[i]=" + room_id);
                                         Log.i("My tag", "write 1 Group adapter 125");
-                                    }
-                                    else if (mydb.getRelayPinById(room_id) == 1) {
+                                    } else if (mydb.getRelayPinById(room_id) == 1) {
                                         write = 2;
                                         Log.i("My tag", "room id[i]=" + room_id);
                                         Log.i("My tag", "write 2 Group adapter 129");
-                                    }
-                                    else if (mydb.getRelayPinById(room_id) == 2) {
+                                    } else if (mydb.getRelayPinById(room_id) == 2) {
                                         write = 3;
                                         Log.i("My tag", "room id[i]=" + room_id);
                                         Log.i("My tag", "write 3 Group adapter 133");
-                                    }
-                                    else if (mydb.getRelayPinById(room_id) == 3) {
+                                    } else if (mydb.getRelayPinById(room_id) == 3) {
                                         write = 4;
                                         Log.i("My tag", "room id[i]=" + room_id);
                                         Log.i("My tag", "write 4 Group adapter 137");
                                     }
                                     outputStream.write(write);
-                                    mydb.updateStateOfRoom(room_id,0);
+                                    mydb.updateStateOfRoom(room_id, 0);
 
                                 }
-//                                FragmentTransaction ft = ((MainActivity) parent.getContext()).getSupportFragmentManager().beginTransaction();
-//                                HomeFragment homeFragment = new HomeFragment();
-//                                ft.replace(R.id.home_frame, homeFragment);
-//                                ft.commit();
+
                             }
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                             Toast.makeText(getContext(), "Broken pipe. Reconnect with Bluetooth", Toast.LENGTH_LONG).show();
                             btSocket = ((MyBluetoothSocketApplication) getContext().getApplicationContext()).getBtSocket();
-                            try{
+                            try {
                                 outputStream = btSocket.getOutputStream();
                                 Log.i("Kani", "get  Group adapter 147");
                                 inputStream = btSocket.getInputStream();
@@ -185,7 +172,7 @@ public class GroupAdapter extends ArrayAdapter<Group> {
                                 inputStream.close();
                                 btSocket.close();
                                 Log.i("My tag", "Bluetooth socket closed");
-                            }catch (Exception ex){
+                            } catch (Exception ex) {
                                 ex.printStackTrace();
                             }
                             Intent intent = new Intent(getContext(), ConnectToArduinoWithBluetooth.class);
@@ -193,6 +180,7 @@ public class GroupAdapter extends ArrayAdapter<Group> {
                         }
 
 
+                    }
                 }
             });
         }
