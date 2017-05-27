@@ -306,7 +306,6 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
                             restartSetTimeFragment = true;
                             Log.i("My tag", "write  set time frag 308");
                             Log.i("My tag","set time on set time wake = " + value_to_send[0]);
-                            Toast.makeText(getActivity(), "sending set time frag"+ value_to_send[0], Toast.LENGTH_LONG).show();
                         }catch (Exception e){
                             Log.i("My tag", "error: try send in set time frag on set time wake");
                             e.printStackTrace();

@@ -80,24 +80,34 @@ public class DBHelper extends SQLiteOpenHelper {
                 GROUP_COLUMN_NAME + " text, " +
                 GROUP_COLUMN_ROOM_ID + " integer, " +
                 GROUP_COLUMN_STATE + " integer) " );
-        HashMap<String, String> infoMapEn = new HashMap<String, String>();
-        infoMapEn.put("Create a new room","Go to Home tab and click ‘+’ add button in bottom right corner. In input text, write the name of room. Then choose corresponding relay\'s pin. Hit save. Now you can see the newly created room in the list of all rooms.");
-        infoMapEn.put("Delete room (-s)","Go to Home tab. Select room (-s) to delete. Click trash box in the top right corner.");
-        infoMapEn.put("Set time to turn the light on (off) in room","Go to Routines tab. To set time of turning the light on in room click wake up. The list of all the rooms with corresponding wake up time to the right will appear. Click the room and set the time in the dialog appeared. To set time of turning the light off in room click go to sleep. The list of all the rooms with corresponding go sleep time to the right will appear. Click the room and set the time in the dialog appeared.");
-        infoMapEn.put("Change language settings","Go to Settings tab.Choose the language from list.");
-        infoMapEn.put("Manage voice control","If you want to voice control on Russian language (there is no Kyrgyz language voice library) first do the following steps.\n" +
+        ArrayList<String> title = new ArrayList<>();
+        ArrayList<String> details = new ArrayList<>();
+        title.add("Create a new room");
+        title.add("Delete room (-s)");
+        title.add("Set time to turn the light on (off) in room");
+        title.add("Change language settings");
+        title.add("Manage voice control");
+        details.add("Go to Home tab and click ‘+’ add button in bottom right corner. In input text, write the name of room. Then choose corresponding relay\'s pin. Hit save. Now you can see the newly created room in the list of all rooms.");
+        details.add("Go to Home tab. Select room (-s) to delete. Click trash box in the top right corner.");
+        details.add("Go to Routines tab. To set time of turning the light on in room click wake up. The list of all the rooms with corresponding wake up time to the right will appear. Click the room and set the time in the dialog appeared. To set time of turning the light off in room click go to sleep. The list of all the rooms with corresponding go sleep time to the right will appear. Click the room and set the time in the dialog appeared.");
+        details.add("Go to Settings tab.Choose the language from list.");
+        details.add("If you want to voice control on Russian language (there is no Kyrgyz language voice library) first do the following steps.\n" +
                 "\nTo install a voice library from Google go to Menu in mobile phone. Choose Settings ⇒ My device ⇒ Language and input ⇒ Voice search ⇒ Speech recognition offline ⇒ tab All ⇒ download Russian language. Now you can use voice control feature on Russian language.\n" +
                 "Go to Settings tab.  Turn on voice control. Go to Home tab. Voice control button appeared. Click voice control button and command. The commands are following: “Turn on room_name” or “Turn off room_name”, “Room_name turn on” or “Room_name turn off”; “Включить room_name”, “Отключить room_name” or “Выключить room_name”, “Room_name включить”, “Room_name отключить” or “Room_name выключить”.");
-        HashMap<String, String> infoMapRu = new HashMap<String, String>();
-        infoMapRu.put("Создать новое помещение","Пройдите во вкладку Главная и нажмите кнопку ‘+’ в правом нижнем углу. Введите название помещения ( комнаты ). Затем выберите соответствующий pin релейного модуля. Нажмите кнопку “Сохранить”. Теперь можете проверить новое помещение в списке помещений во вкладке Главная.");
-        infoMapRu.put("Удалить комнату(-ы)","Пройдите во вкладку Главная. Выберите комнату(-ы), которую (-ые) вы хотели бы удалить. Нажмите кнопку “Удалить” (мусорное ведро) в правом верхнем углу.");
-        infoMapRu.put("Установить время когда включать(выключать) лампочки","Пройдите во вкладку Время. " +
+        title.add("Создать новое помещение");
+        title.add("Удалить комнату(-ы)");
+        title.add("Установить время когда включать(выключать) лампочки");
+        title.add("Настройки языка");
+        title.add("Управление голосом");
+        details.add("Пройдите во вкладку Главная и нажмите кнопку ‘+’ в правом нижнем углу. Введите название помещения ( комнаты ). Затем выберите соответствующий pin релейного модуля. Нажмите кнопку “Сохранить”. Теперь можете проверить новое помещение в списке помещений во вкладке Главная.");
+        details.add("Пройдите во вкладку Главная. Выберите комнату(-ы), которую (-ые) вы хотели бы удалить. Нажмите кнопку “Удалить” (мусорное ведро) в правом верхнем углу.");
+        details.add("Пройдите во вкладку Время. " +
                 "Чтобы установить время включения света в комнате, нажмите “Проснуться”. " +
                 "Появится список всех комнат с соответсвтующим временем включения справа." +
                 "Нажмите на название комнаты, в появившемся окне установите время. " +
                 "\nЧтобы установить время выключения света в комнате, нажмите “Уснуть”. Появится список всех комнат с соответсвтующим временем вsключения справа. Нажмите на название комнаты, в появившемся окне установите время.");
-        infoMapRu.put("Настройки языка","Пройдите во вкладку Настройки. Выберите язык из списка.");
-        infoMapRu.put("Управление голосом","Если вы хотите управлять на русском языке " +
+        details.add("Пройдите во вкладку Настройки. Выберите язык из списка.");
+        details.add("Если вы хотите управлять на русском языке " +
                 "(голосовая библиотека кыргызского языка пока не имплементирована) выполните следующие шаги: " +
                 "\nДля установки голосовой библиотеки Google пройдите в Меню на своем смартфоне. " +
                 "Выберите Настройки ⇒ Мое устройство ⇒ Язык и ввод ⇒ Голосовое управление ⇒ Распознавание речи офлайн ⇒ " +
@@ -108,19 +118,23 @@ public class DBHelper extends SQLiteOpenHelper {
                 "“Название_комнаты turn on” or “Название_комнаты turn off”; “Включить название_комнаты”, " +
                 "“Отключить название_комнаты” or “Выключить название_комнаты”, “Название_комнаты включить”, " +
                 "“Название_комнаты отключить” or “Название_комнаты выключить”.");
-        HashMap<String, String> infoMapKg = new HashMap<String, String>();
-        infoMapKg.put("Жаңы бөлмө кошуу","Башкы бетке барып, ‘+’ кошуу баскычын басыңыз. Текст киргизүү кутучасына бөлмөнүн атын жазыңыз." +
+        title.add("Жаңы бөлмө кошуу");
+        title.add("Бөлмөнү(-лөрдү) жок кылуу");
+        title.add("Бөлмөдө жарыкты күйгүзүп өчүрүү убактысын белгилөө");
+        title.add("Тил орнотуулар");
+        title.add("Yн башкаруу");
+        details.add("Башкы бетке барып, ‘+’ кошуу баскычын басыңыз. Текст киргизүү кутучасына бөлмөнүн атын жазыңыз." +
                 " Реленин тиешелүү PINин тандаңыз. Сактоо баскычын басыңыз. Эми бүт бөлмөлөрдүн тизмесинде жаңы кошулган бөлмөнү көрө аласыз.");
-        infoMapKg.put("Бөлмөнү(-лөрдү) жок кылуу","Башкы бетке барыңыз. Жок кыла турган бөлмөнү(-лөрдү) тандаңыз. Таштанды кутучасын басыңыз.");
-        infoMapKg.put("Бөлмөдө жарыкты күйгүзүп өчүрүү убактысын белгилөө","“Убакыт“ кошумча баракчасына барыңыз." +
+        details.add("Башкы бетке барыңыз. Жок кыла турган бөлмөнү(-лөрдү) тандаңыз. Таштанды кутучасын басыңыз.");
+        details.add("“Убакыт“ кошумча баракчасына барыңыз." +
                 " Бөлмөдө жарыкты күйгүзүү убактысын белгилөө үчүн “Ойгонуу” баскычын басыңыз." +
                 " Бардык бөлмөлөрдүн тизмеси жана аларга тиешелүү жарыкты күйгүзүү убактысы пайда болот." +
                 " Бөлмөнү басыңыз жана пайда болгон диалогдо убакыт тандаңыз." +
                 " \\nБөлмөдө жарыкты өчүрүү убактысын белгилөө үчүн “Уктоo” баскычын басыңыз." +
                 " Бардык бөлмөлөрдүн тизмеси жана аларга тиешелүү жарыкты өчүрүү убактысы пайда болот." +
                 " Бөлмөнү басыңыз жана пайда болгон диалогдо убакыт тандаңыз.");
-        infoMapKg.put("Тил орнотуулар","“Орнотуулар” кошумча баракчасына барыңыз. Тизменен тилди тандаңыз.");
-        infoMapKg.put("Yн башкаруу","Орус тилинде үн менен башкаргыңыз келсе (кыргыз тилинин үн китепканасы жок)" +
+        details.add("“Орнотуулар” кошумча баракчасына барыңыз. Тизменен тилди тандаңыз.");
+        details.add("Орус тилинде үн менен башкаргыңыз келсе (кыргыз тилинин үн китепканасы жок)" +
                 " биринчи төмөнкү кадамдарды жасаңыз. Google үн китепканасын орнотуу үчүн мобилдик аппаратта Менюну басыңыз." +
                 " Настройки ⇒ Мое устройство ⇒ Язык и ввод ⇒ Голосовое управление ⇒ Распознавание речи офлайн ⇒" +
                 " вкладка ВСЕ ⇒ Орус тилин жүктөп алыңыз. Эми сиз орус тилинде үн башкаруу мүмкүнчүлүгүн колдоно аласыз. \\n" +
@@ -129,43 +143,23 @@ public class DBHelper extends SQLiteOpenHelper {
                 " Буйрук болуп төмөнкүлөр саналат: “Turn on room_name” or “Turn off room_name”, “Room_name turn on” or “Room_name turn off”;" +
                 " “Включить room_name”, “Отключить room_name” or “Выключить room_name”, “Room_name включить”," +
                 " “Room_name отключить” or “Room_name выключить”.");
-
-        Iterator hashMapIteratorKg = infoMapKg.keySet().iterator();
-        while(hashMapIteratorKg.hasNext()) {
-            String language = "kg";
-            String title=(String)hashMapIteratorKg.next();
-            String details=(String)infoMapKg.get(title);
+        String language = "en";
+        for(int i = 0; i < title.size(); i++){
+            if(i < 5) {
+                language = "en";
+            }else if (i < 10){
+                language = "ru";
+            }else if (i < 15){
+                language = "kg";
+            }
+            String titles = title.get(i);
+            String detail = details.get(i);
             db.execSQL("insert into " + INFO_TABLE_NAME + " ("
                     + INFO_COLUMN_TITLE + ","
                     + INFO_COLUMN_DETAILS + ","
-                    + INFO_COLUMN_LANGUAGE + ") values(\"" + title + "\", \"" + details + "\", \"" + language + "\")");
+                    + INFO_COLUMN_LANGUAGE + ") values(\"" + titles + "\", \"" + detail + "\", \"" + language + "\")");
 
-            Log.i("My Tag", "inserted: " + title + " " + details);
-        }
-
-        Iterator hashMapIteratorEn = infoMapEn.keySet().iterator();
-        while(hashMapIteratorEn.hasNext()) {
-            String language = "en";
-            String title=(String)hashMapIteratorEn.next();
-            String details=(String)infoMapEn.get(title);
-            db.execSQL("insert into " + INFO_TABLE_NAME + " ("
-                    + INFO_COLUMN_TITLE + ","
-                    + INFO_COLUMN_DETAILS + ","
-                    + INFO_COLUMN_LANGUAGE + ") values(\"" + title + "\", \"" + details + "\", \"" + language + "\")");
-
-            Log.i("My Tag", "inserted: " + title + " " + details);
-        }
-        Iterator hashMapIteratorRu = infoMapRu.keySet().iterator();
-        while(hashMapIteratorRu.hasNext()) {
-            String language = "ru";
-            String title=(String)hashMapIteratorRu.next();
-            String details=(String)infoMapRu.get(title);
-            db.execSQL("insert into " + INFO_TABLE_NAME + " ("
-                    + INFO_COLUMN_TITLE + ","
-                    + INFO_COLUMN_DETAILS + ","
-                    + INFO_COLUMN_LANGUAGE + ") values(\"" + title + "\", \"" + details + "\", \"" + language + "\")");
-
-            Log.i("My Tag", "inserted: " + title + " " + details);
+            Log.i("My Tag", "inserted: " + title + " " + details + " language " + language);
         }
     }
 
