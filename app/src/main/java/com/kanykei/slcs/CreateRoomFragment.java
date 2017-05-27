@@ -26,7 +26,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 
-public class CreateRoomFragment extends Fragment{
+public class CreateRoomFragment extends Fragment {
 
     private EditText inputName;
     private TextInputLayout inputLayoutName;
@@ -48,13 +48,13 @@ public class CreateRoomFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View createRoomView = inflater.inflate(R.layout.fragment_create_room, container, false);
         toolbar_title = (TextView) getActivity().findViewById(R.id.toolbar_title);
-        mydb = DBHelper.getInstance(getContext());
+        mydb = DBHelper.getInstance(getActivity());
         inputLayoutName = (TextInputLayout) createRoomView.findViewById(R.id.input_layout_name);
         inputName = (EditText) createRoomView.findViewById(R.id.input_name);
         final String[] relay_pins = { "K1", "K2", "K3", "K4" };
         Spinner spinner = (Spinner) createRoomView.findViewById(R.id.spinner_relay_pins);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item, relay_pins) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item, relay_pins) {
             // Disable click item where relay pin is already taken
             @Override
             public boolean isEnabled(int position) {
@@ -167,25 +167,25 @@ public class CreateRoomFragment extends Fragment{
                         if(!validateName()) {
                         }
                         else if(mydb.updateRoom(id_To_Update,inputName.getText().toString(), relay_pin)){
-                            Toast.makeText(getContext(), R.string.updated, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.updated, Toast.LENGTH_SHORT).show();
                             getFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit();
 
                         } else{
                             inputLayoutName.setError(getString(R.string.err_msg_duplicate_name));
 //                            requestFocus(inputName);
-                            Toast.makeText(getContext(), R.string.not_updated, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.not_updated, Toast.LENGTH_SHORT).show();
                         }
                     } else{  // insert a new room
                         if(!validateName()) {
                         }
                         else if (mydb.insertRoom(inputName.getText().toString(), relay_pin)) {
-                            Toast.makeText(getContext(), R.string.done_room, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.done_room, Toast.LENGTH_SHORT).show();
                             getFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit();
 
                         } else {
                             inputLayoutName.setError(getString(R.string.err_msg_duplicate_name));
 //                            requestFocus(inputName);
-                            Toast.makeText(getContext(), R.string.not_done_room, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.not_done_room, Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -213,11 +213,11 @@ public class CreateRoomFragment extends Fragment{
         super.onOptionsItemSelected(item);
         switch(item.getItemId()) {
             case R.id.Delete_Room:
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage(R.string.deleteRoom).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mydb.deleteRoom(id_To_Update);
-                        Toast.makeText(getContext(), R.string.success_delete, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.success_delete, Toast.LENGTH_SHORT).show();
                         getFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit();
                     }
                 }).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {

@@ -1,7 +1,5 @@
 package com.kanykei.slcs;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
@@ -9,9 +7,9 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -66,7 +64,7 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
         setLocale(lan);
         View routineView = inflater.inflate(R.layout.fragment_set_time, container, false);
         toolbar_title = (TextView) getActivity().findViewById(R.id.toolbar_title);
-        mydb = DBHelper.getInstance(getContext());
+        mydb = DBHelper.getInstance(getActivity());
         array_list = mydb.getAllRooms();
         if(array_list.isEmpty()){
             empty_text = (TextView) routineView.findViewById(R.id.emptyText);
@@ -158,6 +156,7 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
                         " after " + hours + " " + minutes + ".");
                 mydb.updateDelayWake(array_list.get(position_value).getId(),diff);
                 ((MyBluetoothSocketApplication) getActivity().getApplication()).setTime_difference(diff);
+                startTimer();
 
 
 //                Handler handler_wake = new Handler();
@@ -233,7 +232,7 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
                 msg("Turn lights off in " + array_list.get(position_value).getName() +
                         " after " + hours + " " + minutes + ".");
                 mydb.updateDelaySleep(array_list.get(position_value).getId(),diff);
-                ((MainActivity)getActivity()).timer_handler();
+                ((MyBluetoothSocketApplication) getActivity().getApplication()).setTime_difference(diff);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -243,7 +242,7 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
         bundle.putString("message", message);
         SetTimeFragment time_fragment = new SetTimeFragment();
         time_fragment.setArguments(bundle);
-        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentManager fm = getActivity().getFragmentManager();
         fm.popBackStack();
         fm.beginTransaction().replace(R.id.routines_frame, time_fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).addToBackStack(null).commit();
     }
@@ -259,12 +258,11 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
             toolbar_title.setText(R.string.app_name);
         }
         //onResume we start our timer so it can start when the app comes from the background
-        startTimer();
     }
 
     public void startTimer() {
         long firstStart = ((MyBluetoothSocketApplication) getActivity().getApplication()).getTime_difference();
-
+        Log.i("My tag", firstStart + "difference");
         //set a new Timer
         timer = new Timer();
 
@@ -275,7 +273,8 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
         timer.schedule(timerTask, firstStart, 10000); //
     }
 
-    public void stoptimertask(View v) {
+    public void stoptimertask() {
+        Log.i("My tag", "stop timer task");
         //stop the timer, if it's not already null
         if (timer != null) {
             timer.cancel();
@@ -293,6 +292,7 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
                     public void run() {
                         mydb.updateStateOfRoom(array_list.get(position_value).getId(), 1);
                         int[] value_to_send = new int[1];
+                        Log.i("My tag",array_list.get(position_value).getRelayPin() + "get relay pin");
                         if(array_list.get(position_value).getRelayPin() == 0){
                             value_to_send[0] = 5;
                         }else if(array_list.get(position_value).getRelayPin() == 1){
@@ -312,6 +312,8 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
                             Log.i("My tag", "error: try send in set time frag on set time wake");
                             e.printStackTrace();
                         }
+                        stoptimertask();
+
                     }
                 });
             }
@@ -320,7 +322,7 @@ public class SetTimeFragment extends Fragment implements TimePickerFragment.Time
 
     public String loadLanguage(String defaultLanguage)
     {
-        SharedPreferences pref = getContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        SharedPreferences pref = getActivity().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
         return pref.getString("lan", defaultLanguage);
     }
     public void setLocale(String lang) {

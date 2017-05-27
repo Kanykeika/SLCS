@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class SettingsFragment extends Fragment{
+public class SettingsFragment extends Fragment {
     ToggleButton toggleButton;
     TextView toolbar_title;
 
@@ -47,13 +47,13 @@ public class SettingsFragment extends Fragment{
         toolbar_title = (TextView) getActivity().findViewById(R.id.toolbar_title);
         toolbar_title.setText(R.string.app_name);
 
-        String[] languages = { getContext().getString(R.string.en_lang), getContext().getString(R.string.ru_lang), getContext().getString(R.string.kg_lang) };
+        String[] languages = { getActivity().getString(R.string.en_lang), getActivity().getString(R.string.ru_lang), getActivity().getString(R.string.kg_lang) };
         Integer[] images = { R.drawable.united_kingdom, R.drawable.russia, R.drawable.kyrgyzstan };
         final List<String> Locale_list = new ArrayList<String>(Arrays.asList("en", "ru", "kg"));
 
         final Spinner spinner = (Spinner) settingsView.findViewById(R.id.spinner_lang);
 
-        SpinnerAdapter adapter = new SpinnerAdapter(getContext(),R.layout.spinner_item, languages, images);
+        SpinnerAdapter adapter = new SpinnerAdapter(getActivity(),R.layout.spinner_item, languages, images);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setSelection(Locale_list.indexOf(lan));
@@ -119,7 +119,7 @@ public class SettingsFragment extends Fragment{
 
     public String loadLanguage(String defaultLanguage)
     {
-        SharedPreferences pref = getContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        SharedPreferences pref = getActivity().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
         return pref.getString("lan", defaultLanguage);
     }
     public void setLocale(String lang) {
@@ -131,7 +131,7 @@ public class SettingsFragment extends Fragment{
 
     public boolean loadVoiceControl(boolean defaultValue)
     {
-        SharedPreferences pref = getContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        SharedPreferences pref = getActivity().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
         return pref.getBoolean("voice_control", defaultValue);
     }
     public void setVoiceControl(boolean on_off) {
@@ -140,7 +140,7 @@ public class SettingsFragment extends Fragment{
 
     public void saveVoiceControl(boolean on_off)
     {
-        SharedPreferences pref = getContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        SharedPreferences pref = getActivity().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean("voice_control", on_off);
         editor.apply();
@@ -189,7 +189,7 @@ public class SettingsFragment extends Fragment{
 
     public void saveLanguage(String language)
     {
-        SharedPreferences pref = getContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        SharedPreferences pref = getActivity().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("lan", language);
         editor.apply();

@@ -23,7 +23,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 
-public class CreateGroupFragment extends Fragment{
+public class CreateGroupFragment extends Fragment {
 
     private EditText inputName;
     private TextInputLayout inputLayoutName;
@@ -47,7 +47,7 @@ public class CreateGroupFragment extends Fragment{
         final View createGroupView = inflater.inflate(R.layout.fragment_create_group, container, false);
         Log.i("My tag", "on createview CreateGroupFragment");
         toolbar_title = (TextView) getActivity().findViewById(R.id.toolbar_title);
-        mydb = DBHelper.getInstance(getContext());
+        mydb = DBHelper.getInstance(getActivity());
         final Bundle extras = getArguments();
         if(extras != null) {
             room_ids = extras.getIntegerArrayList("room_ids");
@@ -70,12 +70,12 @@ public class CreateGroupFragment extends Fragment{
                     }
                     else if (!mydb.isDuplicateGroup(inputName.getText().toString())) {
                         mydb.insertGroup(inputName.getText().toString(), room_ids);
-                        Toast.makeText(getContext(), R.string.done_group, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.done_group, Toast.LENGTH_SHORT).show();
                         getFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit();
                     } else {
                         inputLayoutName.setError(getString(R.string.err_msg_duplicate_group));
 //                            requestFocus(inputName);
-                        Toast.makeText(getContext(), R.string.not_done_group, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.not_done_group, Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -101,11 +101,11 @@ public class CreateGroupFragment extends Fragment{
         super.onOptionsItemSelected(item);
         switch(item.getItemId()) {
             case R.id.Delete_Room:
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage(R.string.deleteRoom).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mydb.deleteGroup(id_To_Update);
-                        Toast.makeText(getContext(), R.string.success_delete, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.success_delete, Toast.LENGTH_SHORT).show();
                         getFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit();
                     }
                 }).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {

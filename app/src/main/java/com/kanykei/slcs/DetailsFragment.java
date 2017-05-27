@@ -4,9 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.app.ActionBar;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -22,7 +21,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 
-public class DetailsFragment extends Fragment{
+public class DetailsFragment extends Fragment {
     TextView tv_title;
     TextView tv_details;
     DBHelper mydb;
@@ -42,7 +41,7 @@ public class DetailsFragment extends Fragment{
         setLocale(lan);
         View detaisView = inflater.inflate(R.layout.fragment_details, container, false);
 
-        mydb = DBHelper.getInstance(getContext());
+        mydb = DBHelper.getInstance(getActivity());
         ArrayList<String> arrayList  = mydb.getInfoDetails(getArguments().getInt("info_id"), lan);
         if(arrayList.size() != 0){
             String title = arrayList.get(0);
@@ -73,7 +72,7 @@ public class DetailsFragment extends Fragment{
 
     public String loadLanguage(String defaultLanguage)
     {
-        SharedPreferences pref = getContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        SharedPreferences pref = getActivity().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
         return pref.getString("lan", defaultLanguage);
     }
     public void setLocale(String lang) {

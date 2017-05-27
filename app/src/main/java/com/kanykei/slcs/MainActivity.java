@@ -1,5 +1,5 @@
 package com.kanykei.slcs;
-
+//import android.support.v13.app.FragmentPagerAdapter;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
@@ -8,14 +8,16 @@ import android.content.res.Configuration;
 //import android.text.format.DateFormat;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+//import android.app.Fragment;
+//import android.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -190,87 +192,87 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void timer_handler(){
-//        handler_wake.removeCallbacks(runnable);
-
-        final int[] value_to_send = new int[1];
-
-        final ArrayList<Room> roomArrayList = mydb.getAllRooms();
-
-        if (roomArrayList.size() != 0) {
-//            System.out.println("Turn lights on in: ");
-            for (int i = 0; i < roomArrayList.size(); i++) {
-                if (roomArrayList.get(i) != null) {
-                    long wake_time_delay = roomArrayList.get(i).getDelay_wake();
-                    if(wake_time_delay != 0) {
-                        Handler handler_wake = new Handler();
-                        final int finalI = i;
-                        handler_wake.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {//Do something after .....
-                                mydb.updateStateOfRoom(roomArrayList.get(finalI).getId(), 1);
-                                if(roomArrayList.get(finalI).getRelayPin() == 0){
-                                    value_to_send[0] = 5;
-                                }else if(roomArrayList.get(finalI).getRelayPin() == 1){
-                                    value_to_send[0] = 6;
-                                }else if(roomArrayList.get(finalI).getRelayPin() == 2){
-                                    value_to_send[0] = 7;
-                                }else if(roomArrayList.get(finalI).getRelayPin() == 3){
-                                    value_to_send[0] = 8;
-                                }
-                                try{
-                                    outputStream.write(value_to_send[0]);
-                                    Log.i("Kani", "write  main activity 222");
-                                    Log.i("My tag","main activity on set time wake = " + value_to_send[0]);
-                                    Toast.makeText(MainActivity.this, "sending "+ value_to_send[0], Toast.LENGTH_LONG).show();
-                                }catch (Exception e){
-                                    Log.i("My tag", "try send in main activity on set time wake");
-                                    e.printStackTrace();
-                                }
-                                getSupportFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit();
-                            }
-                        }, wake_time_delay);
-                    }
-                }
-            }
-//            System.out.println("Turn lights off in: ");
-            for (int i = 0; i < roomArrayList.size(); i++) {
-                if (roomArrayList.get(i) != null) {
-                    long sleep_time_delay = roomArrayList.get(i).getDelay_sleep();
-                    if(sleep_time_delay != 0) {
-                        Handler handler_sleep = new Handler();
-                        final int finalI = i;
-                        handler_sleep.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {//Do something after .....
-                                mydb.updateStateOfRoom(roomArrayList.get(finalI).getId(), 0);
-                                if(roomArrayList.get(finalI).getRelayPin() == 0){
-                                    value_to_send[0] = 1;
-                                }else if(roomArrayList.get(finalI).getRelayPin() == 1){
-                                    value_to_send[0] = 2;
-                                }else if(roomArrayList.get(finalI).getRelayPin() == 2){
-                                    value_to_send[0] = 3;
-                                }else if(roomArrayList.get(finalI).getRelayPin() == 3){
-                                    value_to_send[0] = 4;
-                                }
-                                try{
-                                    outputStream.write(value_to_send[0]);
-                                    Log.i("Kani", "write  main activity 257");
-                                    Log.i("My tag","main activity on set time sleep = " + value_to_send[0]);
-                                    Toast.makeText(MainActivity.this, "sending "+ value_to_send[0], Toast.LENGTH_LONG).show();
-                                }catch (Exception e){
-                                    Log.i("My tag", "try send in main activity on set time sleep");
-                                    e.printStackTrace();
-                                }
-                                getSupportFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit();
-                            }
-                        }, sleep_time_delay);
-                    }
-                }
-            }
-
-        }
-    }
+//    public void timer_handler(){
+////        handler_wake.removeCallbacks(runnable);
+//
+//        final int[] value_to_send = new int[1];
+//
+//        final ArrayList<Room> roomArrayList = mydb.getAllRooms();
+//
+//        if (roomArrayList.size() != 0) {
+////            System.out.println("Turn lights on in: ");
+//            for (int i = 0; i < roomArrayList.size(); i++) {
+//                if (roomArrayList.get(i) != null) {
+//                    long wake_time_delay = roomArrayList.get(i).getDelay_wake();
+//                    if(wake_time_delay != 0) {
+//                        Handler handler_wake = new Handler();
+//                        final int finalI = i;
+//                        handler_wake.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {//Do something after .....
+//                                mydb.updateStateOfRoom(roomArrayList.get(finalI).getId(), 1);
+//                                if(roomArrayList.get(finalI).getRelayPin() == 0){
+//                                    value_to_send[0] = 5;
+//                                }else if(roomArrayList.get(finalI).getRelayPin() == 1){
+//                                    value_to_send[0] = 6;
+//                                }else if(roomArrayList.get(finalI).getRelayPin() == 2){
+//                                    value_to_send[0] = 7;
+//                                }else if(roomArrayList.get(finalI).getRelayPin() == 3){
+//                                    value_to_send[0] = 8;
+//                                }
+//                                try{
+//                                    outputStream.write(value_to_send[0]);
+//                                    Log.i("Kani", "write  main activity 222");
+//                                    Log.i("My tag","main activity on set time wake = " + value_to_send[0]);
+//                                    Toast.makeText(MainActivity.this, "sending "+ value_to_send[0], Toast.LENGTH_LONG).show();
+//                                }catch (Exception e){
+//                                    Log.i("My tag", "try send in main activity on set time wake");
+//                                    e.printStackTrace();
+//                                }
+//                                getFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit();
+//                            }
+//                        }, wake_time_delay);
+//                    }
+//                }
+//            }
+////            System.out.println("Turn lights off in: ");
+//            for (int i = 0; i < roomArrayList.size(); i++) {
+//                if (roomArrayList.get(i) != null) {
+//                    long sleep_time_delay = roomArrayList.get(i).getDelay_sleep();
+//                    if(sleep_time_delay != 0) {
+//                        Handler handler_sleep = new Handler();
+//                        final int finalI = i;
+//                        handler_sleep.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {//Do something after .....
+//                                mydb.updateStateOfRoom(roomArrayList.get(finalI).getId(), 0);
+//                                if(roomArrayList.get(finalI).getRelayPin() == 0){
+//                                    value_to_send[0] = 1;
+//                                }else if(roomArrayList.get(finalI).getRelayPin() == 1){
+//                                    value_to_send[0] = 2;
+//                                }else if(roomArrayList.get(finalI).getRelayPin() == 2){
+//                                    value_to_send[0] = 3;
+//                                }else if(roomArrayList.get(finalI).getRelayPin() == 3){
+//                                    value_to_send[0] = 4;
+//                                }
+//                                try{
+//                                    outputStream.write(value_to_send[0]);
+//                                    Log.i("Kani", "write  main activity 257");
+//                                    Log.i("My tag","main activity on set time sleep = " + value_to_send[0]);
+//                                    Toast.makeText(MainActivity.this, "sending "+ value_to_send[0], Toast.LENGTH_LONG).show();
+//                                }catch (Exception e){
+//                                    Log.i("My tag", "try send in main activity on set time sleep");
+//                                    e.printStackTrace();
+//                                }
+//                                getFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit();
+//                            }
+//                        }, sleep_time_delay);
+//                    }
+//                }
+//            }
+//
+//        }
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

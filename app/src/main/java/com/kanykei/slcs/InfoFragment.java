@@ -21,7 +21,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class InfoFragment extends Fragment{
+public class InfoFragment extends Fragment {
     TextView toolbar_title;
     public InfoFragment() {
         // Required empty public constructor
@@ -38,12 +38,12 @@ public class InfoFragment extends Fragment{
         String lan = loadLanguage("en");
         setLocale(lan);
         View infoView = inflater.inflate(R.layout.fragment_info, container, false);
-        mydb = DBHelper.getInstance(getContext());
+        mydb = DBHelper.getInstance(getActivity());
         toolbar_title = (TextView) getActivity().findViewById(R.id.toolbar_title);
         toolbar_title.setText(R.string.help);
         ArrayList<String> infoList = mydb.getInfoTitles(lan);
         final ListView list = (ListView) infoView.findViewById(R.id.listViewInfo);
-        list.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.info_listview, R.id.textViewInfo, infoList));
+        list.setAdapter(new ArrayAdapter<String>(getActivity(), R.layout.info_listview, R.id.textViewInfo, infoList));
         list.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position,long arg3) {
@@ -78,7 +78,7 @@ public class InfoFragment extends Fragment{
 
     public String loadLanguage(String defaultLanguage)
     {
-        SharedPreferences pref = getContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        SharedPreferences pref = getActivity().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
         return pref.getString("lan", defaultLanguage);
     }
     public void setLocale(String lang) {

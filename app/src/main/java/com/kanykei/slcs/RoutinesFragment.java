@@ -1,11 +1,11 @@
 package com.kanykei.slcs;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-public class RoutinesFragment extends Fragment{
+public class RoutinesFragment extends Fragment {
     private TextView wake;
     private TextView sleep;
     private String lan;
@@ -50,7 +50,7 @@ public class RoutinesFragment extends Fragment{
                 bundle.putString("message", "wake");
                 SetTimeFragment wake_time_fragment = new SetTimeFragment();
                 wake_time_fragment.setArguments(bundle);
-                FragmentManager fm = getActivity().getSupportFragmentManager();
+                FragmentManager fm = getActivity().getFragmentManager();
                 fm.beginTransaction().replace(R.id.routines_frame, wake_time_fragment,"routine_frag").setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).addToBackStack(null).commit();
             }
         });
@@ -62,7 +62,7 @@ public class RoutinesFragment extends Fragment{
                 bundle.putString("message", "sleep");
                 SetTimeFragment sleep_time_fragment = new SetTimeFragment();
                 sleep_time_fragment.setArguments(bundle);
-                FragmentManager fm = getActivity().getSupportFragmentManager();
+                FragmentManager fm = getActivity().getFragmentManager();
                 fm.beginTransaction().replace(R.id.routines_frame, sleep_time_fragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).addToBackStack(null).commit();
             }
         });
@@ -71,7 +71,7 @@ public class RoutinesFragment extends Fragment{
     }
     public String loadLanguage(String defaultLanguage)
     {
-        SharedPreferences pref = getContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        SharedPreferences pref = getActivity().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
         return pref.getString("lan", defaultLanguage);
     }
     public void setLocale(String lang) {

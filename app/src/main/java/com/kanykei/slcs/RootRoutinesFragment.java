@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-public class RootRoutinesFragment extends Fragment{
+public class RootRoutinesFragment extends Fragment {
 
     public RootRoutinesFragment() {
         // Required empty public constructor

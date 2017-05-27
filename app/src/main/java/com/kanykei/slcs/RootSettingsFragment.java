@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-public class RootSettingsFragment extends Fragment{
+public class RootSettingsFragment extends Fragment {
 
     public RootSettingsFragment() {
         // Required empty public constructor

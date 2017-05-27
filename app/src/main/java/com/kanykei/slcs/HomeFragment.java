@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -32,7 +32,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import android.support.v4.app.Fragment;
+//import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.support.design.widget.FloatingActionButton;
@@ -98,7 +98,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
         mContext = getActivity();
         toolbar_title = (TextView) getActivity().findViewById(R.id.toolbar_title);
         toolbar_title.setText(R.string.app_name);
-        mydb = DBHelper.getInstance(getContext());
+        mydb = DBHelper.getInstance(getActivity());
         array_list = mydb.getAllRooms();
         group_array_list = mydb.getAllGroups();
         if(array_list.isEmpty() && group_array_list.isEmpty()){
@@ -128,7 +128,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
             fab_voice_control.setVisibility(View.VISIBLE);
             fab_voice_control.setOnClickListener(startRecognizerOnClickListener);
             spinnerResult = (Spinner) myView.findViewById(R.id.result);
-            tts = new TextToSpeech(getContext(), this);
+            tts = new TextToSpeech(getActivity(), this);
         }
          btSocket = ((MyBluetoothSocketApplication) getActivity().getApplication()).getBtSocket(); // get global Bluetooth Socket variable from application class
 
@@ -232,8 +232,8 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                                 mydb.deleteRoom(selecteditem.getId());
                             }
                         }
-                        Toast.makeText(getContext(), getString(R.string.success_delete), Toast.LENGTH_SHORT).show();
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit(); //call it here to refresh listView upon delete
+                        Toast.makeText(getActivity(), getString(R.string.success_delete), Toast.LENGTH_SHORT).show();
+                        getFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit(); //call it here to refresh listView upon delete
                         // Close CAB
                         mode.finish();
                         return true;
@@ -299,8 +299,8 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                                 mydb.deleteGroup(selecteditem_group.getId());
                             }
                         }
-                        Toast.makeText(getContext(), getString(R.string.success_delete), Toast.LENGTH_SHORT).show();
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit(); //call it here to refresh listView upon delete
+                        Toast.makeText(getActivity(), getString(R.string.success_delete), Toast.LENGTH_SHORT).show();
+                        getFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).commit(); //call it here to refresh listView upon delete
                         // Close CAB
                         mode.finish();
                         return true;
@@ -392,7 +392,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                                 break;
                         }
                         if(restartFlag) {
-                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                            FragmentTransaction ft = getFragmentManager().beginTransaction();
                             HomeFragment homeFragment = new HomeFragment();
                             if (!homeFragment.isAdded()) {
                                 ft.replace(R.id.home_frame, homeFragment);
@@ -414,7 +414,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
 
                         msg("Connection lost:\n"
                                 + e.getMessage());
-                        Toast.makeText(getContext(), "Connection lost: "+ e.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Connection lost: "+ e.getMessage(), Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getActivity(), ConnectToArduinoWithBluetooth.class);
                         startActivity(intent);
 
@@ -455,7 +455,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
         if ((requestCode == RQS_RECOGNITION) & (resultCode == Activity.RESULT_OK)) {
 //        if (requestCode == RQS_RECOGNITION) {
             ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, result);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, result);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerResult.setAdapter(adapter);
             spinnerResult.setOnItemSelectedListener(spinnerResultOnItemSelectedListener);
@@ -547,13 +547,12 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                 outputStream.write(value_to_send);
                 Log.i("Kani", "write  home frag 570");
                 Log.i("My tag","value_to_send = " + value_to_send);
-                Toast.makeText(getContext(), "sending "+ value_to_send, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "sending "+ value_to_send, Toast.LENGTH_LONG).show();
             }catch (Exception e){
                 Log.i("My tag", "try send in voice control");
                 e.printStackTrace();
             }
-            FragmentManager fm = getActivity().getSupportFragmentManager();
-            fm.beginTransaction().replace(R.id.home_frame, new HomeFragment()).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
+            getFragmentManager().beginTransaction().replace(R.id.home_frame, new HomeFragment()).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
             Log.i("My tag","update Home fragment in voice control");
         }
 
@@ -572,7 +571,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
 
     public boolean loadVoiceControl(boolean defaultValue)
     {
-        SharedPreferences pref = getContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        SharedPreferences pref = getActivity().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
         return pref.getBoolean("voice_control", defaultValue);
     }
     @Override

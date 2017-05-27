@@ -12,7 +12,7 @@
 
     <item
         android:id="@+id/delete"
-        android:icon="@drawable/ic_delete"
+        android:icon="@drawable/icon_delete"
         android:title=""
         />
 

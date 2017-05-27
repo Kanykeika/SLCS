@@ -1,6 +1,7 @@
 package com.kanykei.slcs;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,14 +75,17 @@ public class RoutinesAdapter extends ArrayAdapter<Room> {
             public void onClick(View v) {
                 // Perform action on click
                 if(action.equals("sleep")){
-                    mydb.updateGoSleepTimer(roomsArrayList.get(position).getId(),null);
+                    Log.i("My tag","btn on click sleep");
                     timeView.setText(getContext().getText(R.string.set_sleep));
                     deleteBtn.setVisibility(View.INVISIBLE);
+                    mydb.updateGoSleepTimer(roomsArrayList.get(position).getId(),null);
+
 
                 }else if(action.equals("wake")){
-                    mydb.updateWakeUpTimer(roomsArrayList.get(position).getId(),null);
+                    Log.i("My tag","btn on click sleep");
                     timeView.setText(getContext().getText(R.string.set_wake));
                     deleteBtn.setVisibility(View.INVISIBLE);
+                    mydb.updateWakeUpTimer(roomsArrayList.get(position).getId(),null);
                 }
 
             }

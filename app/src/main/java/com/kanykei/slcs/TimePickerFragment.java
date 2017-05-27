@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import android.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,11 +24,11 @@ public class TimePickerFragment extends DialogFragment  {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState){
-        View v = LayoutInflater.from(getContext()).inflate(R.layout.dialog_time,null);
+        View v = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_time,null);
 
         timePicker = (TimePicker) v.findViewById(R.id.dialog_time_picker);
         timePicker.setIs24HourView(true);
-        return new AlertDialog.Builder(getContext())
+        return new AlertDialog.Builder(getActivity())
                 .setView(v)
                 .setPositiveButton(android.R.string.ok,
                         new DialogInterface.OnClickListener() {

@@ -290,27 +290,39 @@ public class DBHelper extends SQLiteOpenHelper {
     public Cursor getData(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from " + ROOMS_TABLE_NAME + " where " + ROOMS_COLUMN_ID + " = " + id + "", null );
-        res.moveToFirst();
-        return res;
+            res.moveToFirst();
+            return res;
+
     }
     public Cursor getGroupData(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from " + GROUP_TABLE_NAME + " where " + GROUP_COLUMN_ID + " = " + id + "", null );
-        res.moveToFirst();
-        return res;
+            res.moveToFirst();
+            return res;
+
+
     }
 
     public Cursor getDataByRelayPin(int id, int relay_pin) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from " + ROOMS_TABLE_NAME + " where " + ROOMS_COLUMN_RELAY_PIN + " = " + relay_pin + " and " + ROOMS_COLUMN_ID + " <> " + id + "", null );
-        res.moveToFirst();
-        return res;
+        Cursor res  =  db.rawQuery( "select * from " + ROOMS_TABLE_NAME + " where " + ROOMS_COLUMN_RELAY_PIN + " = " + relay_pin + " and " + ROOMS_COLUMN_ID + " <> " + id + "", null );
+            res.moveToFirst();
+            return res;
+
+
     }
     public int getRelayPinById(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from " + ROOMS_TABLE_NAME + " where " + ROOMS_COLUMN_ID + " = " + id + "", null );
-        res.moveToFirst();
-        return res.getInt(res.getColumnIndex(ROOMS_COLUMN_RELAY_PIN));
+        Cursor res = null;
+        try {
+            res =  db.rawQuery( "select * from " + ROOMS_TABLE_NAME + " where " + ROOMS_COLUMN_ID + " = " + id + "", null );
+            res.moveToFirst();
+            return res.getInt(res.getColumnIndex(ROOMS_COLUMN_RELAY_PIN));
+
+        } finally {
+            if(res != null) { res.close(); }
+        }
+
     }
 
     public int numberOfRows(){
@@ -321,25 +333,25 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public boolean updateRoom (Integer id, String name, int relay_pin) {
 
-        Cursor res =  db.rawQuery( "select * from " + ROOMS_TABLE_NAME +
-                " where (" + ROOMS_COLUMN_NAME + "=\"" + name + "\" or " + ROOMS_COLUMN_RELAY_PIN + "=" + relay_pin + ") and " +
-                ROOMS_COLUMN_ID + " <> " + id + "", null );
-        res.moveToFirst();
-        if(res.getCount() == 0) {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(ROOMS_COLUMN_NAME, name);
-            contentValues.put(ROOMS_COLUMN_RELAY_PIN, relay_pin);
-            db.update(ROOMS_TABLE_NAME, contentValues, "id = ? ", new String[]{Integer.toString(id)});
-            if (!res.isClosed())  {
-                res.close();
+        Cursor res = null;
+        try {
+            res =  db.rawQuery( "select * from " + ROOMS_TABLE_NAME +
+                    " where (" + ROOMS_COLUMN_NAME + "=\"" + name + "\" or " + ROOMS_COLUMN_RELAY_PIN + "=" + relay_pin + ") and " +
+                    ROOMS_COLUMN_ID + " <> " + id + "", null );
+            res.moveToFirst();
+            if(res.getCount() == 0) {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(ROOMS_COLUMN_NAME, name);
+                contentValues.put(ROOMS_COLUMN_RELAY_PIN, relay_pin);
+                db.update(ROOMS_TABLE_NAME, contentValues, "id = ? ", new String[]{Integer.toString(id)});
+                return true;
+            }else{
+                return false;
             }
-            return true;
-        }else{
-            if (!res.isClosed())  {
-                res.close();
-            }
-            return false;
+        } finally {
+            if(res != null) { res.close(); }
         }
+
     }
 
     public boolean updateGroup (Integer id, String name, int room_id) {
@@ -492,24 +504,29 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor group =  db.rawQuery( "select * from " + GROUP_TABLE_NAME + " where id = " + group_id, null );
         group.moveToFirst();
+        String[] room_id = group.getString(group.getColumnIndex(GROUP_COLUMN_ROOM_ID)).split(", ");
         while(!group.isAfterLast()) {
-            Cursor rooms = db.rawQuery("select * from " + ROOMS_TABLE_NAME + " where id = " + group.getInt(group.getColumnIndex(GROUP_COLUMN_ROOM_ID)), null);
-            rooms.moveToFirst();
-            while (!rooms.isAfterLast()) {
-                array_list.add(new Room(
-                        rooms.getInt(rooms.getColumnIndex(ROOMS_COLUMN_ID)),
-                        rooms.getString(rooms.getColumnIndex(ROOMS_COLUMN_NAME)),
-                        rooms.getInt(rooms.getColumnIndex(ROOMS_COLUMN_STATE)),
-                        rooms.getString(rooms.getColumnIndex(ROOMS_COLUMN_WAKE_UP_TIME)),
-                        rooms.getString(rooms.getColumnIndex(ROOMS_COLUMN_GO_SLEEP_TIME)),
-                        rooms.getInt(rooms.getColumnIndex(ROOMS_COLUMN_RELAY_PIN)),
-                        rooms.getLong(rooms.getColumnIndex(ROOMS_COLUMN_DELAY_WAKE)),
-                        rooms.getLong(rooms.getColumnIndex(ROOMS_COLUMN_DELAY_SLEEP))
-                ));
-                rooms.moveToNext();
-            }
-            if (!rooms.isClosed()) {
-                rooms.close();
+            for(int i = 0; i < room_id.length; i++) {
+                Cursor rooms = db.rawQuery("select * from " + ROOMS_TABLE_NAME + " where id = " + room_id[i], null);
+                Log.i("My tag", "select * from " + ROOMS_TABLE_NAME + " where id = " + room_id[i]);
+                rooms.moveToFirst();
+                while (!rooms.isAfterLast()) {
+                    array_list.add(new Room(
+                            rooms.getInt(rooms.getColumnIndex(ROOMS_COLUMN_ID)),
+                            rooms.getString(rooms.getColumnIndex(ROOMS_COLUMN_NAME)),
+                            rooms.getInt(rooms.getColumnIndex(ROOMS_COLUMN_STATE)),
+                            rooms.getString(rooms.getColumnIndex(ROOMS_COLUMN_WAKE_UP_TIME)),
+                            rooms.getString(rooms.getColumnIndex(ROOMS_COLUMN_GO_SLEEP_TIME)),
+                            rooms.getInt(rooms.getColumnIndex(ROOMS_COLUMN_RELAY_PIN)),
+                            rooms.getLong(rooms.getColumnIndex(ROOMS_COLUMN_DELAY_WAKE)),
+                            rooms.getLong(rooms.getColumnIndex(ROOMS_COLUMN_DELAY_SLEEP))
+                    ));
+                    rooms.moveToNext();
+                }
+
+                if (!rooms.isClosed()) {
+                    rooms.close();
+                }
             }
             group.moveToNext();
         }
