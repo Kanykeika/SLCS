@@ -5,9 +5,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.Fragment;
@@ -23,16 +21,12 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Objects;
-
-//import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.support.design.widget.FloatingActionButton;
@@ -40,9 +34,6 @@ import android.view.View.OnClickListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import static java.lang.Integer.parseInt;
-
 
 public class HomeFragment extends Fragment implements TextToSpeech.OnInitListener, OnClickListener {
 
@@ -54,7 +45,6 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
 
     Activity mContext;
     TextView toolbar_title;
-    // recognizer
     TextToSpeech tts;
     boolean restartFlag = false;
     Spinner spinnerResult;
@@ -64,7 +54,6 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
     volatile boolean stopWorker;
     BluetoothSocket btSocket;
     private static final int RQS_RECOGNITION = 1;
-    // CRUD rooms
     private ListView obj;
     private DBHelper mydb;
     private FloatingActionButton fab;
@@ -114,9 +103,6 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
             fab.setOnClickListener(this);
         }
 
-        //-----------------------
-        //speech recognition code
-
         boolean voice_control = loadVoiceControl(false);
 
 
@@ -134,27 +120,21 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
 
          try{
              outputStream = btSocket.getOutputStream();
-             Log.i("Kani", "get  home frag 158");
              inputStream = btSocket.getInputStream();
              counter = ((MyBluetoothSocketApplication) getActivity().getApplication()).getCounter();
              if(counter != 1){
                  outputStream.write(9);
                  ((MyBluetoothSocketApplication) getActivity().getApplication()).setCounter(1);
-                 Log.i("My tag", "sending 9");
              }beginListenForData();
-             Log.i("My tag", "beginListenForData()");
         }
         catch (IOException e){
             Toast.makeText(getActivity(),"Socket closed. Reconnect with bluetooth",Toast.LENGTH_LONG).show();
             e.printStackTrace();
-            Log.i("My tag", "socket closed");
             btSocket = ((MyBluetoothSocketApplication) getActivity().getApplicationContext()).getBtSocket();
             try{
                 outputStream = btSocket.getOutputStream();
-                Log.i("Kani", "get  home frag 160");
                 inputStream = btSocket.getInputStream();
                 outputStream.close();
-                Log.i("Kani", "close  home frag 160");
                 inputStream.close();
                 btSocket.close();
                 Log.i("My tag", "Bluetooth socket closed");
@@ -164,8 +144,6 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
             Intent intent = new Intent(getActivity(), ConnectToArduinoWithBluetooth.class);
             getActivity().startActivity(intent);
         }
-
-
 
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -250,21 +228,19 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
-                // TODO Auto-generated method stub
                 adapter.removeSelection();
 
             }
 
             @Override
             public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                // TODO Auto-generated method stub
                 return false;
             }
 
         });
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
         ////////////           GROUPS                 /////////////////////////////////////////////////////
 
         final GroupAdapter groupAdapter = new GroupAdapter(myView.getContext(),R.layout.group_listview, group_array_list);
@@ -317,14 +293,11 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
-                // TODO Auto-generated method stub
                 groupAdapter.removeSelection();
-
             }
 
             @Override
             public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                // TODO Auto-generated method stub
                 return false;
             }
 
@@ -348,46 +321,37 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                     try {
                         bytes = inputStream.read(buffer);
                         String strReceived = new String(buffer, 0, bytes);
-                        msg(String.valueOf(bytes) + " bytes received:\n" + strReceived);
                         switch (strReceived) {
                             case "1":
                                 mydb.updateStateOfRoomByRelayPin(0, 0);
-                                Log.i("My tag", "case 1");
                                 restartFlag = true;
                                 break;
                             case "2":
                                 mydb.updateStateOfRoomByRelayPin(1, 0);
-                                Log.i("My tag", "case 2");
                                 restartFlag = true;
                                 break;
                             case "3":
                                 mydb.updateStateOfRoomByRelayPin(2, 0);
-                                Log.i("My tag", "case 3");
                                 restartFlag = true;
                                 break;
                             case "4":
                                 mydb.updateStateOfRoomByRelayPin(3, 0);
-                                Log.i("My tag", "case 4");
                                 restartFlag = true;
                                 break;
                             case "5":
                                 mydb.updateStateOfRoomByRelayPin(0, 1);
-                                Log.i("My tag", "case 5");
                                 restartFlag = true;
                                 break;
                             case "6":
                                 mydb.updateStateOfRoomByRelayPin(1, 1);
-                                Log.i("My tag", "case 6");
                                 restartFlag = true;
                                 break;
                             case "7":
                                 mydb.updateStateOfRoomByRelayPin(2, 1);
-                                Log.i("My tag", "case 7");
                                 restartFlag = true;
                                 break;
                             case "8":
                                 mydb.updateStateOfRoomByRelayPin(3, 1);
-                                Log.i("My tag", "case 8");
                                 restartFlag = true;
                                 break;
                         }
@@ -413,11 +377,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                             }
                         }
                     } catch (IOException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
-
-                        msg("Connection lost:\n"
-                                + e.getMessage());
                         Toast.makeText(getActivity(), "Connection lost: "+ e.getMessage(), Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getActivity(), ConnectToArduinoWithBluetooth.class);
                         startActivity(intent);
@@ -434,8 +394,6 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
         workerThread.start();
     }
 
-
-
     private void msg(String s)
     {
         Log.i("My tag", s);
@@ -450,14 +408,13 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
             Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                     RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-            intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speech to Recognize");
+            intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.tts));
             startActivityForResult(intent, RQS_RECOGNITION);
         }
     };
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if ((requestCode == RQS_RECOGNITION) & (resultCode == Activity.RESULT_OK)) {
-//        if (requestCode == RQS_RECOGNITION) {
             ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, result);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

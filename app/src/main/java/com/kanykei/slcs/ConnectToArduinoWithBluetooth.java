@@ -27,7 +27,6 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
@@ -53,7 +52,6 @@ public class ConnectToArduinoWithBluetooth extends Activity {
     private ArrayList<String> mPairedDeviceNameList;
     private ArrayList<String> mPairedDeviceAddressList;
     static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    public static String EXTRA_ADDRESS = "device_address";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +59,6 @@ public class ConnectToArduinoWithBluetooth extends Activity {
         setContentView(R.layout.connect);
         btSocket = ((MyBluetoothSocketApplication) getApplication()).getBtSocket();
         if(btSocket != null && btSocket.isConnected()){
-            Log.i("My tag","if(btSocket is connected) start main activity");
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
@@ -76,9 +73,9 @@ public class ConnectToArduinoWithBluetooth extends Activity {
         lv_scan = (ListView) findViewById(R.id.available_devices_list);
         hideScan();
         mProgressDlg = new ProgressDialog(this);
-        mProgressDlg.setMessage("Scanning...");
+        mProgressDlg.setMessage(getString(R.string.scanning));
         mProgressDlg.setCancelable(false);
-        mProgressDlg.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+        mProgressDlg.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -213,7 +210,7 @@ public class ConnectToArduinoWithBluetooth extends Activity {
     }
 
     private void showUnsupported() {
-        mStatusTv.setText("Bluetooth is unsupported by this device");
+        mStatusTv.setText(getString(R.string.unsupported));
         mActivateBtn.setVisibility(View.INVISIBLE);
         mScanBtn.setEnabled(false);
     }
@@ -225,7 +222,6 @@ public class ConnectToArduinoWithBluetooth extends Activity {
             if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
                 final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
                 if (state == BluetoothAdapter.STATE_ON) {
-                    msg("Enabled");
                     showEnabled();
                 }
             } else if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
@@ -248,7 +244,6 @@ public class ConnectToArduinoWithBluetooth extends Activity {
                 BluetoothDevice device = (BluetoothDevice) intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 mScannedDeviceNameList.add(device.getName());
                 mScannedDeviceAddressList.add(device.getAddress());
-                msg("Found device " + device.getName());
             }
         }
     };
@@ -257,18 +252,16 @@ public class ConnectToArduinoWithBluetooth extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 0) {
             if(resultCode == Activity.RESULT_OK){
-                msg("Turned on");
                 Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
                 mPairedDeviceNameList = new ArrayList<String>();
                 mPairedDeviceAddressList = new ArrayList<String>();
                 if (pairedDevices == null || pairedDevices.size() == 0) {
-                    msg("No Paired Devices Found");
+                    msg(getString(R.string.no_paired));
                 } else {
                     for(BluetoothDevice bt : pairedDevices){
                         mPairedDeviceNameList.add(bt.getName());
                         mPairedDeviceAddressList.add(bt.getAddress());
                     }
-                    msg("Showing Paired Devices");
                     final ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), R.layout.list_item, mPairedDeviceNameList);
                     lv_paired.setAdapter(adapter);
                     lv_paired.setOnItemClickListener(myPairedListClickListener);
@@ -276,7 +269,7 @@ public class ConnectToArduinoWithBluetooth extends Activity {
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Write your code if there's no result
-                msg("Could not turn on");
+                msg(getString(R.string.no_turn_on));
             }
         }
     }
@@ -309,7 +302,7 @@ public class ConnectToArduinoWithBluetooth extends Activity {
         @Override
         protected void onPreExecute()
         {
-            progress = ProgressDialog.show(ConnectToArduinoWithBluetooth.this, "Connecting...", "Please wait!!!");  //show a progress dialog
+                progress = ProgressDialog.show(ConnectToArduinoWithBluetooth.this, getString(R.string.connecting), getString(R.string.wait));  //show a progress dialog
 
         }
 
@@ -342,11 +335,11 @@ public class ConnectToArduinoWithBluetooth extends Activity {
 
             if (!ConnectSuccess)
             {
-                msg("Connection Failed. Is it a SPP (Serial Port Profile)  Bluetooth? Try again.");
+                msg(getString(R.string.not_connected));
             }
             else
             {
-                msg("Connected.");
+                msg(getString(R.string.connected));
                 isBtConnected = true;
                 Intent turnOn = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(turnOn);

@@ -49,17 +49,18 @@
     <string name="mail_feedback_message">Hi,
 \n\nYour Feedback sample app rocks! I would like to give you some feedback:</string>
     <string name="help">Help</string>
-    <string name="title0">Create a new room</string>
-    <string name="details0">Go to Home tab and click ‘+’ add button in bottom right corner. In input text, write the name of room. Then choose corresponding relay\'s pin. Hit save. Now you can see the newly created room in the list of all rooms.</string>
-    <string name="title1">Delete room (-s)</string>
-    <string name="details1">Go to Home tab. Select room (-s) to delete. Click trash box in the top right corner.</string>
-    <string name="title2">Set time to turn the light on (off) in room</string>
-    <string name="details2">Go to Routines tab. To set time of turning the light on in room click wake up. The list of all the rooms with corresponding wake up time to the right will appear. Click the room and set the time in the dialog appeared. To set time of turning the light off in room click go to sleep. The list of all the rooms with corresponding go sleep time to the right will appear. Click the room and set the time in the dialog appeared.</string>
-    <string name="title3">Change language settings</string>
-    <string name="details3">Go to Settings tab.<b> Choose the language</b> from list.</string>
-    <string name="title4">Manage voice control</string>
-    <string name="details4">If you want to voice control on Russian language (there is no Kyrgyz language voice library) first do the following steps.
-\nTo install a voice library from Google go to Menu in mobile phone. Choose Settings ⇒ My device ⇒ Language and input ⇒ Voice search ⇒ Speech recognition offline ⇒ tab All ⇒ download Russian language. Now you can use voice control feature on Russian language.\n
-Go to Settings tab.  Turn on voice control. Go to Home tab. Voice control button appeared. Click voice control button and command. The commands are following: “Turn on room_name” or “Turn off room_name”, “Room_name turn on” or “Room_name turn off”; “Включить room_name”, “Отключить room_name” or “Выключить room_name”, “Room_name включить”, “Room_name отключить” or “Room_name выключить”.</string>
+    <string name="tts">Speech to Recognize</string>
+    <string name="scan">Scan</string>
+    <string name="scanning">Scanning...</string>
+    <string name="unsupported">Bluetooth is unsupported by this device</string>
+    <string name="no_paired">No Paired Devices Found</string>
+    <string name="no_turn_on">Could not turn on</string>
+    <string name="connecting">Connecting...</string>
+    <string name="wait">Please wait!!!</string>
+    <string name="not_connected">Connection Failed. Is it a SPP (Serial Port Profile)  Bluetooth? Try again.</string>
+    <string name="connected">Connected.</string>
+    <string name="no_available">No available devices</string>
+    <string name="available">Available devices</string>
+    <string name="paired">Paired devices</string>
 
 </resources>
