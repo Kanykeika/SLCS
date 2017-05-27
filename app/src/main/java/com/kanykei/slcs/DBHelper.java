@@ -83,11 +83,13 @@ public class DBHelper extends SQLiteOpenHelper {
         ArrayList<String> title = new ArrayList<>();
         ArrayList<String> details = new ArrayList<>();
         title.add("Create a new room");
+        title.add("Create a new group of rooms");
         title.add("Delete room (-s)");
         title.add("Set time to turn the light on (off) in room");
         title.add("Change language settings");
         title.add("Manage voice control");
         details.add("Go to Home tab and click ‘+’ add button in bottom right corner. In input text, write the name of room. Then choose corresponding relay\'s pin. Hit save. Now you can see the newly created room in the list of all rooms.");
+        details.add("Go to Home tab. Select room (-s) to add to group. Click group icon in the top right corner. Enter name of a new group. Click “Save” button.");
         details.add("Go to Home tab. Select room (-s) to delete. Click trash box in the top right corner.");
         details.add("Go to Routines tab. To set time of turning the light on in room click wake up. The list of all the rooms with corresponding wake up time to the right will appear. Click the room and set the time in the dialog appeared. To set time of turning the light off in room click go to sleep. The list of all the rooms with corresponding go sleep time to the right will appear. Click the room and set the time in the dialog appeared.");
         details.add("Go to Settings tab.Choose the language from list.");
@@ -95,11 +97,13 @@ public class DBHelper extends SQLiteOpenHelper {
                 "\nTo install a voice library from Google go to Menu in mobile phone. Choose Settings ⇒ My device ⇒ Language and input ⇒ Voice search ⇒ Speech recognition offline ⇒ tab All ⇒ download Russian language. Now you can use voice control feature on Russian language.\n" +
                 "Go to Settings tab.  Turn on voice control. Go to Home tab. Voice control button appeared. Click voice control button and command. The commands are following: “Turn on room_name” or “Turn off room_name”, “Room_name turn on” or “Room_name turn off”; “Включить room_name”, “Отключить room_name” or “Выключить room_name”, “Room_name включить”, “Room_name отключить” or “Room_name выключить”.");
         title.add("Создать новое помещение");
+        title.add("Создать новую группу");
         title.add("Удалить комнату(-ы)");
         title.add("Установить время когда включать(выключать) лампочки");
         title.add("Настройки языка");
         title.add("Управление голосом");
         details.add("Пройдите во вкладку Главная и нажмите кнопку ‘+’ в правом нижнем углу. Введите название помещения ( комнаты ). Затем выберите соответствующий pin релейного модуля. Нажмите кнопку “Сохранить”. Теперь можете проверить новое помещение в списке помещений во вкладке Главная.");
+        details.add("Пройдите во вкладку Главная. Выберите комнату(-ы), которую (-ые) вы хотели бы добавить в группу. Нажмите кнопку “Группа” (три лампочки) в правом верхнем углу. Введите название группы. Нажмите “Сохранить”.");
         details.add("Пройдите во вкладку Главная. Выберите комнату(-ы), которую (-ые) вы хотели бы удалить. Нажмите кнопку “Удалить” (мусорное ведро) в правом верхнем углу.");
         details.add("Пройдите во вкладку Время. " +
                 "Чтобы установить время включения света в комнате, нажмите “Проснуться”. " +
@@ -119,12 +123,15 @@ public class DBHelper extends SQLiteOpenHelper {
                 "“Отключить название_комнаты” or “Выключить название_комнаты”, “Название_комнаты включить”, " +
                 "“Название_комнаты отключить” or “Название_комнаты выключить”.");
         title.add("Жаңы бөлмө кошуу");
+        title.add("Жаңы топ кошуу");
         title.add("Бөлмөнү(-лөрдү) жок кылуу");
         title.add("Бөлмөдө жарыкты күйгүзүп өчүрүү убактысын белгилөө");
         title.add("Тил орнотуулар");
         title.add("Yн башкаруу");
         details.add("Башкы бетке барып, ‘+’ кошуу баскычын басыңыз. Текст киргизүү кутучасына бөлмөнүн атын жазыңыз." +
                 " Реленин тиешелүү PINин тандаңыз. Сактоо баскычын басыңыз. Эми бүт бөлмөлөрдүн тизмесинде жаңы кошулган бөлмөнү көрө аласыз.");
+        details.add("Башкы бетке барыңыз. Топко кошо турган бөлмөнү(-лөрдү) тандаңыз. Топтун сүрөтүн басыңыз. Текст киргизүү кутучасына топтун атын жазыңыз.\" +\n" +
+                "Сактоо баскычын басыңыз.");
         details.add("Башкы бетке барыңыз. Жок кыла турган бөлмөнү(-лөрдү) тандаңыз. Таштанды кутучасын басыңыз.");
         details.add("“Убакыт“ кошумча баракчасына барыңыз." +
                 " Бөлмөдө жарыкты күйгүзүү убактысын белгилөө үчүн “Ойгонуу” баскычын басыңыз." +
@@ -145,11 +152,11 @@ public class DBHelper extends SQLiteOpenHelper {
                 " “Room_name отключить” or “Room_name выключить”.");
         String language = "en";
         for(int i = 0; i < title.size(); i++){
-            if(i < 5) {
+            if(i < 6) {
                 language = "en";
-            }else if (i < 10){
+            }else if (i < 12){
                 language = "ru";
-            }else if (i < 15){
+            }else if (i < 18){
                 language = "kg";
             }
             String titles = title.get(i);
