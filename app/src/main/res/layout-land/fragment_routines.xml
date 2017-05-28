@@ -26,10 +26,10 @@
             android:paddingRight="10dp"/>
         <TextView
             android:id="@+id/wake_up"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:fontFamily="@string/font_fontFamily_medium"
+            android:textColor="@color/colorPrimary"
             android:layout_gravity="center"
             android:text="@string/wake"
             android:clickable="true"
@@ -60,11 +60,11 @@
             android:paddingTop="5dp"/>
         <TextView
             android:id="@+id/go_to_sleep"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textSize="20sp"
-            android:fontFamily="@string/font_fontFamily_medium"
+            android:textColor="@color/colorPrimary"
             android:text="@string/sleep"
             android:clickable="true"
             android:paddingStart="10dp"

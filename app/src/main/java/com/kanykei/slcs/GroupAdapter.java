@@ -57,7 +57,7 @@ public class GroupAdapter extends ArrayAdapter<Group> {
         final ViewHolder  holder;
         if (view == null) {
             holder = new ViewHolder();
-            view = inflater.inflate(R.layout.group_listview, null);
+            view = inflater.inflate(R.layout.group_listview, parent, false);
             // Locate the TextViews in  listview_item.xml
             holder.labelView = (TextView) view.findViewById(R.id.group_id);
             holder.valueView = (TextView) view.findViewById(R.id.group_name);

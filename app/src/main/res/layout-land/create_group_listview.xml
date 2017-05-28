@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--  Single List Item Design for setting up timer  -->
+<!--  Single List Item Design -->
 <LinearLayout
 xmlns:android="http://schemas.android.com/apk/res/android"
 android:layout_width="fill_parent"
     android:orientation="horizontal"
     android:layout_height="wrap_content"
-    android:padding="10dp">
-
+    android:background="?android:attr/activatedBackgroundIndicator"
+   >
     <TextView
-        android:id="@+id/room_id"
+        android:id="@+id/position"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size"
         android:textStyle="bold"
         android:layout_gravity="center"
         android:layout_weight="0.10"
+        android:paddingStart="15dp"
+        android:paddingLeft="15dp"
         android:textColor="@color/colorPrimary"
+        android:textColorHighlight="@color/colorAccent"
         />
 
     <TextView
@@ -27,26 +30,8 @@ android:layout_width="fill_parent"
         android:textColor="@color/colorPrimary"
         android:textColorHighlight="@color/colorAccent"
         android:layout_gravity="start|center_vertical"
-        android:layout_weight="0.50" />
-
-    <TextView
-        android:id="@+id/display_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/text_size"
-        android:textColor="@color/colorPrimary"
-        android:layout_weight="0.30"
-        android:layout_gravity="start|center_vertical"
+        android:layout_weight="0.50"
         />
-
-    <ImageView
-        android:layout_width="10dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/ic_delete"
-        android:id="@+id/btn_delete"
-        android:layout_weight="0.10"
-        android:layout_gravity="center"
-        android:contentDescription="delete" />
 
 </LinearLayout>
 

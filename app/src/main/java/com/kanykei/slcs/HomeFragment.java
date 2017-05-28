@@ -90,6 +90,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
         mydb = DBHelper.getInstance(getActivity());
         array_list = mydb.getAllRooms();
         group_array_list = mydb.getAllGroups();
+        group_list_view = (ListView) myView.findViewById(R.id.group_listView);
         if(array_list.isEmpty() && group_array_list.isEmpty()){
             empty_text = (TextView) myView.findViewById(R.id.emptyText);
             empty_text.setText(getText(R.string.empty));
@@ -244,7 +245,6 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
         ////////////           GROUPS                 /////////////////////////////////////////////////////
 
         final GroupAdapter groupAdapter = new GroupAdapter(myView.getContext(),R.layout.group_listview, group_array_list);
-        group_list_view = (ListView) myView.findViewById(R.id.group_listView);
         group_list_view.setAdapter(groupAdapter);
         group_list_view.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 
