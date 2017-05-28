@@ -3,6 +3,7 @@ int relay[4]={4,5,6,7};  // arduino pin numbers for relay module
 int tempBT[4]={1,2,3,4};
 boolean tempBtn[4]={HIGH,LOW,HIGH,HIGH};// temporary state of switch buttons
 boolean OUT[4]= {HIGH,HIGH,HIGH,HIGH}; // turn on or off leds
+boolean IN[4]= {HIGH,HIGH,HIGH,HIGH}; // turn on or off leds
 int BT[4]= {1,2,3,4};
 boolean Btn[4]= {HIGH,HIGH,HIGH,HIGH}; // state of switch buttons
 int button[4]={8,9,10,11}; // arduino pin numbers for switch buttons
@@ -73,6 +74,12 @@ void loop()
       tempBtn[i] = digitalRead(button[i]); 
     }
 
+    // read data from relay
+    for(int i = 0; i < 4; i++)
+    {
+      IN[i] = bitRead(PORTD,relay[i]); 
+    }
+
     // check temp and bt values
     for(int i = 0; i < 4; i++){
      if(tempBT[i] != BT[i]) { // if temporary value read from bluetooth is not equal to previous 
@@ -88,14 +95,13 @@ void loop()
 
      //check temp and button values if changed change also bluetooth values
      for(int i=0;i<4;i++){
-      if(tempBtn[i] != Btn[i]) {
-        Btn[i]=tempBtn[i]; 
-        if(Btn[i] == 0)  { // if switch button's position is on
-          OUT[i]=LOW; // turn on
+      if(tempBtn[i] != Btn[i]) { // if button position changed
+        Btn[i]=tempBtn[i]; // update state of button
+        if(IN[i] == 1){ // if relay led is off
+          OUT[i] = LOW; // turn on
           tempBT[i]=BT[i]=i+5;
-        }
-        else {
-          OUT[i]=HIGH; // turn off
+        }else{ // if relay led is on
+          OUT[i] = HIGH; // turn off
           tempBT[i]=BT[i]=i+1;
         }
         sendAndroidValues(i);  
